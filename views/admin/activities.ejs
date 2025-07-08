@@ -1,0 +1,79 @@
+<%- include("../partials/header", { title: __("admin.activities.title") }) %>
+<meta name="_csrf" value="<%= csrfToken %>">
+
+<style>
+    .deleting .delete-button,
+    .deleting .edit-button {
+        display: none;
+    }
+
+    .deleting .cancel-button,
+    .deleting .confirm-button {
+        display: block;
+    }
+
+    .cancel-button,
+    .confirm-button {
+        display: none;
+    }
+</style>
+
+<h1 class="text-center sm:text-left text-5xl mx-4 sm:text-6xl font-bold text-emerald-900 dark:text-emerald-200 mb-4"><%= __("admin.activities.activitiesSection") %></h1>
+
+<div class="max-w-xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800 w-4/5">
+
+    <ul id="activity-list" class="space-y-4">
+        <% activities.forEach(activity => { %>
+            <li class="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 p-4 bg-gray-200 rounded-md dark:bg-gray-700">
+                <div class="flex gap-4 items-center">
+                    <img src="<%= activity.photo %>" alt="Activity Photo" class="h-12 pointer-events-none rounded-md" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
+                    <span class="font-bold text-black dark:text-white"><%= activity.title.es %></span>
+                </div>
+                <button type="button" onclick="deleteActivity(this)" class="delete-button w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.activities.delete") %></button>
+                <button type="button" onclick="cancelDelete(this)" class="cancel-button w-full sm:w-min border bg-gray-500 hover:bg-gray-600 border-gray-600 hover:border-gray-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.activities.cancel") %></button>
+                <button type="button" onclick="confirmDelete(this, '<%= activity.url %>')" class="confirm-button w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.activities.confirm") %></button>
+                <button type="button" onclick="editActivity('<%= activity.url %>')" class="edit-button w-full sm:w-min border bg-blue-500 hover:bg-blue-600 border-blue-600 hover:border-blue-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.activities.edit") %></button>
+            </li>
+        <% }) %>
+    </ul>
+
+    <div class="mt-4 flex">
+        <button type="button" onclick="editActivity('new')" class="w-full sm:w-auto border bg-blue-500 hover:bg-blue-600 border-blue-600 hover:border-blue-700 transition duration-150 text-white px-4 py-2 rounded-md"><%= __("admin.activities.new") %></button>
+    </div>
+
+    <a href="/admin" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.activities.back") %></a>
+</div>
+
+<%- include("../partials/footer") %>
+
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("value");
+    let lastDel;
+
+    function deleteActivity(button) {
+        if (lastDel) lastDel.classList.remove("deleting");
+        lastDel = button.parentElement;
+        lastDel.classList.add("deleting");
+    }
+    
+    function cancelDelete(button) {
+        lastDel = undefined;
+        button.parentElement.classList.remove("deleting");
+    }
+
+    function confirmDelete(button, activity) {
+        fetch("/admin/activities/del/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ _csrf: csrfToken, activity: activity })
+        })
+        .then(_ => location.reload())
+        .catch(err => location.reload());
+    }
+
+    function editActivity(url) {
+        window.location.href = `/admin/<%= __('admin.activities.url') %>/${url}`;
+    }
+</script>

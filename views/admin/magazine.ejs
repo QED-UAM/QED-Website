@@ -1,0 +1,144 @@
+<%- include("../partials/header", { title: __("admin.magazines.magazine.title", { name: magazine.title.es }) }) %>
+<meta name="_csrf" value="<%= csrfToken %>">
+
+<div class="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800">
+    <form id="profile-form" action="/admin/magazines/<%= magazine.url %>" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div>
+            <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.magazines.magazine.urlSection") %></label>
+            <div class="flex items-center">
+                <span class="text-gray-500 dark:text-gray-400">
+                    <%= baseURL %>/<%= __("magazine.index.url") %>/
+                </span>
+                <input type="text" id="url" name="url" value="<%= magazine.url %>" onkeyup="validateURL(this)" onchange="validateURL(this)" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" required>
+            </div>
+            <div id="url-error" class="text-red-500 mt-2 hidden"><%= __("admin.magazines.magazine.errors.url") %></div>
+            <input id="url-error-checkbox" type="checkbox" class="hidden" checked required>
+        </div>
+
+        <div>
+            <label for="visible" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.magazines.magazine.visibleSection") %></label>
+            <div class="relative flex items-center mt-1">
+                <input type="checkbox" id="visible" name="visible" onchange="showUnsavedChangesMessage()" class="appearance-none peer w-6 h-6 border border-gray-300 dark:border-gray-500 dark:bg-gray-600 rounded-md bg-gray-100 mr-2 shrink-0 checked:bg-blue-500 dark:checked:bg-blue-500 checked:border-0 cursor-pointer" <%= magazine.visible ? 'checked' : '' %>>
+                <svg class="absolute w-4 h-4 hidden peer-checked:block top-1 left-1 pointer-events-none text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span class="text-gray-500 dark:text-gray-400 hidden peer-checked:block">
+                    <%= __("admin.magazines.magazine.visible") %>
+                </span>
+                <span class="text-gray-500 dark:text-gray-400 block peer-checked:hidden">
+                    <%= __("admin.magazines.magazine.hidden") %>
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.magazines.magazine.titleSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="title-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <input id="title-<%= language %>" name="title[<%= language %>]" value="<%= magazine.title[language] %>" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeydown="showUnsavedChangesMessage()">
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            <label for="cover" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.magazines.magazine.coverSection") %></label>
+            <input type="text" id="cover" name="cover" value="<%= magazine.cover %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.magazines.magazine.descriptionSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="description-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <textarea id="description-<%= language %>" name="description[<%= language %>]" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeyup="updatePreview('<%= language %>')"><%= magazine.description[language] %></textarea>
+                        <div id="preview-<%= language %>" class="text-gray-600 dark:text-gray-400 text-md mx-2 text-justify prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+                            <%- magazine.description[language] || "" %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0 items-center">
+            <button id="submit-magazine" type="submit" class="border bg-green-500 hover:bg-green-600 border-green-600 hover:border-green-700 transition duration-150 text-white px-4 py-2 rounded-md w-full sm:w-min cursor-pointer" disabled><%= __("admin.magazines.magazine.submit") %></button>
+            <div id="unsaved-changes" class="hidden text-gray-500 dark:text-gray-400"><%= __("admin.magazines.magazine.unsavedChanges") %></div>
+        </div>
+    </form>
+
+    <a href="/admin/<%= __('admin.magazines.url') %>" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.magazines.magazine.back") %></a>
+</div>
+
+
+<%- include("../partials/footer") %>
+
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("value");
+
+    async function updatePreview(language, changed=true) {
+        const textarea = document.getElementById(`description-${language}`);
+        const md = textarea.value.trim();
+
+        if (!md) {
+            document.getElementById(`preview-${language}`).innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/mdParse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ md })
+            });
+
+            if (!response.ok) throw new Error('Failed to parse markdown');
+
+            const result = await response.json();
+            document.getElementById(`preview-${language}`).innerHTML = result.md;
+            if (changed) showUnsavedChangesMessage();
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+        }
+    }
+
+    function validateURL(input) {
+        const checkbox = document.getElementById("url-error-checkbox");
+        const message = document.getElementById("url-error");
+
+        input.value = input.value.replace(/\s+/g, '-').replace(/-+/g, '-');
+
+        const urlPattern = /^[a-zA-Z0-9_-]{4,}$/;
+        if (!urlPattern.test(input.value.trim())) {
+            message.classList.remove("hidden");
+            checkbox.checked = false;
+            return;
+        }
+
+        message.classList.add("hidden");
+        checkbox.checked = true;
+        showUnsavedChangesMessage();
+    }
+
+    function showUnsavedChangesMessage() {
+        document.getElementById("unsaved-changes").classList.remove("hidden");
+        document.getElementById("submit-magazine").disabled = false;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        "<%= SUPPORTED_LANGUAGES %>".split(",").forEach((lang) => updatePreview(lang, false));
+    });
+</script>

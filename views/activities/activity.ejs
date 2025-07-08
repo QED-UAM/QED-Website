@@ -1,0 +1,55 @@
+<%- include("../partials/header", { title: __("activities.activity.title", { name: activity.title }) }) %>
+<script src="/js/activityInteractiveElements.js"></script>
+<script src="/js/spoilerOverlay.js"></script>
+<script src="/js/activityUtils.js"></script>
+
+<div class="mx-4">
+  <h1 class="text-5xl sm:text-6xl flex items-center space-x-2 font-bold <%= activity.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
+      <%- activity.noTranslation ? `title="${__('activities.activity.noTranslation')}"` : '' %>>
+    <% if (activity.noTranslation) { %>
+      <%- include("../partials/components/icons/translate", { size: 12 }) %>
+    <% } %>
+    <p><%= activity.title %></p>
+  </h1>
+  <p class="text-center sm:text-left text-lg text-gray-600 dark:text-gray-400 mt-2">
+    <%- __("activities.activity.postedAt", { date: activity.created_at }) %>
+  </p>
+</div>
+
+<div class="flex justify-center mx-auto px-4 max-w-6xl">
+  <!-- Main Content -->
+
+  <div class="max-w-2xl p-4">
+    <!--
+    <% if (activity.photo) { %>
+      <div class="mb-6 flex justify-center">
+        <img src="<%= activity.photo %>" 
+             alt="QED - <%= activity.title %>" 
+             class="w-full max-w-md object-cover rounded-md pointer-events-none"
+             onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
+      </div>
+    <% } %>
+    -->
+
+    <div id="activity-md" class="text-slate-700 dark:text-slate-100 text-md mt-4 mx-2 text-justify prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+      <%- activity.content %>
+      <hr>
+    </div>
+
+    <!-- Back link -->
+    <a href="/<%= __('activities.index.url') %>" class="text-sm text-blue-500 dark:text-blue-300 hover:underline mt-12 inline-block">
+      &larr; <%= __("activities.activity.backToActivities") %>
+    </a>
+
+    <% if (activity.scripts) { %>
+      <textarea id="scripts" class="hidden"><%- activity.scripts %></textarea>
+      <script>
+        const element = document.getElementById("scripts");
+        activateInteractiveElements([element.value]);
+        element.remove();
+      </script>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

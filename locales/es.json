@@ -1,0 +1,322 @@
+{
+    "roles": {
+        "author": "Autor",
+        "editor": "Editor",
+        "illustrator": "Ilustrador",
+        "animator": "Simulaciones web"
+    },
+    "tags": {
+        "tag1": "TAG1",
+        "tag2": "TAG2"
+    },
+    "postTypes": {
+        "post": "(Sin categoría)",
+        "prose": "Operando en Prosa",
+        "interview": "Hablamos con...",
+        "recreational": "Matemática Recreativa",
+        "literature": "Literatura",
+        "news": "Actualidad",
+        "philosophy": "Para comerse el coco (Mates + Filosofía)",
+        "art": "Tras la belleza (Mates + Arte)",
+        "culture": "Cultura"
+    },
+    "containers": {
+        "didyouknow": {
+            "es": {
+                "title": "¿Sabías que...?"
+            },
+            "en": {
+                "title": "Did you know...?"
+            }
+        },
+        "tryit": {
+            "es": {
+                "title": "¡Inténtalo!"
+            },
+            "en": {
+                "title": "Try it!"
+            }
+        },
+        "solution": {
+            "es": {
+                "title": "Solución",
+                "click": "Haz click aquí para revelar la solución"
+            },
+            "en": {
+                "title": "Solution",
+                "click": "Click here to reveal the solution"
+            }
+        }
+    },
+    "footer": {
+        "webMadeBy": "Web creada por <a href='/{{profileUrl}}/hector-tablero'><u>Héctor Tablero Díaz</u></a> y diseñada por <a href='/{{profileUrl}}/ana-xiu'><u>Ana Xiu Fernández</u></a>",
+        "copyright": "Copyright © {{year}} - QED"
+    },
+    "index": {
+        "title": "Inicio",
+        "logoSubtitle": "Asociación Estudiantil de Matemáticas",
+        "knowMore": "Saber más",
+        "noTranslation": "El contenido no está disponible en español",
+        "magazineTitle": "Revista QED",
+        "magazineDesc": "La actividad principal de la asociación es la creación desde cero de una revista de carácter divulgativo con contenido matemático. Esta revista está confeccionada mayoritariamente por estudiantes de la facultad, desde la redacción de artículos hasta su correspondiente corrección, maquetación e ilustración. Cuenta también con el apoyo de los profesores del Departamento de Matemáticas, que ayudan en la corrección de la misma en cuanto a rigurosidad matemática.",
+        "tournamentsTitle": "Torneos",
+        "tournamentsDesc": "Una o dos veces al cuatrimestre organizamos torneos de mus y de ajedrez para todos los estudiantes que se quieran apuntar. Desde QED nos encargamos de reservar el espacio, conseguir los materiales, hacer los cuadros y dar los premios. Suelen ser unas jornadas muy divertidas, perfectas para conocer e interactuar con otros alumnos y hacer amigos, además de pasar un buen rato jugando a nuestros juegos favoritos.",
+        "gymkhanaTitle": "Gymkhana",
+        "gymkhanaDesc": "La gymkhana QED es una actividad que solemos organizar dos o tres veces cada curso para alumnos de institutos que vienen a visitar la UAM. En ella, los estudiantes pasan por varios puestos con pruebas que tienen que resolver en equipo, como son sudokus, cifrados, un twister matemático, tabú, etc. Después de un par de horas, el equipo que mejor desempeño haya tenido es el ganador.",
+        "escapeTitle": "Escape Rooms",
+        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room."
+    },
+    "profile": {
+        "title": "{{name}}",
+        "url": "perfil",
+        "collaboratedArticles": "Artículos en los que ha colaborado",
+        "role": {
+            "president": "Presidente de QED",
+            "vicepresident": "Vicepresidente de QED",
+            "secretary": "Secretario de QED",
+            "treasurer": "Tesorero de QED",
+            "member": "Miembro de la Junta Directiva"
+        }
+    },
+    "contact": {
+        "title": "Contacto",
+        "url": "contacto",
+        "ourSocialMedia": "Nuestras Redes Sociales",
+        "contactUs": "¡Envíanos un mensaje!",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "message": "Mensaje",
+        "submit": "Enviar"
+    },
+    "about": {
+        "title": "Sobre QED",
+        "url": "nosotros",
+        "aboutTitle": "¿Quiénes somos?",
+        "aboutDesc": "<strong>QED</strong> es una asociación que surge como iniciativa de los estudiantes de Matemáticas de la <strong>Universidad Autónoma de Madrid</strong>. Esta asociación pretende acercar las matemáticas al resto de estudiantes de la Facultad de Ciencias a través de diversas actividades.<br><br>Como principal actividad, se elabora la <strong>Revista QED</strong>, en la que se incluyen artículos divulgativos, fragmentos de historia de las matemáticas, acertijos, problemas, y mucho más. Para leer los artículos o saber más, puedes consultar el apartado <a href='/{{magazineUrl}}'>Revista</a>.<br><br>Otros ejemplos de actividades que hemos llevado a cabo son los torneos universitarios de <strong>Mus y Ajedrez</strong>, el <strong>Carnaval Matemático</strong>, e incluso hemos participado en campamentos organizados por el Departamento de Matemáticas de la UAM.",
+        "nameTitle": "Significado de nuestro nombre",
+        "nameDesc": "<strong><em>Quod erat demonstrandum</em></strong>, abreviado como <strong>QED</strong>, es una locución latina que significa \"lo que se quería demostrar\". Tiene su origen en la frase griega ὅπερ ἔδει δεῖξαι (hóper édei deĩxai), que usaban diversos matemáticos antiguos, incluidos Euclides y Arquímedes, al final de las demostraciones o pruebas matemáticas para señalar que habían alcanzado el resultado requerido para la prueba.<br><br>Hoy en día, el uso de las siglas QED es cada vez menos frecuente, y en la mayoría de las situaciones se ve sustituido por símbolos, como el cuadrado relleno ( ■ ).",
+        "boardTitle": "Junta",
+        "boardDesc": "Nuestra asociación se organiza mediante <strong>asambleas</strong>, en las que cualquier miembro de la asociación puede opinar e intervenir. Todo el mundo tiene voz y voto, y las decisiones importantes se deciden entre todos. Aún así, necesitamos un equipo directivo para poder constituirnos como asociación de estudiantes de la UAM. Este equipo se compone de <strong>presidente, vicepresidente, secretario, tesorero y múltiples vocales</strong>."
+    },
+    "magazine": {
+        "index": {
+            "title": "Revista",
+            "url": "revista",
+            "editions": "Ediciones",
+            "aboutTitle": "Sobre la Revista",
+            "aboutDesc": "Como ya hemos mencionado, la revista tiene diferentes secciones, cada una enfocada a un público distinto, de forma que desde aquellos que no estudian Matemáticas, hasta los profesores y estudiantes más avanzados, tengan un artículo que disfrutar.<br><br>Los <strong>artículos divulgativos</strong> tienen un público más general, intentan enseñar caras más entretenidas de las matemáticas, ya sea relacionando los conceptos con la música, la literatura, o los deportes. Casi cualquier cosa del día a día podría dar pie a un nuevo artículo divulgativo.<br><br>Los <strong>artículos científicos</strong> van dirigidos a estudiantes y profesores de Matemáticas, ya que ahondan en conceptos más profundos de esta área. Uno de estos artículos puede mostrar la importancia de un teorema que quizás no sea tan conocido, mientras que otro puede abordar un problema a simple vista complejo, pero con una solución ingeniosa. Los temas pueden ser extremadamente variados, pero todos de mayor complejidad que los divulgativos.<br><br>La revista incluye también <strong>entrevistas</strong>. Estas pueden ser entrevistas reales a figuras importantes de la actualidad matemática, o entrevistas ficticias a personajes destacados de la historia. Otra sección interesante es la de <strong>acertijos y problemas</strong>. Aquí están incluidos problemas propuestos por estudiantes y profesores, y seguro que te proporcionan un rato entretenido, además de una satisfacción inmensa al resolverlos!",
+            "collaborateTitle": "¿Quieres colaborar?",
+            "collaborateDesc": "Tras cada entrega, comienza de nuevo la hora de recabar artículos para los posteriores números. Si quieres informarte en más detalle de los plazos de admisión de artículos, ¡escríbenos a nuestro correo! No es necesario ser estudiante de Matemáticas, ni siquiera estudiante, para mandarnos tu propuesta y verla publicada. ¡Esperamos recibir noticias tuyas!<br><br>Puedes participar en este proyecto <strong>corrigiendo, ilustrando o maquetando</strong>. Puedes comprobar de qué se encarga cada equipo de trabajo <a href='#commissions'>aquí</a>.<br><br>¡Estaremos encantados de contar contigo para futuras publicaciones!",
+            "commissionsTitle": "Comisiones",
+            "commissionsDesc": "La revista está elaborada en su totalidad por <strong>estudiantes</strong>, tanto de Matemáticas como de otros grados. Para organizar la gran cantidad de trabajo que conlleva todo el proceso nos dividimos en <strong>comisiones</strong>.<br><br>Si después de leer el resumen de alguna comisión tienes ganas de participar en la asociación, <strong>escríbenos</strong> a través del formulario en la página de <a href='/{{contactUrl}}'>Contacto</a>, o mediante cualquiera de nuestras redes sociales.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de contenido</h2>La <strong>comisión de contenido</strong> se encarga de elaborar el material de la revista, aportando material propio o recopilando todo lo que recibimos por correo. También organizan y debaten qué artículos se publicarán en cada edición, intentando publicar artículos de calidad, manteniendo a la vez un equilibrio entre lo divulgativo y lo científico.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de corrección</h2>La <strong>comisión de corrección</strong> es el siguiente eslabón en la cadena de trabajo. Esta comisión recibe todo el contenido seleccionado en la fase anterior. Su trabajo es revisar los artículos, entrevistas y problemas, con el fin de mantener un estilo similar, evitar erratas y controlar cualquier posible problema en el texto. Además, esta comisión se encarga de contactar con los diferentes profesores voluntarios del departamento de Matemáticas, para así mantener el rigor matemático en todos los artículos.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de maquetación</h2>La <strong>comisión de maquetación</strong> organiza los artículos ya corregidos en la revista. Eligen el orden en el que aparecerán, elaboran una portada para los más importantes y, en general, se aseguran de que cada uno de los artículos sea atractivo visualmente. Trabajan mano a mano con la <strong>comisión de ilustración</strong>, ya que son los que proporcionan la portada y las mayoría de las imágenes que se incluyen en los artículos.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de maquetación</h2>Por último tenemos la <strong>comisión de ilustración</strong>, que se encarga de buscar imágenes apropiadas para los artículos, o elaborarlas en caso de ser necesario. También se encargan de elaborar los carteles que colgamos en redes sociales para anunciar distintos eventos.",
+            "noTranslation": "El contenido no está disponible en español"
+        },
+        "issue": {
+            "title": "{{name}}",
+            "noTranslation": "El contenido no está disponible en español"
+        },
+        "post": {
+            "title": "{{name}}",
+            "url": "articulo",
+            "noTranslation": "Este artículo no está disponible en español"
+        }
+    },
+    "activities": {
+        "index": {
+            "title": "Actividades",
+            "url": "actividades",
+            "section": "Actividades"
+        },
+        "activity": {
+            "title": "{{name}}",
+            "noTranslation": "El contenido no está disponible en español",
+            "backToActivities": "Volver a Actividades",
+            "postedAt": "Publicado el {{date}}",
+            "latestTitle": "Últimas Actividades"
+        }
+    },
+    "errors": {
+        "404": {
+            "title": "Error 404",
+            "desc": "Oops. Parece que esta página no existe."
+        },
+        "500": {
+            "title": "Error 500",
+            "desc": "Parece que hemos tenido un fallo. Intenta refrescar o volver a inicio."
+        }
+    },
+    "admin": {
+        "index": {
+            "title": "Panel de Administración",
+            "section": "Panel de Administración"
+        },
+        "accounts": {
+            "title": "Gestión de Cuentas",
+            "url": "cuentas",
+            "adminAccounts": "Cuentas de Administrador",
+            "delete": "Eliminar",
+            "you": "Tú",
+            "addEmail": "Añadir Email",
+            "addEmailDesc": "Añade un nuevo correo de administrador",
+            "submit": "Guardar",
+            "enterValidAddress": "Dirección de correo incorrecta",
+            "unsavedChanges": "Tienes cambios sin guardar",
+            "back": "Atrás"
+        },
+        "activities": {
+            "title": "Gestión de Actividades",
+            "url": "actividades",
+            "activitiesSection": "Gestión de Actividades",
+            "delete": "Eliminar",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "new": "Nueva actividad",
+            "back": "Atrás",
+            "activity": {
+                "title": "Editar Actividad - {{name}}",
+                "urlSection": "URL",
+                "titleSection": "Título",
+                "descriptionSection": "Descripción",
+                "photoSection": "Portada",
+                "scriptsSection": "Scripts",
+                "contentSection": "Contenido",
+                "submit": "Guardar",
+                "unsavedChanges": "Tienes cambios sin guardar",
+                "errors": {
+                    "url": "La URL debe tener más de 3 caracteres y contener sólo letras, números, guiones bajos y guiones."
+                },
+                "back": "Atrás"
+            }
+        },
+        "magazines": {
+            "title": "Gestión de Revistas",
+            "url": "revistas",
+            "magazinesSection": "Revistas",
+            "delete": "Eliminar",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "new": "Nueva revista",
+            "back": "Atrás",
+            "magazine": {
+                "title": "Editar Revista - {{name}}",
+                "urlSection": "URL",
+                "coverSection": "Portada",
+                "submit": "Guardar",
+                "unsavedChanges": "Tienes cambios sin guardar",
+                "titleSection": "Título",
+                "descriptionSection": "Descripción",
+                "visibleSection": "Visibilidad para los lectores",
+                "visible": "Visible",
+                "hidden": "Oculto",
+                "errors": {
+                    "url": "La URL debe tener más de 3 caracteres y contener sólo letras, números, guiones bajos y guiones."
+                },
+                "back": "Atrás"
+            }
+        },
+        "posts": {
+            "title": "Gestión de Artículos",
+            "url": "articulos",
+            "postsSection": "Artículos",
+            "delete": "Eliminar",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "new": "Nuevo artículo",
+            "back": "Atrás",
+            "noMagazine": "Artículos sin revista",
+            "post": {
+                "title": "Editar Artículo - {{name}}",
+                "urlSection": "URL",
+                "titleSection": "Título",
+                "descriptionSection": "Descripción",
+                "scriptsSection": "Scripts",
+                "contentSection": "Contenido",
+                "tagsSection": "Etiquetas",
+                "tags": {
+                    "select": "Seleccionar etiquetas",
+                    "search": "Buscar etiquetas..."
+                },
+                "authorsSection": "Autores",
+                "authors": {
+                    "select": "Seleccionar autores",
+                    "search": "Buscar autores..."
+                },
+                "magazineSection": "Revista",
+                "magazine": {
+                    "select": "Seleccionar revista",
+                    "search": "Buscar revistas...",
+                    "noMagazine": "(Sin revista)"
+                },
+                "typeSection": "Tipo de publicación",
+                "submit": "Guardar",
+                "unsavedChanges": "Tienes cambios sin guardar",
+                "errors": {
+                    "url": "La URL debe tener más de 3 caracteres y contener sólo letras, números, guiones bajos y guiones."
+                },
+                "back": "Atrás"
+            }
+        },
+        "profiles": {
+            "title": "Gestión de Usuarios",
+            "url": "perfiles",
+            "userProfiles": "Perfiles de Usuarios",
+            "delete": "Eliminar",
+            "confirm": "Confirmar",
+            "cancel": "Cancelar",
+            "edit": "Editar",
+            "new": "Nuevo perfil",
+            "back": "Atrás",
+            "profile": {
+                "title": "Editar Perfil - {{name}}",
+                "urlSection": "URL",
+                "socialMediaSection": "Redes Sociales",
+                "socialMedia": {
+                    "email": "Correo electrónico",
+                    "instagram": "Instagram",
+                    "x": "X (Twitter)",
+                    "linkedin": "LinkedIn"
+                },
+                "aboutSection": "Bio",
+                "submit": "Guardar",
+                "unsavedChanges": "Tienes cambios sin guardar",
+                "personalDataSection": "Datos Personales",
+                "personalData": {
+                    "name": "Nombre",
+                    "photo": "Foto"
+                },
+                "errors": {
+                    "url": "La URL debe tener más de 3 caracteres y contener sólo letras, números, guiones bajos y guiones.",
+                    "email": "El formato de la dirección de correo no es válido"
+                },
+                "addYear": "Añadir año",
+                "directiveBoard": "Junta Directiva",
+                "remove": "Eliminar",
+                "back": "Atrás"
+            }
+        },
+        "news": {
+            "url": "noticias",
+            "title": "Editar Noticias",
+            "urlSection": "URL de Redirección",
+            "submit": "Guardar",
+            "unsavedChanges": "Tienes cambios sin guardar",
+            "titleSection": "Título",
+            "descriptionSection": "Descripción",
+            "back": "Atrás"
+        },
+        "directiveBoard": {
+            "year": "Año",
+            "role": "Rol",
+            "roles": {
+                "president": "Presidente",
+                "vicepresident": "Vicepresidente",
+                "secretary": "Secretario",
+                "treasurer": "Tesorero",
+                "member": "Vocal"
+            }
+        }
+    }
+}

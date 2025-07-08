@@ -1,0 +1,66 @@
+<%- include("partials/header", { title: __("magazine.index.title") }) %>
+</div>
+
+<div class="sm:px-8 -mt-6">
+    <h1 class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%= __("magazine.index.editions") %></h1>
+</div>
+
+<div class="relative">
+    <div class="hidden sm:block absolute top-0 left-0 w-12 h-full pb-2 z-10">
+        <div class="w-full h-full bg-gradient-to-r from-white dark:from-gray-700 pointer-events-none"></div>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center sm:overflow-x-auto overflow-y-hidden sm:space-x-6 space-y-8 sm:space-y-0 mx-auto" style="scrollbar-width: none;"> <!-- Add max-w-fit to center the magazines -->
+        <div class="hidden sm:block"></div>
+        <div class="hidden sm:block"></div>
+        <div class="hidden sm:block" style="margin-right: -1.5rem;"></div>
+        <% magazines.reverse().forEach((magazine, index) => { %>
+            <div class="group flex-none sm:flex-shrink-0 relative transition-all">
+                <a href="/<%= __('magazine.index.url') %>/<%= magazine.url %>">
+                    <div class="overflow-hidden rounded-2xl border-2 border-gray-200 dark:border-gray-600 <%= magazine.noTranslation ? 'group-hover:border-red-500 dark:group-hover:border-red-300' : 'group-hover:border-blue-500 dark:group-hover:border-blue-300' %> transition-all">
+                        <img src="<%= magazine.cover %>" alt="QED - <%= magazine.title %>" 
+                            class="w-64 sm:w-auto sm:h-[25rem] pointer-events-none transform transition-transform duration-300 group-hover:scale-105"
+                            onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
+                    </div>
+                    <h2 class="text-center flex items-center justify-center space-x-1 font-bold mt-2 text-xl <%= magazine.noTranslation ? 'text-red-500 dark:text-red-300 underline decoration-dotted' : 'text-blue-500 dark:text-blue-300' %> hover:underline" <%- magazine.noTranslation ? `title="${__('magazine.index.noTranslation')}"` : '' %>>
+                        <% if (magazine.noTranslation) { %>
+                            <%- include("partials/components/icons/translate", { size: 5 }) %>
+                        <% } %>
+                        <p><%= magazine.title %></p>
+                    </h2>
+                </a>
+            </div>
+        <% }) %>
+        <div class="hidden sm:block"></div>
+        <div class="hidden sm:block"></div>
+        <div></div>
+    </div>
+    <div class="hidden sm:block absolute top-0 right-0 w-12 h-full z-10"> <!-- Add pb-2 if the scrollbar is visible -->
+        <div class="w-full h-full bg-gradient-to-l from-white dark:from-gray-700 pointer-events-none"></div>
+    </div>
+</div>
+
+<div class="flex flex-col space-y-12 mt-12 mb-6">
+    <div class="sm:px-8">
+        <h1 id="about" class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("magazine.index.aboutTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("magazine.index.aboutDesc") %>
+        </div>
+    </div>
+
+    <div class="sm:px-8">
+        <h1 id="colaborar" class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("magazine.index.collaborateTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("magazine.index.collaborateDesc") %>
+        </div>
+    </div>
+
+    <div class="sm:px-8">
+        <h1 id="comisiones" class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("magazine.index.commissionsTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("magazine.index.commissionsDesc", { contactUrl: __("contact.url") }) %>
+        </div>
+    </div>
+</div>
+
+<div>
+<%- include("partials/footer") %>

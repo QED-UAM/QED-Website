@@ -1,0 +1,83 @@
+<%- include("partials/header", { title: __("profile.title", { name: user.name }) }) %>
+
+<% 
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth(); // 0-indexed
+    let currentSchoolYear;
+    if (currentMonth >= 8) { // September is 8
+        currentSchoolYear = `${currentYear}-${(currentYear + 1).toString().slice(-2)}`;
+    } else {
+        currentSchoolYear = `${currentYear - 1}-${currentYear.toString().slice(-2)}`;
+    }
+    const isInCurrentBoard = user.directiveBoard.some(item => item.year === currentSchoolYear);
+    const role = user.directiveBoard.find(item => item.year === currentSchoolYear)?.role || null;
+%>
+
+<div class="max-w-3xl mx-auto flex flex-col justify-center">
+    <div class="flex flex-col sm:flex-row items-center justify-center sm:justify-start sm:space-x-6 space-y-4 sm:space-y-0">
+        <img src="<%= user.photo %>" alt="Profile Picture" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full <%= isInCurrentBoard ? 'ring-2 ring-blue-700 dark:ring-blue-200' : '' %> border-2 border-gray-200 dark:border-gray-600 pointer-events-none" onerror="this.onerror=null;this.src='https://i.pinimg.com/736x/2c/f5/58/2cf558ab8c1f12b43f7326945672805e.jpg';">
+        <div class="text-center sm:text-left">
+            <h1 class="text-3xl font-bold"><%= user.name %></h1>
+            <div class="flex flex-wrap justify-center sm:justify-start mt-2 space-x-4">
+                <% if (user.socialMedia.linkedin) { %>
+                    <%- include("partials/components/icons/socialMedia/linkedin", { user: user.socialMedia.linkedin }) %>
+                <% } %>
+                <% if (user.socialMedia.instagram) { %>
+                    <%- include("partials/components/icons/socialMedia/instagram", { user: user.socialMedia.instagram }) %>
+                <% } %>
+
+                <% if (user.socialMedia.x) { %>
+                    <%- include("partials/components/icons/socialMedia/x", { user: user.socialMedia.x }) %>
+                <% } %>
+                <% if (user.socialMedia.email) { %>
+                    <%- include("partials/components/icons/socialMedia/email", { user: user.socialMedia.email }) %>
+                <% } %>
+            </div>
+            <% if (isInCurrentBoard) { %>
+                <div class="mt-3 px-3 py-1 w-fit flex gap-1 m-auto sm:ml-0 items-center border-2 border-blue-700 dark:border-blue-200 text-blue-700 dark:text-blue-200 text-sm font-semibold rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" width="20px" viewBox="0 -960 960 960" fill="currentColor"><path d="m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm34-102 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Zm-42 142 226-226-56-58-170 170-86-84-56 56 142 142Z"/></svg>
+                    <span class="h-min"><%= __(`profile.role.${role}`) %></span>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <div id="about-md" class="text-md mx-2 mt-8 text-center sm:text-left prose prose-lg dark:prose-invert sm:prose-xl max-w-none break-words prose-custom">
+        <%- user.about %>
+    </div>
+    <div id="about-md" class="text-md mt-4 mx-2 prose prose-md dark:prose-invert sm:prose-lg max-w-none break-words prose-custom">
+        <% if (user.collaboratedPosts && user.collaboratedPosts.length > 0) { %>
+            <div>
+                <h4><%= __("profile.collaboratedArticles") %></h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <% user.collaboratedPosts.forEach(post => { %>
+                        <a href="/magazine/<%= post.url %>" class="flex flex-col justify-between p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow duration-200 no-underline <%= post.noTranslation ? 'text-red-900 dark:text-red-200' : '' %>" <%- post.noTranslation ? `title="${__('magazine.post.noTranslation')}"` : '' %>>
+                            <div>
+                                <h5 class="font-bold text-lg mb-1 hover:underline flex items-center space-x-2">
+                                    <% if (post.noTranslation) { %>
+                                        <%- include("partials/components/icons/translate", { size: 6 }) %>
+                                    <% } %>
+                                    <span><%= post.title %><% if (post.showMagazineTitle && post.magazineTitle) { %> <span class="text-sm text-gray-500 dark:text-gray-400">(<%= post.magazineTitle %>)</span><% } %></span>
+                                </h5>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" style="margin-top: 8px; margin-bottom: 20px;"><%= post.description %></p>
+                            </div>
+                            <span class="inline-block w-fit bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full dark:bg-blue-200 dark:text-blue-900"><%= __(`roles.${post.role}`) %></span>
+                        </a>
+                    <% }); %>
+                </div>
+            </div>
+        <% } %>
+
+    <% if (user.directiveBoard && user.directiveBoard.length > 0) { %>
+        <div class="mt-8">
+            <h4><%= __("profile.directiveBoardHistory") %></h4>
+            <ul>
+                <% user.directiveBoard.forEach(item => { %>
+                    <li style="margin-top: 0; margin-bottom: 0;"><%= item.year %>: <% if (item.role === 'president' || item.role === 'vicepresident' || item.role === 'secretary' || item.role === 'treasurer') { %><%= __(`profile.role.${item.role}`) %><% } else { %><%= __(`admin.directiveBoard.roles.${item.role}`) %><% } %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+    </div>
+</div>
+
+<%- include("partials/footer") %>

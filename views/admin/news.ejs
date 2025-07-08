@@ -1,0 +1,100 @@
+<%- include("../partials/header", { title: __("admin.news.title", { name: news.title.es }) }) %>
+<meta name="_csrf" value="<%= csrfToken %>">
+
+<div class="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800">
+    <form id="profile-form" action="/admin/news" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div>
+            <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.news.urlSection") %></label>
+            <div class="flex items-center">
+                <span class="text-gray-500 dark:text-gray-400">
+                    <%= baseURL %>/
+                </span>
+                <input type="text" id="url" name="url" value="<%= news.url %>" onkeyup="showUnsavedChangesMessage()" onchange="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.news.titleSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="title-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <input id="title-<%= language %>" name="title[<%= language %>]" value="<%= news.title[language] %>" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeydown="showUnsavedChangesMessage()">
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.news.descriptionSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="description-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <textarea id="description-<%= language %>" name="description[<%= language %>]" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeyup="updatePreview('<%= language %>')"><%= news.description[language] %></textarea>
+                        <div id="preview-<%= language %>" class="text-gray-600 dark:text-gray-400 text-md mx-2 text-justify prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+                            <%- news.description[language] || "" %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0 items-center">
+            <button id="submit-news" type="submit" class="border bg-green-500 hover:bg-green-600 border-green-600 hover:border-green-700 transition duration-150 text-white px-4 py-2 rounded-md w-full sm:w-min cursor-pointer" disabled><%= __("admin.news.submit") %></button>
+            <div id="unsaved-changes" class="hidden text-gray-500 dark:text-gray-400"><%= __("admin.news.unsavedChanges") %></div>
+        </div>
+    </form>
+
+    <a href="/admin" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.news.back") %></a>
+</div>
+
+<%- include("../partials/footer") %>
+
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("value");
+
+    async function updatePreview(language, changed=true) {
+        const textarea = document.getElementById(`description-${language}`);
+        const md = textarea.value.trim();
+
+        if (!md) {
+            document.getElementById(`preview-${language}`).innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/mdParse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ md })
+            });
+
+            if (!response.ok) throw new Error('Failed to parse markdown');
+
+            const result = await response.json();
+            document.getElementById(`preview-${language}`).innerHTML = result.md;
+            if (changed) showUnsavedChangesMessage();
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+        }
+    }
+
+    function showUnsavedChangesMessage() {
+        document.getElementById("unsaved-changes").classList.remove("hidden");
+        document.getElementById("submit-news").disabled = false;
+    }
+
+    "<%= SUPPORTED_LANGUAGES %>".split(",").forEach((lang) => updatePreview(lang, false));
+</script>

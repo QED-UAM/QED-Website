@@ -1,0 +1,314 @@
+<%- include("partials/header", { title: __("index.title") }) %>
+</div>
+
+<div id="title" class="absolute top-0 left-0 w-full pointer-events-none">
+    <div class="relative w-full h-min overflow-hidden">
+        <div id="qed-logo-animation" class="absolute top-0 left-0 w-full h-full -z-10 blur-[1px] bg-gray-100 dark:bg-gray-700"></div>
+        
+        <div class="mx-6 mt-24 pb-12">
+            <div class="flex flex-col mx-auto w-fit items-center justify-center relative z-10">
+                <img id="qed-logo" src="/images/qed-title-animated.svg" alt="QED UAM" class="dark:invert max-w-[50%] animatedQEDSvg" onerror="this.onerror=null;this.src='/images/qed.svg'">
+                <h2 id="qed-logo-subtitle" class="mt-4 text-xl text-center sm:text-3xl font-semibold transition-opacity duration-700 ease-in-out"><%= __("index.logoSubtitle") %></h2>
+                <script>
+                    if ((document.referrer && document.referrer.startsWith(window.location.origin)) || performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+                        document.getElementById("qed-logo").setAttribute("src", "/images/qed.svg");
+                    } else {
+                        const subtitle = document.getElementById("qed-logo-subtitle");
+                        subtitle.classList.add("opacity-0");
+                        setTimeout(() => subtitle.classList.remove("opacity-0"), 1000);
+                    }
+                </script>
+            </div>
+        </div>
+
+        <div class="absolute -bottom-[1px] w-full">
+            <svg class="fill-current text-gray-100 dark:text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 150 1080 50">
+                <path d="M 0 200 C 540 185 540 185 1080 200"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="py-6 relative">
+    <script>
+        (() => {
+            moveContent = () => document.getElementById("main-content").style.marginTop = document.getElementById("title").clientHeight - 48 - document.getElementById("navbar").clientHeight + "px";
+            moveContent();
+            window.addEventListener("resize", moveContent)
+            document.addEventListener("DOMContentLoaded", moveContent)
+        })();
+    </script>
+
+    <% if (news) { %>
+        <div class="flex justify-center items-center relative w-full h-full">
+            <div class="flex flex-col max-w-3xl justify-center items-center text-center px-8 pt-6">
+                <% news.noTranslation = !news.noTranslation; %>
+                <h2 class="text-center flex items-center space-x-2 mb-2 text-2xl sm:text-4xl font-bold <%= news.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" <%- news.noTranslation ? `title="${__('index.noTranslation')}"` : '' %>>
+                    <% if (news.noTranslation) { %>
+                        <%- include("partials/components/icons/translate", { size: 8 }) %>
+                    <% } %>
+                    <p><%= news.title %></p>
+                </h2>
+                <div class="text-md sm:text-lg text-black dark:text-white mb-6 mt-4 relative prose dark:prose-invert break-words prose-custom"><%- news.description %></div>
+                <% if (news.url) { %>
+                    <a href="/<%= news.url %>" class="inline-block w-fit px-6 py-3 mb-6 text-lg rounded-md shadow-sm font-semibold relative text-white hover:bg-blue-700 dark:hover:bg-blue-300 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 bg-blue-500 transition-colors">
+                        <%= __("index.knowMore") %>
+                    </a>
+                <% } %>
+            </div>
+        </div>
+        <hr class="mt-6 mx-8 mb-12 border-gray-300 dark:border-gray-600 border-2 rounded-sm">
+    <% } %>
+
+    <div class="space-y-8">
+        <div class="flex flex-col sm:flex-row relative justify-evenly min-h-96 px-8 sm:space-x-8">
+            <div class="flex flex-1 flex-col justify-center max-w-3xl relative text-center items-center sm:items-start sm:text-justify z-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-200 mb-2 z-20 relative"><%= __("index.magazineTitle") %></h2>
+                <p class="text-md sm:text-lg text-black dark:text-white mb-6 z-20 relative"><%= __("index.magazineDesc") %></p>
+                <a href="/<%= __('magazine.index.url') %>" class="inline-block w-fit px-6 py-3 text-lg rounded-md shadow-sm font-semibold z-20 relative text-white hover:bg-blue-700 dark:hover:bg-blue-300 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 bg-blue-500 transition-colors">
+                    <%= __("index.knowMore") %>
+                </a>
+            </div>
+            <canvas class="flex-1 w-full bg-gray-200 dark:bg-gray-600 hidden sm:block rounded-2xl"></canvas>
+        </div>
+
+        <div class="flex flex-col sm:flex-row relative justify-evenly min-h-96 px-8 sm:space-x-8">
+            <canvas class="flex-1 w-full bg-gray-200 dark:bg-gray-600 hidden sm:block rounded-2xl"></canvas>
+            <div class="flex flex-1 flex-col justify-center max-w-3xl relative text-center items-center sm:items-start sm:text-justify z-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-200 mb-2 z-20 relative"><%= __("index.tournamentsTitle") %></h2>
+                <p class="text-md sm:text-lg text-black dark:text-white mb-6 z-20 relative"><%= __("index.tournamentsDesc") %></p>
+                <a href="/TODO" class="inline-block w-fit px-6 py-3 text-lg rounded-md shadow-sm font-semibold z-20 relative text-white hover:bg-blue-700 dark:hover:bg-blue-300 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 bg-blue-500 transition-colors">
+                    <%= __("index.knowMore") %>
+                </a>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row relative justify-evenly min-h-96 px-8 sm:space-x-8">
+            <div class="flex flex-1 flex-col justify-center max-w-3xl relative text-center items-center sm:items-start sm:text-justify z-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-200 mb-2 z-20 relative"><%= __("index.gymkhanaTitle") %></h2>
+                <p class="text-md sm:text-lg text-black dark:text-white mb-6 z-20 relative"><%= __("index.gymkhanaDesc") %></p>
+                <a href="/TODO" class="inline-block w-fit px-6 py-3 text-lg rounded-md shadow-sm font-semibold z-20 relative text-white hover:bg-blue-700 dark:hover:bg-blue-300 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 bg-blue-500 transition-colors">
+                    <%= __("index.knowMore") %>
+                </a>
+            </div>
+            <canvas class="flex-1 w-full bg-gray-200 dark:bg-gray-600 hidden sm:block rounded-2xl"></canvas>
+        </div>
+
+        <div class="flex flex-col sm:flex-row relative justify-evenly min-h-96 px-8 sm:space-x-8">
+            <canvas class="flex-1 w-full bg-gray-200 dark:bg-gray-600 hidden sm:block rounded-2xl"></canvas>
+            <div class="flex flex-1 flex-col justify-center max-w-3xl relative text-center items-center sm:items-start sm:text-justify z-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-200 mb-2 z-20 relative"><%= __("index.escapeTitle") %></h2>
+                <p class="text-md sm:text-lg text-black dark:text-white mb-6 z-20 relative"><%= __("index.escapeDesc") %></p>
+                <a href="/TODO" class="inline-block w-fit px-6 py-3 text-lg rounded-md shadow-sm font-semibold z-20 relative text-white hover:bg-blue-700 dark:hover:bg-blue-300 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 bg-blue-500 transition-colors">
+                    <%= __("index.knowMore") %>
+                </a>
+            </div>
+        </div>
+    </div>
+
+<%- include("partials/footer") %>
+
+<script type="x-shader/x-vertex" id="vertexshader">
+    attribute float scale;
+
+    void main() {
+        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_PointSize = scale * ( 150.0 / -mvPosition.z );
+        gl_Position = projectionMatrix * mvPosition;
+    }
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentshader">
+    uniform vec3 colorTop;
+    uniform vec3 colorBottom;
+
+    void main() {
+        float gradientFactor = gl_FragCoord.y / 800.0;
+        vec3 gradientColor = mix(colorBottom, colorTop, gradientFactor);
+
+        if ( length( gl_PointCoord - vec2( 0.5, 0.5 ) ) > 0.475 ) discard;
+
+        gl_FragColor = vec4( gradientColor, 1.0 );
+    }
+</script>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.1/three.module.min.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.1/three.module.min.js";
+
+    (() => {
+        const ALLOW_MOUSE_MOVEMENT = false;
+
+        const SEPARATION = 100, AMOUNTX = 100, AMOUNTY = 50, HEIGHT_MULTIPLIER = 15, XO = -100 + 100 * ALLOW_MOUSE_MOVEMENT, YO = 400, ZO = 2050 - 50 * ALLOW_MOUSE_MOVEMENT;
+
+        const lightModeColors = {
+            colorTop: new THREE.Color(0.117647059, 0.22745098, 0.541176471),
+            colorBottom: new THREE.Color(1.0, 0.792156863, 0.792156863),
+            backgroundColor: new THREE.Color(0xc6c7d7)
+        };
+
+        const darkModeColors = {
+            colorTop: new THREE.Color(0.749019608, 0.858823529, 1.0),
+            colorBottom: new THREE.Color(0.5, 0.11372549, 0.11372549),
+            backgroundColor: new THREE.Color(0x28313b)
+        };
+
+
+        let container;
+        let camera, scene, renderer;
+        let particles, count = 0;
+
+        let targetX = XO, targetY = ZO;
+
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        init();
+
+        function init() {
+            container = document.createElement("div");
+            container.style.position = "absolute";
+            container.style.top = "0";
+            container.style.left = "0";
+            container.style.width = "100%";
+            container.style.height = "100%";
+            container.style.zIndex = "-10";
+            document.getElementById("qed-logo-animation").appendChild( container );
+
+            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+            camera.position.x = XO;
+            camera.position.y = YO;
+            camera.position.z = ZO;
+            camera.lookAt(0, 100, 1750);
+
+            scene = new THREE.Scene();
+
+            const isDarkMode = document.documentElement.classList.contains("dark");
+            const colors = isDarkMode ? darkModeColors : lightModeColors;
+            scene.background = colors.backgroundColor;
+
+            renderer = new THREE.WebGLRenderer( { antialias: true } );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setAnimationLoop( animate );
+            container.appendChild( renderer.domElement );
+            renderer.render( scene, camera );
+
+            const numParticles = AMOUNTX * AMOUNTY;
+            const positions = new Float32Array( numParticles * 3 );
+            const scales = new Float32Array( numParticles );
+            let i = 0, j = 0;
+            for ( let ix = 0; ix < AMOUNTX; ix ++ ) {
+                for ( let iy = 0; iy < AMOUNTY; iy ++ ) {
+                    positions[ i ] = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 ); // x
+                    positions[ i + 1 ] = 0; // y
+                    positions[ i + 2 ] = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 ); // z
+                    scales[ j ] = 1;
+                    i += 3;
+                    j ++;
+                }
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute( "position", new THREE.BufferAttribute( positions, 3 ) );
+            geometry.setAttribute( "scale", new THREE.BufferAttribute( scales, 1 ) );
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    colorTop: { value: colors.colorTop },
+                    colorBottom: { value: colors.colorBottom }
+                },
+                vertexShader: document.getElementById("vertexshader").textContent,
+                fragmentShader: document.getElementById("fragmentshader").textContent
+            });
+
+            particles = new THREE.Points( geometry, material );
+            scene.add( particles );
+
+            container.style.touchAction = "none";
+            if (ALLOW_MOUSE_MOVEMENT) document.addEventListener( "pointermove", onPointerMove );
+
+            window.addEventListener("resize", onWindowResize );
+
+            window.addEventListener("on-theme-change", function(event) {
+                const isDarkMode = event.detail === "dark";
+                const colors = isDarkMode ? darkModeColors : lightModeColors;
+                scene.background = colors.backgroundColor;
+
+                material.uniforms.colorTop.value = colors.colorTop;
+                material.uniforms.colorBottom.value = colors.colorBottom;
+            });
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            particles.geometry.attributes.scale.array = particles.geometry.attributes.scale.array.map(scale => {
+                return scale * (window.innerHeight / 800);
+            });
+            particles.geometry.attributes.scale.needsUpdate = true;
+        }
+
+        function onPointerMove( event ) {
+            if ( event.isPrimary === false ) return;
+
+            targetX = XO + Math.max(-100, Math.min((event.clientX - windowHalfX) * 0.5, 100));
+            targetY = ZO + Math.max(-100, Math.min((event.clientY - windowHalfY) * 0.5, 50));
+            console.log(targetX, targetY)
+        }
+
+        function animate() {
+            render();
+        }
+
+        function render() {
+            if (ALLOW_MOUSE_MOVEMENT) {
+                camera.position.x += (targetX - camera.position.x) * 0.05;
+                camera.position.z += (targetY - camera.position.z) * 0.05;
+                camera.lookAt(0, 100, 1750);
+            }
+
+            const positions = particles.geometry.attributes.position.array;
+            const scales = particles.geometry.attributes.scale.array;
+
+            let i = 0, j = 0;
+
+            for ( let ix = 0; ix < AMOUNTX; ix ++ ) {
+
+                for ( let iy = 0; iy < AMOUNTY; iy ++ ) {
+
+                    positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * HEIGHT_MULTIPLIER ) +
+                                    ( Math.sin( ( iy + count ) * 0.5 ) * HEIGHT_MULTIPLIER );
+
+                    scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * HEIGHT_MULTIPLIER +
+                                    ( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * HEIGHT_MULTIPLIER;
+
+                    i += 3;
+                    j ++;
+
+                }
+
+            }
+
+            particles.geometry.attributes.position.needsUpdate = true;
+            particles.geometry.attributes.scale.needsUpdate = true;
+            renderer.render( scene, camera );
+
+            count += 0.025; // Wave speed
+        }
+    })();
+</script>

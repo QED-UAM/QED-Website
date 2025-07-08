@@ -1,0 +1,482 @@
+<%- include("../partials/header", { title: __("admin.posts.post.title", { name: post.title.es }) }) %>
+<meta name="_csrf" value="<%= csrfToken %>">
+
+<!-- Views: <%= post.views %> -->
+
+<div class="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800">
+    <form id="profile-form" action="/admin/posts/<%= post.url %>" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <!-- URL Section -->
+        <div>
+            <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.urlSection") %></label>
+            <div class="flex items-center">
+                <span class="text-gray-500 dark:text-gray-400">
+                    <%= baseURL %>/<%= __("magazine.index.url") %>/<%= __("magazine.post.url") %>/
+                </span>
+                <input type="text" id="url" name="url" value="<%= post.url %>" onkeyup="validateURL(this)" onchange="validateURL(this)" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" required>
+            </div>
+            <div id="url-error" class="text-red-500 mt-2 hidden"><%= __("admin.posts.post.errors.url") %></div>
+            <input id="url-error-checkbox" type="checkbox" class="hidden" checked required>
+        </div>
+
+        <!-- Title Section -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.titleSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="title-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <input id="title-<%= language %>" name="title[<%= language %>]" value="<%= post.title[language] %>" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeydown="showUnsavedChangesMessage()">
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Description Section -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.descriptionSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="description-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <textarea id="description-<%= language %>" name="description[<%= language %>]" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeydown="showUnsavedChangesMessage()"><%= post.description[language] %></textarea>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Scripts Section -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.scriptsSection") %></label>
+            <textarea id="scripts" name="scripts" class="mt-1 p-2 h-64 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeyup='"<%= SUPPORTED_LANGUAGES %>".split(",").forEach((lang) => updatePreview(lang))'><%= post.scripts %></textarea>
+        </div>
+
+        <!-- Content Section -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.contentSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="content-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <textarea id="content-<%= language %>" name="content[<%= language %>]" class="mt-1 p-2 h-64 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeyup="updatePreview('<%= language %>')"><%= post.content[language] %></textarea>
+                        <div class="w-full flex items-center justify-center">
+                            <div id="preview-<%= language %>" class="bg-gray-100 dark:bg-gray-700 max-w-2xl text-slate-700 dark:text-slate-100 text-md mx-2 p-8 rounded-lg text-justify prose dark:prose-invert mobile:prose-lg break-words prose-custom">
+                                <%- post.content[language] || "" %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div>
+            <label for="tags" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.tagsSection") %></label>
+            <div class="relative inline-block w-full">
+                <div id="tags-select-selected" class="bg-gray-100 border border-gray-300 p-2 w-full rounded-md cursor-pointer dark:bg-gray-600 dark:border-gray-500"><%= __("admin.posts.post.tags.select") %></div>
+                <div id="tags-select-items" class="absolute rounded-b-md bg-white border border-gray-300 border-t-0 w-full z-50 max-h-48 overflow-y-auto hidden dark:bg-gray-800 dark:border-gray-500 shadow-lg">
+                    <input type="text" id="tag-search" placeholder="<%= __('admin.posts.post.tags.search') %>" class="p-2 border-b bg-gray-100 border-gray-300 w-full dark:border-gray-500 dark:bg-gray-600 dark:text-white focus:outline-none">
+                    <% Object.keys(__("tags")).forEach((tag) => { %>
+                        <div data-value="<%= tag %>" class="p-2 cursor-pointer flex items-center"><%= __(`tags.${tag}`) %></div>
+                    <% }) %>
+                </div>
+            </div>
+            <div id="selected-tags" class="flex flex-wrap mt-2"></div>
+            <input type="hidden" name="tags" id="tags" value="<%= post.tags.join(',') %>">
+        </div>
+
+        <!-- Authors Section -->
+        <div>
+            <label for="authors" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.authorsSection") %></label>
+            <div class="relative inline-block w-full">
+                <div id="authors-select-selected" class="bg-gray-100 border border-gray-300 p-2 w-full rounded-md cursor-pointer dark:bg-gray-600 dark:border-gray-500"><%= __("admin.posts.post.authors.select") %></div>
+                <div id="authors-select-items" class="absolute rounded-b-md bg-white border border-gray-300 border-t-0 w-full z-50 max-h-48 overflow-y-auto hidden dark:bg-gray-800 dark:border-gray-500 shadow-lg">
+                    <input type="text" id="author-search" placeholder="<%= __('admin.posts.post.authors.search') %>" class="p-2 border-b bg-gray-100 border-gray-300 w-full dark:border-gray-500 dark:bg-gray-600 dark:text-white focus:outline-none">
+                    <% users.forEach(user => { %>
+                        <div data-value="<%= user._id %>" data-name="<%= user.name %>" class="p-2 cursor-pointer flex items-center">
+                            <img src="<%= user.photo %>" alt="<%= user.name %>" class="rounded-full mr-2 w-7 h-7 pointer-events-none" onerror="this.onerror=null;this.src='https://i.pinimg.com/736x/2c/f5/58/2cf558ab8c1f12b43f7326945672805e.jpg';">
+                            <%= user.name %>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+            <div id="selected-authors" class="flex flex-wrap mt-2"></div>
+            <input type="hidden" name="authors" id="authors" value='<%= JSON.stringify(post.authors) %>'>
+        </div>
+
+        <!-- Magazine Section -->
+        <div>
+            <label for="magazine_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.magazineSection") %></label>
+            <div class="relative inline-block w-full">
+                <div id="magazine-select-selected" class="bg-gray-100 border border-gray-300 p-2 w-full rounded-md cursor-pointer dark:bg-gray-600 dark:border-gray-500"><%= __("admin.posts.post.magazine.select") %></div>
+                <div id="magazine-select-items" class="absolute rounded-b-md bg-white border border-gray-300 border-t-0 w-full z-50 max-h-48 overflow-y-auto hidden dark:bg-gray-800 dark:border-gray-500 shadow-lg">
+                    <input type="text" id="magazine-search" placeholder="<%= __('admin.posts.post.magazine.search') %>" class="p-2 border-b bg-gray-100 border-gray-300 w-full dark:border-gray-500 dark:bg-gray-600 dark:text-white focus:outline-none">
+                    <div data-value="" class="p-2 cursor-pointer"><%= __("admin.posts.post.magazine.noMagazine") %></div>
+                    <% magazines.forEach(magazine => { %>
+                        <div data-value="<%= magazine._id %>" class="p-2 cursor-pointer"><%= magazine.title.es %></div>
+                    <% }) %>
+                </div>
+            </div>
+            <input type="hidden" name="magazine_id" id="magazine_id" value="<%= post.magazine_id %>">
+        </div>
+
+        <!-- Type Section -->
+        <div>
+            <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.posts.post.typeSection") %></label>
+            <select id="type" name="type" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white cursor-pointer" onchange="showUnsavedChangesMessage()">
+                <% Object.keys(__("postTypes")).forEach(type => { %>
+                    <option value="<%= type %>" <%= post.type === type ? 'selected' : '' %>><%= __(`postTypes.${type}`) %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0 items-center">
+            <button id="submit-post" type="submit" class="border bg-green-500 hover:bg-green-600 border-green-600 hover:border-green-700 transition duration-150 text-white px-4 py-2 rounded-md w-full sm:w-min cursor-pointer" disabled><%= __("admin.posts.post.submit") %></button>
+            <div id="unsaved-changes" class="hidden text-gray-500 dark:text-gray-400"><%= __("admin.posts.post.unsavedChanges") %></div>
+        </div>
+    </form>
+
+    <a href="/admin/<%= __('admin.posts.url') %>" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.posts.post.back") %></a>
+</div>
+
+<%- include("../partials/footer") %>
+
+<script src="/js/postInteractiveElements.js"></script>
+<script src="/js/postUtils.js"></script>
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("value");
+
+    async function updatePreview(language, changed=true) {
+        const textarea = document.getElementById(`content-${language}`);
+        const md = textarea.value.trim();
+
+        if (!md) {
+            document.getElementById(`preview-${language}`).innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/mdParse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ md })
+            });
+
+            if (!response.ok) throw new Error('Failed to parse markdown');
+
+            const result = await response.json();
+            document.getElementById(`preview-${language}`).innerHTML = result.md;
+            activateInteractiveElements([document.getElementById("scripts").value]);
+            document.querySelectorAll(".spoiler-overlay").forEach((overlay) => {
+                overlay.addEventListener("click", () => {
+                    overlay.classList.add("hide");
+                    setTimeout(() => overlay.remove(), 300);
+                });
+            });
+            if (changed) showUnsavedChangesMessage();
+            removeEmptyPTags();
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+        }
+    }
+
+    function validateURL(input) {
+        const checkbox = document.getElementById("url-error-checkbox");
+        const message = document.getElementById("url-error");
+
+        input.value = input.value.replace(/\s+/g, '-').replace(/-+/g, '-');
+
+        const urlPattern = /^[a-zA-Z0-9_-]{4,}$/;
+        if (!urlPattern.test(input.value.trim())) {
+            message.classList.remove("hidden");
+            checkbox.checked = false;
+            return;
+        }
+
+        message.classList.add("hidden");
+        checkbox.checked = true;
+        showUnsavedChangesMessage();
+    }
+
+
+    function showUnsavedChangesMessage() {
+        document.getElementById("unsaved-changes").classList.remove("hidden");
+        document.getElementById("submit-post").disabled = false;
+    }
+
+    "<%= SUPPORTED_LANGUAGES %>".split(",").forEach((lang) => updatePreview(lang, false));
+
+    // Tags Section
+    const tagsSelectSelected = document.getElementById("tags-select-selected");
+    const tagsSelectItems = document.getElementById("tags-select-items");
+    const selectedTagsContainer = document.getElementById("selected-tags");
+    const tagsInput = document.getElementById("tags");
+    const tagSearch = document.getElementById("tag-search");
+    const tags = <%- JSON.stringify(__("tags")) %>;
+
+    // Initialize selected tags
+    const initialTags = tagsInput.value.split(',');
+    tagsInput.value = "";
+    initialTags.forEach((tag) => {
+        if (tags[tag]) addTag(tag, false);
+    });
+
+    // Show/hide the dropdown
+    tagsSelectSelected.addEventListener("click", () => {
+        tagsSelectItems.classList.toggle("hidden");
+        if (tagsSelectItems.classList.contains("hidden")) tagsSelectSelected.classList.remove("rounded-b-none");
+        else tagsSelectSelected.classList.add("rounded-b-none");
+    });
+
+    // Add event listeners for dropdown items
+    tagsSelectItems.querySelectorAll("div").forEach((item) => {
+        item.addEventListener("click", function() {
+            addTag(this.getAttribute("data-value"));
+        });
+    });
+
+    // Add a tag
+    function addTag(tag, changed=true) {
+        if (!tagsInput.value.split(',').includes(tag)) {
+            const tagSpan = document.createElement("span");
+            tagSpan.className = "bg-gray-200 dark:bg-gray-700 dark:text-white p-1 m-1 rounded flex items-center";
+            tagSpan.textContent = tags[tag];
+            tagSpan.setAttribute("data-tag", tag)
+            const removeIcon = document.createElement("i");
+            removeIcon.innerHTML = "&times;";
+            removeIcon.className = "ml-2 cursor-pointer";
+            removeIcon.addEventListener("click", () => removeTag(tag));
+            tagSpan.appendChild(removeIcon);
+            selectedTagsContainer.appendChild(tagSpan);
+            tagsSelectItems.querySelector(`div[data-value="${tag}"]`).classList.add("hidden");
+
+            tagsInput.value = tagsInput.value ? tagsInput.value + ',' + tag : tag;
+            if (tagsSelectItems.classList.contains("hidden")) tagsSelectSelected.classList.remove("rounded-b-none");
+            else tagsSelectSelected.classList.add("rounded-b-none");
+            if (changed) showUnsavedChangesMessage();
+        }
+    }
+
+    // Remove a tag
+    function removeTag(tag) {
+        const tagsArray = tagsInput.value.split(',');
+        tagsInput.value = tagsArray.filter(t => t !== tag).join(',');
+        selectedTagsContainer.querySelector(`span[data-tag="${tag}"]`).remove();
+        tagsSelectItems.querySelector(`div[data-value="${tag}"]`).classList.remove("hidden");
+        if (tagsSelectItems.classList.contains("hidden")) tagsSelectSelected.classList.remove("rounded-b-none");
+        else tagsSelectSelected.classList.add("rounded-b-none");
+        showUnsavedChangesMessage();
+    }
+
+    // Filter tags based on search input
+    tagSearch.addEventListener("input", function() {
+        const searchTerm = this.value.toLowerCase();
+        tagsSelectItems.querySelectorAll("div").forEach(item => {
+            const tagText = item.innerText.toLowerCase();
+            item.style.display = tagText.includes(searchTerm) ? "" : "none";
+        });
+    });
+
+    // Authors Section
+    const authorsSelectSelected = document.getElementById("authors-select-selected");
+    const authorsSelectItems = document.getElementById("authors-select-items");
+    const selectedAuthorsContainer = document.getElementById("selected-authors");
+    const authorsInput = document.getElementById("authors");
+    const authorSearch = document.getElementById("author-search");
+    const roles = <%- JSON.stringify(__("roles")) %>;
+
+    // Initialize selected authors
+    const initialAuthors = JSON.parse(authorsInput.value);
+    const authorsList = [];
+    initialAuthors.forEach((author) => {
+        if (author.user_id) addAuthor(author.user_id, author.role, false);
+    });
+
+    // Show/hide the dropdown
+    authorsSelectSelected.addEventListener("click", () => {
+        authorsSelectItems.classList.toggle("hidden");
+        if (authorsSelectItems.classList.contains("hidden")) authorsSelectSelected.classList.remove("rounded-b-none");
+        else authorsSelectSelected.classList.add("rounded-b-none");
+    });
+
+    // Add event listeners for dropdown items
+    authorsSelectItems.querySelectorAll("div").forEach((item) => {
+        item.addEventListener("click", function() {
+            addAuthor(this.getAttribute("data-value"), "");
+        });
+    });
+
+    // Add an author
+    function addAuthor(userId, role, changed=true) {
+        if (!authorsList.map(a => a.user_id).includes(userId)) {
+            const authorData = {
+                user_id: userId,
+                role: role || Object.keys(roles)[0]
+            };
+            authorsList.push(authorData);
+            updateAuthorsInput();
+
+            const authorElement = document.createElement("span");
+            authorElement.className = "bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 m-1 rounded-md flex items-center";
+            authorElement.setAttribute("data-id", userId);
+            const user = authorsSelectItems.querySelector(`div[data-value="${userId}"]`);
+            user.classList.add("hidden");
+            const img = user.querySelector("img").cloneNode(true);
+            img.className = "rounded-full mr-2 w-6 h-6";
+            authorElement.appendChild(img);
+            authorElement.appendChild(document.createTextNode(user.getAttribute("data-name")));
+
+            const roleSelect = document.createElement("select");
+            roleSelect.className = "ml-2 p-1 border border-gray-300 rounded bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white cursor-pointer";
+            Object.keys(roles).forEach((role) => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.text = roles[role];
+                if (role === authorData.role) {
+                    option.selected = true;
+                }
+                roleSelect.appendChild(option);
+            });
+            roleSelect.addEventListener("change", function() {
+                authorData.role = this.value;
+                updateAuthorsInput();
+                showUnsavedChangesMessage();
+            });
+            authorElement.appendChild(roleSelect);
+            
+            const removeIcon = document.createElement("i");
+            removeIcon.innerHTML = "&times;";
+            removeIcon.className = "ml-2 cursor-pointer";
+            removeIcon.addEventListener("click", () => removeAuthor(userId));
+            authorElement.appendChild(removeIcon);
+            
+            selectedAuthorsContainer.appendChild(authorElement);
+            if (authorsSelectItems.classList.contains("hidden")) authorsSelectSelected.classList.remove("rounded-b-none");
+            else authorsSelectSelected.classList.add("rounded-b-none");
+            if (changed) showUnsavedChangesMessage();
+        }
+    }
+
+    // Remove an author
+    function removeAuthor(userId) {
+        const index = authorsList.findIndex(a => a.user_id === userId);
+        if (index > -1) {
+            authorsList.splice(index, 1);
+            updateAuthorsInput();
+            authorsSelectItems.querySelector(`div[data-value="${userId}"]`).classList.remove("hidden");
+            selectedAuthorsContainer.querySelector(`span[data-id="${userId}"]`).remove();
+            if (authorsSelectItems.classList.contains("hidden")) authorsSelectSelected.classList.remove("rounded-b-none");
+            else authorsSelectSelected.classList.add("rounded-b-none");
+            showUnsavedChangesMessage();
+        }
+    }
+
+    // Update hidden input value
+    function updateAuthorsInput() {
+        authorsInput.value = JSON.stringify(authorsList);
+    }
+
+    // Filter authors based on search input
+    authorSearch.addEventListener("input", function() {
+        const searchTerm = this.value.toLowerCase();
+        authorsSelectItems.querySelectorAll("div").forEach(item => {
+            const authorName = item.getAttribute("data-name").toLowerCase();
+            item.style.display = authorName.includes(searchTerm) ? "" : "none";
+        });
+    });
+
+    // Magazine Section
+    const magazineSelectSelected = document.getElementById("magazine-select-selected");
+    const magazineSelectItems = document.getElementById("magazine-select-items");
+    const magazineInput = document.getElementById("magazine_id");
+    const magazineSearch = document.getElementById("magazine-search");
+
+    // Initialize selected magazine
+    const selectedMagazine = magazineInput.value;
+    if (selectedMagazine) {
+        const selectedItem = magazineSelectItems.querySelector(`div[data-value="${selectedMagazine}"]`);
+        if (selectedItem) {
+            magazineSelectSelected.textContent = selectedItem.textContent;
+        }
+    }
+
+    // Show/hide the dropdown
+    magazineSelectSelected.addEventListener("click", () => {
+        magazineSelectItems.classList.toggle("hidden");
+        if (magazineSelectItems.classList.contains("hidden")) magazineSelectSelected.classList.remove("rounded-b-none");
+        else magazineSelectSelected.classList.add("rounded-b-none");
+    });
+
+    // Add event listeners for dropdown items
+    magazineSelectItems.querySelectorAll("div").forEach((item) => {
+        item.addEventListener("click", function() {
+            magazineInput.value = this.getAttribute("data-value");
+            magazineSelectSelected.textContent = this.getAttribute("data-value") ? this.textContent : "<%= __('admin.posts.post.magazine.select') %>";
+            magazineSelectItems.classList.add("hidden");
+            magazineSelectSelected.classList.remove("rounded-b-none");
+            showUnsavedChangesMessage();
+        });
+    });
+
+    // Filter magazines based on search input
+    magazineSearch.addEventListener("input", function() {
+        const searchTerm = this.value.toLowerCase();
+        magazineSelectItems.querySelectorAll("div").forEach(item => {
+            const magazineText = item.textContent.toLowerCase();
+            item.style.display = magazineText.includes(searchTerm) ? "" : "none";
+        });
+    });
+
+    // Close the dropdown if clicked outside
+    document.addEventListener("click", (event) => {
+        if (!tagsSelectSelected.contains(event.target) && !tagSearch.contains(event.target)) {
+            tagsSelectItems.classList.add("hidden");
+            if (tagsSelectItems.classList.contains("hidden")) tagsSelectSelected.classList.remove("rounded-b-none");
+            else tagsSelectSelected.classList.add("rounded-b-none");
+        }
+        if (!authorsSelectSelected.contains(event.target) && !authorSearch.contains(event.target)) {
+            authorsSelectItems.classList.add("hidden");
+            if (authorsSelectItems.classList.contains("hidden")) authorsSelectSelected.classList.remove("rounded-b-none");
+            else authorsSelectSelected.classList.add("rounded-b-none");
+        }
+
+        if (!magazineSelectSelected.contains(event.target) && !magazineSearch.contains(event.target)) {
+            magazineSelectItems.classList.add("hidden");
+            if (magazineSelectItems.classList.contains("hidden")) magazineSelectSelected.classList.remove("rounded-b-none");
+            else magazineSelectSelected.classList.add("rounded-b-none");
+        }
+    });
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            if (!tagsSelectItems.classList.contains("hidden")) {
+                tagsSelectItems.classList.add("hidden");
+                tagsSelectSelected.classList.remove("rounded-b-none");
+            }
+
+            if (!authorsSelectItems.classList.contains("hidden")) {
+                authorsSelectItems.classList.add("hidden");
+                authorsSelectSelected.classList.remove("rounded-b-none");
+            }
+
+            if (!magazineSelectItems.classList.contains("hidden")) {
+                magazineSelectItems.classList.add("hidden");
+                magazineSelectSelected.classList.remove("rounded-b-none");
+            }
+        }
+    });
+</script>

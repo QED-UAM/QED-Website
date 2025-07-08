@@ -1,0 +1,26 @@
+<%- include("partials/header", { title: __("about.title") }) %>
+
+<div class="flex flex-col space-y-12">
+    <div id="quienes-somos">
+        <h1 class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("about.aboutTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("about.aboutDesc", { magazineUrl: __("magazine.index.url") }) %>
+        </div>
+    </div>
+    
+    <div id="nombre">
+        <h1 class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("about.nameTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("about.nameDesc") %>
+        </div>
+    </div>
+    
+    <div id="junta">
+        <h1 class="text-center sm:text-left text-5xl sm:mx-4 sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%- __("about.boardTitle") %></h1>
+        <div class="mx-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- __("about.boardDesc") %>
+        </div>
+    </div>
+</div>
+
+<%- include("partials/footer") %>

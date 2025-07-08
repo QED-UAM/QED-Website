@@ -1,0 +1,323 @@
+{
+    "roles": {
+        "author": "Author",
+        "editor": "Editor",
+        "illustrator": "Illustrator",
+        "animator": "Web simulations"
+    },
+    "tags": {
+        "tag1": "TAG1",
+        "tag2": "TAG2"
+    },
+    "postTypes": {
+        "post": "(No category)",
+        "prose": "Operating in Prose",
+        "interview": "Talking with...",
+        "recreational": "Recreational Mathematics",
+        "literature": "Literature",
+        "news": "News",
+        "philosophy": "Maths + Philosophy",
+        "art": "Unveiling beauty (Maths + Art)",
+        "culture": "Culture"
+    },
+    "containers": {
+        "didyouknow": {
+            "es": {
+                "title": "¿Sabías que...?"
+            },
+            "en": {
+                "title": "Did you know...?"
+            }
+        },
+        "tryit": {
+            "es": {
+                "title": "¡Inténtalo!"
+            },
+            "en": {
+                "title": "Try it!"
+            }
+        },
+        "solution": {
+            "es": {
+                "title": "Solución",
+                "click": "Haz click aquí para revelar la solución"
+            },
+            "en": {
+                "title": "Solution",
+                "click": "Click here to reveal the solution"
+            }
+        }
+    },
+    "footer": {
+        "webMadeBy": "Web created by <a href='/{{profileUrl}}/hector-tablero'><u>Héctor Tablero Díaz</u></a> and designed by <a href='/{{profileUrl}}/ana-xiu'><u>Ana Xiu Fernández</u></a>",
+        "copyright": "Copyright © {{year}} - QED"
+    },
+    "index": {
+        "title": "Home",
+        "logoSubtitle": "Mathematics Student Association",
+        "knowMore": "Know More",
+        "noTranslation": "The content is not available in English",
+        "magazineTitle": "QED Magazine",
+        "magazineDesc": "The main activity of the association is the creation from scratch of an informative magazine with mathematical content. This magazine is mainly made by students of the faculty, from the writing of articles to their corresponding correction, layout and illustration. It also has the support of the professors of the Department of Mathematics, who help in the correction of the same in terms of mathematical rigor.",
+        "tournamentsTitle": "Tournaments",
+        "tournamentsDesc": "Once or twice a term we organize mus and chess tournaments for all students who want to join. From QED we take care of reserving the space, getting the materials, making the tables and giving the prizes. They are usually very fun days, perfect for meeting and interacting with other students and making friends, as well as having a good time playing our favorite games.",
+        "gymkhanaTitle": "Gymkhana",
+        "gymkhanaDesc": "The QED gymkhana is an activity that we usually organize two or three times each year for high school students who come to visit the UAM. In it, students go through several stations with tests they have to solve in teams, such as sudokus, ciphers, a mathematical twister, taboo, etc. After a couple of hours, the team with the best performance is the winner.",
+        "escapeTitle": "Escape Rooms",
+        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room."
+    },
+    "profile": {
+        "title": "{{name}}",
+        "url": "profile",
+        "directiveBoardHistory": "Directive Board History",
+        "collaboratedArticles": "Articles they have collaborated on",
+        "role": {
+            "president": "President of QED",
+            "vicepresident": "Vicepresident of QED",
+            "secretary": "Secretary of QED",
+            "treasurer": "Treasurer of QED",
+            "member": "Directive Board Member"
+        }
+    },
+    "contact": {
+        "title": "Contact",
+        "url": "contact",
+        "ourSocialMedia": "Our Social Media",
+        "contactUs": "Send us a message!",
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "submit": "Send"
+    },
+    "about": {
+        "title": "About QED",
+        "url": "about",
+        "aboutTitle": "Who are we?",
+        "aboutDesc": "<strong>QED</strong> is an association that emerged as an initiative by the Mathematics students at the <strong>Autonomous University of Madrid</strong>. This association aims to bring mathematics closer to other students in the Faculty of Sciences through various activities.<br><br>The main activity is the publication of the <strong>QED Magazine</strong>, which includes popular science articles, pieces of mathematical history, puzzles, problems, and much more. To read the articles or learn more, you can visit the <a href='/{{magazineUrl}}'>Magazine</a> section.<br><br>Other examples of activities we have organized include university tournaments of <strong>Mus and Chess</strong>, the <strong>Mathematical Carnival</strong>, and we have even participated in camps organized by the Department of Mathematics at UAM.",
+        "nameTitle": "Meaning of our name",
+        "nameDesc": "<strong><em>Quod erat demonstrandum</em></strong>, abbreviated as <strong>QED</strong>, is a Latin phrase that means \"what was to be demonstrated.\" It originates from the Greek phrase ὅπερ ἔδει δεῖξαι (hóper édei deĩxai), which was used by various ancient mathematicians, including Euclid and Archimedes, at the end of mathematical proofs to indicate that they had reached the required result for the proof.<br><br>Nowadays, the use of the QED acronym is less common, and in most situations, it is replaced by symbols, such as the filled square ( ■ ).",
+        "boardTitle": "Board",
+        "boardDesc": "Our association is organized through <strong>assemblies</strong>, where any member of the association can voice their opinion and participate. Everyone has a say and a vote, and important decisions are made collectively. However, we need a leadership team to formally establish ourselves as a student association at UAM. This team consists of a <strong>president, vice president, secretary, treasurer, and multiple board members</strong>."
+    },
+    "magazine": {
+        "index": {
+            "title": "Magazine",
+            "url": "magazine",
+            "editions": "Editions",
+            "aboutTitle": "About the Magazine",
+            "aboutDesc": "As we've already mentioned, the magazine has different sections, each aimed at a different audience, so that everyone from those who don't study Mathematics to the most advanced students and professors can find an article to enjoy.<br><br>The <strong>popular science articles</strong> are intended for a more general audience, aiming to showcase the more entertaining sides of mathematics, whether by relating concepts to music, literature, or sports. Almost anything from daily life could inspire a new popular science article.<br><br>The <strong>scientific articles</strong> are aimed at students and professors of Mathematics, delving deeper into more complex concepts in this field. One of these articles might demonstrate the importance of a lesser-known theorem, while another might tackle a seemingly complex problem with a clever solution. The topics can be extremely varied, but all are more complex than those in the popular science section.<br><br>The magazine also includes <strong>interviews</strong>. These could be real interviews with important figures in current mathematics or fictional interviews with notable historical figures. Another interesting section is <strong>puzzles and problems</strong>. Here you'll find problems proposed by students and professors, guaranteed to provide some entertainment and a great sense of satisfaction when solved!",
+            "collaborateTitle": "Want to collaborate?",
+            "collaborateDesc": "After each issue, it's time to gather articles for future editions again. If you want more detailed information on article submission deadlines, write to us at our email! You don't need to be a Mathematics student, or even a student at all, to send us your proposal and see it published. We look forward to hearing from you!<br><br>You can participate in this project by <strong>editing, illustrating, or designing</strong>. You can check what each team is responsible for <a href='#commissions'>here</a>.<br><br>We would be delighted to have you for future publications!",
+            "commissionsTitle": "Committees",
+            "commissionsDesc": "The magazine is entirely produced by <strong>students</strong>, both from Mathematics and other fields. To manage the large amount of work involved in the entire process, we divide into <strong>committees</strong>.<br><br>If after reading the summary of a committee you feel like participating in the association, <strong>write to us</strong> through the form on the <a href='/{{contactUrl}}'>Contact</a> page or through any of our social media channels.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Content Committee</h2>The <strong>Content Committee</strong> is responsible for creating the magazine's material, contributing original material or compiling what we receive by email. They also organize and discuss which articles will be published in each edition, striving to publish high-quality articles while maintaining a balance between popular science and scientific content.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Editing Committee</h2>The <strong>Editing Committee</strong> is the next link in the production chain. This committee receives all the content selected in the previous phase. Their job is to review the articles, interviews, and problems to maintain a consistent style, avoid errors, and address any potential issues in the text. Additionally, this committee is responsible for contacting the various volunteer professors from the Mathematics department to ensure mathematical rigor in all articles.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Layout Committee</h2>The <strong>Layout Committee</strong> organizes the corrected articles within the magazine. They choose the order in which the articles will appear, design a cover for the most important ones, and generally ensure that each article is visually appealing. They work closely with the <strong>Illustration Committee</strong>, who provide the cover and most of the images included in the articles.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Illustration Committee</h2>Finally, we have the <strong>Illustration Committee</strong>, which is responsible for finding or creating appropriate images for the articles. They also design the posters we post on social media to announce various events.",
+            "noTranslation": "The content is not available in English"
+        },
+        "issue": {
+            "title": "{{name}}",
+            "noTranslation": "The content is not available in English"
+        },
+        "post": {
+            "title": "{{name}}",
+            "url": "article",
+            "noTranslation": "This post is not available in English"
+        }
+    },
+    "activities": {
+        "index": {
+            "title": "Activities",
+            "url": "activities",
+            "section": "Activities"
+        },
+        "activity": {
+            "title": "{{name}}",
+            "noTranslation": "The content is not available in English",
+            "backToActivities": "Back to Activities",
+            "postedAt": "Posted on {{date}}",
+            "latestTitle": "Latest Activities"
+        }
+    },
+    "errors": {
+        "404": {
+            "title": "Error 404",
+            "desc": "Oops. It seems like this page doesn't exist."
+        },
+        "500": {
+            "title": "Error 500",
+            "desc": "It seems like we had an error. Try to refresh or return to the home page."
+        }
+    },
+    "admin": {
+        "index": {
+            "title": "Admin Panel",
+            "section": "Admin Panel"
+        },
+        "accounts": {
+            "title": "Account Management",
+            "url": "accounts",
+            "adminAccounts": "Admin Accounts",
+            "delete": "Delete",
+            "you": "You",
+            "addEmail": "Add Email",
+            "addEmailDesc": "Add a new admin email",
+            "submit": "Save",
+            "enterValidAddress": "Invalid email address",
+            "unsavedChanges": "You have unsaved changes",
+            "back": "Back"
+        },
+        "activities": {
+            "title": "Activity Management",
+            "url": "activities",
+            "activitiesSection": "Activity Management",
+            "delete": "Delete",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "edit": "Edit",
+            "new": "New activity",
+            "back": "Back",
+            "activity": {
+                "title": "Edit Activity - {{name}}",
+                "urlSection": "URL",
+                "titleSection": "Title",
+                "descriptionSection": "Description",
+                "photoSection": "Cover",
+                "scriptsSection": "Scripts",
+                "contentSection": "Content",
+                "submit": "Save",
+                "unsavedChanges": "You have unsaved changes",
+                "errors": {
+                    "url": "The URL must be longer than 3 characters and contain only letters, numbers, underscores, and hyphens."
+                },
+                "back": "Back"
+            }
+        },
+        "magazines": {
+            "title": "Magazine Management",
+            "url": "magazines",
+            "magazinesSection": "Magazines",
+            "delete": "Delete",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "edit": "Edit",
+            "new": "New Magazine",
+            "back": "Back",
+            "magazine": {
+                "title": "Edit Magazine - {{name}}",
+                "urlSection": "URL",
+                "coverSection": "Cover",
+                "submit": "Save",
+                "unsavedChanges": "You have unsaved changes",
+                "titleSection": "Title",
+                "descriptionSection": "Description",
+                "visibleSection": "Visibility for readers",
+                "visible": "Visible",
+                "hidden": "Hidden",
+                "errors": {
+                    "url": "The URL must be longer than 3 characters and contain only letters, numbers, underscores, and hyphens."
+                },
+                "back": "Back"
+            }
+        },
+        "posts": {
+            "title": "Article Management",
+            "url": "articles",
+            "postsSection": "Articles",
+            "delete": "Delete",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "edit": "Edit",
+            "new": "New Article",
+            "back": "Back",
+            "noMagazine": "Articles without magazine",
+            "post": {
+                "title": "Edit Article - {{name}}",
+                "urlSection": "URL",
+                "titleSection": "Title",
+                "descriptionSection": "Description",
+                "scriptsSection": "Scripts",
+                "contentSection": "Content",
+                "tagsSection": "Tags",
+                "tags": {
+                    "select": "Select tags",
+                    "search": "Search tags..."
+                },
+                "authorsSection": "Authors",
+                "authors": {
+                    "select": "Select authors",
+                    "search": "Search authors..."
+                },
+                "magazineSection": "Magazine",
+                "magazine": {
+                    "select": "Select magazine",
+                    "search": "Search magazines...",
+                    "noMagazine": "(No magazine)"
+                },
+                "typeSection": "Article type",
+                "submit": "Save",
+                "unsavedChanges": "You have unsaved changes",
+                "errors": {
+                    "url": "The URL must be longer than 3 characters and contain only letters, numbers, underscores, and hyphens."
+                },
+                "back": "Back"
+            }
+        },
+        "profiles": {
+            "title": "User Management",
+            "url": "profiles",
+            "userProfiles": "User Profiles",
+            "delete": "Delete",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "edit": "Edit",
+            "new": "New Profile",
+            "back": "Back",
+            "profile": {
+                "title": "Edit Profile - {{name}}",
+                "urlSection": "URL",
+                "socialMediaSection": "Social Media",
+                "socialMedia": {
+                    "email": "Email",
+                    "instagram": "Instagram",
+                    "x": "X (Twitter)",
+                    "linkedin": "LinkedIn"
+                },
+                "aboutSection": "Bio",
+                "submit": "Save",
+                "unsavedChanges": "You have unsaved changes",
+                "personalDataSection": "Personal Data",
+                "personalData": {
+                    "name": "Name",
+                    "photo": "Photo"
+                },
+                "errors": {
+                    "url": "The URL must be longer than 3 characters and contain only letters, numbers, underscores, and hyphens.",
+                    "email": "Invalid email address format"
+                },
+                "addYear": "Add Year",
+                "directiveBoard": "Directive Board",
+                "remove": "Remove",
+                "back": "Back"
+            }
+        },
+        "news": {
+            "url": "news",
+            "title": "Edit News",
+            "urlSection": "Redirect URL",
+            "submit": "Save",
+            "unsavedChanges": "You have unsaved changes",
+            "titleSection": "Title",
+            "descriptionSection": "Description",
+            "back": "Back"
+        },
+        "directiveBoard": {
+            "year": "Year",
+            "role": "Role",
+            "roles": {
+                "president": "President",
+                "vicepresident": "Vicepresident",
+                "secretary": "Secretary",
+                "treasurer": "Treasurer",
+                "member": "Member"
+            }
+        }
+    }
+}

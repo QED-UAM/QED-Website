@@ -1,0 +1,24 @@
+<%- include("../partials/header", { title: __("admin.index.title") }) %>
+
+<h1 class="text-center sm:text-left text-5xl mx-4 sm:text-6xl font-bold text-emerald-900 dark:text-emerald-200 mb-4"><%= __("admin.index.section") %></h1>
+
+<div class="mx-4">
+    <a href="/admin/<%= __('admin.accounts.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.accounts.title") %></a>
+    <br>
+    <br>
+    <a href="/admin/<%= __('admin.profiles.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.profiles.title") %></a>
+    <br>
+    <br>
+    <a href="/admin/<%= __('admin.magazines.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.magazines.title") %></a>
+    <br>
+    <br>
+    <a href="/admin/<%= __('admin.posts.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.posts.title") %></a>
+    <br>
+    <br>
+    <a href="/admin/<%= __('admin.activities.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.activities.title") %></a>
+    <br>
+    <br>
+    <a href="/admin/<%= __('admin.news.url') %>" class="underline text-emerald-800 dark:text-emerald-300 text-2xl sm:text-3xl font-semibold"><%= __("admin.news.title") %></a>
+</div>
+
+<%- include("../partials/footer") %>

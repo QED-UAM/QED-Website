@@ -1,0 +1,106 @@
+<%- include("../partials/header", { title: __("admin.accounts.title") }) %>
+
+<h1 class="text-center sm:text-left text-5xl mx-4 sm:text-6xl font-bold text-emerald-900 dark:text-emerald-200 mb-4"><%= __("admin.accounts.adminAccounts") %></h1>
+
+<form id="main-form" action="/admin/accounts" method="POST" class="max-w-xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800 w-4/5">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <%
+        let qed = { email: QED_EMAIL }
+
+        for (let i = 0; i < admins.length; i++) {
+            if (admins[i].email === QED_EMAIL) {
+                qed = admins[i];
+                admins.splice(i, 1);
+            }
+        }
+    %>
+
+    <ul id="admin-list" class="space-y-4">
+        <li class="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 p-4 bg-gray-200 rounded-md dark:bg-gray-700">
+            <div class="flex gap-4">
+                <img src="<%= qed.photo %>" alt="Profile Picture" class="w-12 h-12 rounded-full pointer-events-none" onerror="this.onerror=null;this.src='https://i.pinimg.com/736x/2c/f5/58/2cf558ab8c1f12b43f7326945672805e.jpg';">
+                <div class="flex flex-col">
+                    <span class="font-bold text-black dark:text-white"><%= (user === QED_EMAIL ? `(${__("admin.accounts.you")}) ` : "") + (qed.name || qed.email) %></span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"><%= qed.name ? qed.email : "" %></span>
+                </div>
+            </div>
+        </li>
+        <% admins.forEach(admin => { %>
+            <li class="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 p-4 bg-gray-200 rounded-md dark:bg-gray-700">
+                <div class="flex gap-4">
+                    <img src="<%= admin.photo %>" alt="Profile Picture" class="w-12 h-12 rounded-full pointer-events-none" onerror="this.onerror=null;this.src='https://i.pinimg.com/736x/2c/f5/58/2cf558ab8c1f12b43f7326945672805e.jpg';">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-black dark:text-white"><%= (user === admin.email ? `(${__("admin.accounts.you")}) ` : "") + (admin.name || admin.email) %></span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400"><%= admin.name ? admin.email : "" %></span>
+                    </div>
+                </div>
+                <button type="button" onclick="deleteEmail(this)" class="w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.accounts.delete") %></button>
+                <input type="hidden" name="admins[]" value="<%= admin.email %>">
+            </li>
+        <% }) %>
+    </ul>
+
+    <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+        <input id="new-email" placeholder="<%= __('admin.accounts.addEmailDesc') %>" class="flex-grow p-2 border border-gray-300 dark:border-gray-500 rounded-md dark:bg-gray-600 dark:text-white">
+        <button type="button" onclick="addEmail()" class="border bg-blue-500 hover:bg-blue-600 border-blue-600 hover:border-blue-700 transition duration-150 text-white px-4 py-2 rounded-md"><%= __("admin.accounts.addEmail") %></button>
+    </div>
+
+    <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0 items-center">
+        <button id="submit-admins" type="submit" class="border bg-green-500 hover:bg-green-600 border-green-600 hover:border-green-700 transition duration-150 text-white px-4 py-2 rounded-md w-full sm:w-min cursor-pointer" disabled><%= __("admin.accounts.submit") %></button>
+        <div id="unsaved-changes" class="hidden text-gray-500 dark:text-gray-400"><%= __("admin.accounts.unsavedChanges") %></div>
+    </div>
+
+    <a href="/admin" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.accounts.back") %></a>
+</form>
+
+<%- include("../partials/footer") %>
+
+<script>
+    document.getElementById("new-email").addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addEmail();
+        }
+    });
+
+    function addEmail() {
+        const emailInput = document.getElementById("new-email");
+        const email = emailInput.value.trim();
+        if (!email) return;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("<%= __('admin.accounts.enterValidAddress') %>");
+            return;
+        }
+
+        const ul = document.getElementById("admin-list");
+        const li = document.createElement("li");
+        li.className = "flex flex-col sm:flex-row items-center sm:space-x-4 space-y-2 sm:space-y-0 p-4 bg-gray-200 rounded-md dark:bg-gray-700";
+        li.innerHTML = `
+            <div class="flex gap-4">
+                <img src="https://i.pinimg.com/736x/2c/f5/58/2cf558ab8c1f12b43f7326945672805e.jpg" alt="Profile Picture" class="w-12 h-12 rounded-full pointer-events-none">
+                <div class="flex flex-col">
+                    <span class="font-bold text-black dark:text-white">${email}</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"></span>
+                </div>
+            </div>
+            <button type="button" onclick="deleteEmail(this)" class="w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-1 rounded-md"><%= __("admin.accounts.delete") %></button>
+            <input type="hidden" name="admins[]" value="${email}">
+        `;
+        ul.appendChild(li);
+        emailInput.value = '';
+        showUnsavedChangesMessage();
+    }
+
+    function deleteEmail(button) {
+        button.parentElement.remove();
+        showUnsavedChangesMessage();
+    }
+
+    function showUnsavedChangesMessage() {
+        document.getElementById("unsaved-changes").classList.remove("hidden");
+        document.getElementById("submit-admins").disabled = false;
+    }
+</script>

@@ -1,0 +1,16 @@
+<% try {
+    size = size || 6
+} catch (err) {
+    size = 6   
+} %>
+
+<div class="relative flex flex-col items-center">
+    <a href="https://linkedin.com/in/<%= user %>" target="_blank" rel="noopener noreferrer" class="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition duration-150">
+        <svg class="w-<%= size %> h-<%= size %>" fill="currentColor" viewBox="10 10 80 80" xmlns="http://www.w3.org/2000/svg">
+            <path d="M83.333,10H16.667C13.001,10,10,13.001,10,16.667v66.667C10,86.998,13.001,90,16.667,90h66.666C86.999,90,90,86.998,90,83.334V16.667C90,13.001,86.999,10,83.333,10z M83.333,83.334H16.667V16.667h66.666V83.334z"/>
+            <rect height="26.667" width="6.667" x="30" y="43.333"/>
+            <circle cx="33.333" cy="35" r="5"/>
+            <path d="M56.667,43.333c-2.441,0-4.701,0.705-6.667,1.849V43.61h-6.667V70H50V56.666C50,52.984,52.985,50,56.667,50s6.666,2.984,6.666,6.666V70H70V56.666C70,49.303,64.03,43.333,56.667,43.333z"/>
+        </svg>
+    </a>
+</div>

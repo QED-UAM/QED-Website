@@ -1,0 +1,333 @@
+<%- include("../partials/header", { title: __("admin.profiles.profile.title", { name: user.name }) }) %>
+<meta name="_csrf" value="<%= csrfToken %>">
+
+<div class="max-w-4xl mx-auto p-4 bg-white shadow-md rounded-md dark:bg-gray-800">
+    <form id="profile-form" action="/admin/profiles/<%= user.url %>" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div>
+            <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.profiles.profile.urlSection") %></label>
+            <div class="flex items-center">
+                <span class="text-gray-500 dark:text-gray-400">
+                    <%= baseURL %>/<%= __("profile.url") %>/
+                </span>
+                <input type="text" id="url" name="url" value="<%= user.url %>" onkeyup="validateURL(this)" onchange="validateURL(this)" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" required>
+            </div>
+            <div id="url-error" class="text-red-500 mt-2 hidden"><%= __("admin.profiles.profile.errors.url") %></div>
+            <input id="url-error-checkbox" type="checkbox" class="hidden" checked required>
+        </div>
+
+        <div>
+            <label for="general" class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.profiles.profile.personalDataSection") %></label>
+            <div>
+                <label for="name" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.personalData.name") %></label>
+                <input type="text" id="name" name="name" value="<%= user.name %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" required>
+            </div>
+            <div>
+                <label for="photo" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.personalData.photo") %></label>
+                <input type="text" id="photo" name="photo" value="<%= user.photo %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.profiles.profile.socialMediaSection") %></label>
+            <div class="space-y-2">
+                <div>
+                    <label for="socialMedia-email" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.socialMedia.email") %></label>
+                    <input type="text" id="socialMedia-email" name="socialMedia[email]" value="<%= user.socialMedia['email'] %>" onkeyup="validateEmail(this)" onchange="validateEmail(this)" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+                </div>
+                <div id="email-error" class="text-red-500 mt-2 hidden"><%= __("admin.profiles.profile.errors.email") %></div>
+                <input id="email-error-checkbox" type="checkbox" class="hidden" checked required>
+                <div>
+                    <label for="socialMedia-instagram" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.socialMedia.instagram") %></label>
+                    <div class="flex items-center">
+                        <span class="text-gray-500 dark:text-gray-400">
+                            @
+                        </span>
+                        <input type="text" id="socialMedia-instagram" name="socialMedia[instagram]" value="<%= user.socialMedia['instagram'] %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <label for="socialMedia-x" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.socialMedia.x") %></label>
+                    <div class="flex items-center">
+                        <span class="text-gray-500 dark:text-gray-400">
+                            @
+                        </span>
+                        <input type="text" id="socialMedia-x" name="socialMedia[x]" value="<%= user.socialMedia['x'] %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <label for="socialMedia-linkedin" class="block text-sm text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.socialMedia.linkedin") %></label>
+                    <input type="text" id="socialMedia-linkedin" name="socialMedia[linkedin]" value="<%= user.socialMedia['linkedin'] %>" onkeydown="showUnsavedChangesMessage()" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.profiles.profile.aboutSection") %></label>
+            <div class="space-y-2">
+                <% SUPPORTED_LANGUAGES.forEach(language => { %>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <label for="about-<%= language %>" class="block text-sm text-gray-500 dark:text-gray-400"><%= language.toUpperCase() %></label>
+                            <img class="h-4 w-4 pointer-events-none" src="https://hatscripts.github.io/circle-flags/flags/language/<%= language %>.svg" alt="<%= language.toUpperCase() %>">
+                        </div>
+                        <textarea id="about-<%= language %>" name="about[<%= language %>]" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onkeyup="updatePreview('<%= language %>')"><%= user.about[language] %></textarea>
+                        <div id="preview-<%= language %>" class="text-gray-600 dark:text-gray-400 text-md mx-2 text-justify prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+                            <%- user.about[language] || "" %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"><%= __("admin.profiles.profile.directiveBoard") %></label>
+            <div id="directive-board-container" class="space-y-2">
+                <% user.directiveBoard.forEach(item => { %>
+                    <div class="flex items-center space-x-2">
+                        <select name="directiveBoardYear" class="mt-1 p-2 border border-gray-300 rounded-md dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onchange="showUnsavedChangesMessage()">
+                            <% for (let year = 2021; year <= new Date().getFullYear(); year++) { %>
+                                <option value="<%= year %>-<%= (year + 1).toString().slice(-2) %>" <%= item.year === `${year}-${(year + 1).toString().slice(-2)}` ? 'selected' : '' %>><%= year %>-<%= (year + 1).toString().slice(-2) %></option>
+                            <% } %>
+                        </select>
+                        <select name="directiveBoardRole" class="mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white" onchange="updateDisabledYears(); showUnsavedChangesMessage()">
+                            <% Object.entries(__("admin.directiveBoard.roles")).forEach(([roleKey, roleLabel]) => { %>
+                                <option value="<%= roleKey %>" <%= item.role === roleKey ? 'selected' : '' %>><%= roleLabel %></option>
+                            <% }) %>
+                        </select>
+                        <button type="button" onclick="removeDirectiveBoardItem(this)" class="delete-button w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-2 mt-1 rounded-md"><%= __("admin.profiles.profile.remove") %></button>
+                    </div>
+                <% }); %>
+            </div>
+            <button type="button" onclick="addDirectiveBoardItem()" class="mt-2 border bg-blue-500 hover:bg-blue-600 border-blue-600 hover:border-blue-700 transition duration-150 text-white px-3 py-1 rounded-md">
+                <%= __("admin.profiles.profile.addYear") %>
+            </button>
+        </div>
+
+        <div class="mt-4 flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0 items-center">
+            <button id="submit-profile" type="submit" class="border bg-green-500 hover:bg-green-600 border-green-600 hover:border-green-700 transition duration-150 text-white px-4 py-2 rounded-md w-full sm:w-min cursor-pointer" disabled><%= __("admin.profiles.profile.submit") %></button>
+            <div id="unsaved-changes" class="hidden text-gray-500 dark:text-gray-400"><%= __("admin.profiles.profile.unsavedChanges") %></div>
+        </div>
+    </form>
+
+    <a href="/admin/<%= __('admin.profiles.url') %>" class="fixed left-4 top-48 opacity-50 bg-gray-500 text-white p-4 rounded-full shadow-lg z-50 hover:bg-gray-600 transition-colors dark:bg-gray-600 dark:hover:bg-gray-700"><%= __("admin.profiles.profile.back") %></a>
+</div>
+
+
+<%- include("../partials/footer") %>
+
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("value");
+
+    async function updatePreview(language, changed=true) {
+        const textarea = document.getElementById(`about-${language}`);
+        const md = textarea.value.trim();
+
+        if (!md) {
+            document.getElementById(`preview-${language}`).innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/mdParse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({ md })
+            });
+
+            if (!response.ok) throw new Error('Failed to parse markdown');
+
+            const result = await response.json();
+            document.getElementById(`preview-${language}`).innerHTML = result.md;
+            if (changed) showUnsavedChangesMessage();
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+        }
+    }
+
+    function validateURL(input) {
+        const checkbox = document.getElementById("url-error-checkbox");
+        const message = document.getElementById("url-error");
+
+        input.value = input.value.replace(/\s+/g, '-').replace(/-+/g, '-');
+
+        const urlPattern = /^[a-zA-Z0-9_-]{4,}$/;
+        if (!urlPattern.test(input.value.trim())) {
+            message.classList.remove("hidden");
+            checkbox.checked = false;
+            return;
+        }
+
+        message.classList.add("hidden");
+        checkbox.checked = true;
+        showUnsavedChangesMessage();
+    }
+    
+    function validateEmail(input) {
+        const checkbox = document.getElementById("email-error-checkbox");
+        const message = document.getElementById("email-error")
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (input.value.trim() !== "" && !emailRegex.test(input.value.trim())) {
+            message.classList.remove("hidden");
+            checkbox.checked = false;
+            return;
+        }
+        
+        message.classList.add("hidden");
+        checkbox.checked = true;
+        showUnsavedChangesMessage();
+    }
+
+    function showUnsavedChangesMessage() {
+        document.getElementById("unsaved-changes").classList.remove("hidden");
+        document.getElementById("submit-profile").disabled = false;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        "<%= SUPPORTED_LANGUAGES %>".split(",").forEach((lang) => updatePreview(lang, false));
+        updateDisabledYears();
+    });
+
+    function addDirectiveBoardItem() {
+        const container = document.getElementById("directive-board-container");
+
+        // Get all already used years
+        const usedYears = Array.from(document.querySelectorAll("select[name='directiveBoardYear']")).map(s => s.value);
+
+        // Find first available year
+        const currentYear = new Date().getFullYear();
+        let firstAvailable = null;
+        for (let year = 2021; year <= currentYear; year++) {
+            const yrStr = `${year}-${(year + 1).toString().slice(-2)}`;
+            if (!usedYears.includes(yrStr)) {
+                firstAvailable = yrStr;
+                break;
+            }
+        }
+
+        // If no available year, do nothing
+        if (!firstAvailable) return;
+
+        const div = document.createElement("div");
+        div.className = "flex items-center space-x-2";
+
+        const select = document.createElement("select");
+        select.name = "directiveBoardYear";
+        select.className = "mt-1 p-2 border border-gray-300 rounded-md dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white";
+        select.onchange = () => {
+            updateDisabledYears();
+            showUnsavedChangesMessage();
+        };
+
+        for (let year = 2021; year <= currentYear; year++) {
+            const val = `${year}-${(year + 1).toString().slice(-2)}`;
+            const option = document.createElement("option");
+            option.value = val;
+            option.textContent = val;
+            if (val === firstAvailable) option.selected = true;
+            select.appendChild(option);
+        }
+
+        const roleSelect = document.createElement("select");
+        roleSelect.name = "directiveBoardRole";
+        roleSelect.className = "mt-1 p-2 border border-gray-300 rounded-md w-full dark:border-gray-500 bg-gray-100 dark:bg-gray-600 dark:text-white";
+        roleSelect.onchange = () => {
+            updateDisabledYears();
+            showUnsavedChangesMessage();
+        };
+
+        <% Object.entries(__("admin.directiveBoard.roles")).forEach(([roleKey, roleLabel], roleIndex) => { %>
+            let option<%= roleIndex %> = document.createElement("option");
+            option<%= roleIndex %>.value = "<%= roleKey %>";
+            option<%= roleIndex %>.textContent = "<%= roleLabel %>";
+            roleSelect.appendChild(option<%= roleIndex %>);
+        <% }) %>
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "delete-button w-full sm:w-min border bg-red-500 hover:bg-red-600 border-red-600 hover:border-red-700 transition duration-150 text-white px-3 py-2 mt-1 rounded-md";
+        button.innerHTML = "<%= __('admin.profiles.profile.remove') %>";
+        button.onclick = function () {
+            removeDirectiveBoardItem(button);
+        };
+
+        div.appendChild(select);
+        div.appendChild(roleSelect);
+        div.appendChild(button);
+        container.appendChild(div);
+        updateDisabledYears();
+        showUnsavedChangesMessage();
+    }
+
+    function updateDisabledYears() {
+        const allYearSelects = document.querySelectorAll("select[name='directiveBoardYear']");
+        const selectedYears = Array.from(allYearSelects).map(s => s.value);
+
+        // Update year options disabling
+        allYearSelects.forEach(select => {
+            const currentValue = select.value;
+            Array.from(select.options).forEach(option => {
+                option.disabled = selectedYears.includes(option.value) && option.value !== currentValue;
+            });
+        });
+
+        // Disable Add button if all years are taken
+        const currentYear = new Date().getFullYear();
+        const allPossibleYears = [];
+        for (let year = 2021; year <= currentYear; year++) {
+            allPossibleYears.push(`${year}-${(year + 1).toString().slice(-2)}`);
+        }
+
+        const addButton = document.querySelector("button[onclick='addDirectiveBoardItem()']");
+        addButton.disabled = allPossibleYears.every(yr => selectedYears.includes(yr));
+    }
+
+    function removeDirectiveBoardItem(button) {
+        button.parentElement.remove();
+        updateDisabledYears();
+        showUnsavedChangesMessage();
+    }
+
+    document.getElementById("profile-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const directiveBoard = [];
+        const years = this.querySelectorAll("select[name=\"directiveBoardYear\"]");
+        const roles = this.querySelectorAll("select[name=\"directiveBoardRole\"]");
+
+        for (let i = 0; i < years.length; i++) {
+            directiveBoard.push({
+                year: years[i].value,
+                role: roles[i].value
+            });
+        }
+        formData.delete("directiveBoardYear");
+        formData.delete("directiveBoardRole");
+        formData.append("directiveBoard", JSON.stringify(directiveBoard));
+
+        fetch(this.action, {
+            method: this.method,
+            body: new URLSearchParams(formData).toString(),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert("Error saving profile.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Error saving profile.");
+        });
+    });
+</script>
+</script>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="<%= getLocale() %>">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" href="<%= baseURL %>/images/favicon.png" />
+        <meta
+            name="description"
+            content="Website of the QED association of the Universidad Autónoma de Madrid" />
+        <meta name="theme-color" content="#f2a14d" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="<%= baseURL %>/" />
+        <meta property="og:title" content="<%= __(title) %> - QED" />
+        <meta
+            property="og:description"
+            content="Website of the QED association of the Universidad Autónoma de Madrid" />
+        <meta property="og:image" content="<%= baseURL %>/images/favicon.png" />
+        <meta property="twitter:card" content="summary_large_small" />
+        <meta property="twitter:url" content="<%= baseURL %>/" />
+        <meta property="twitter:title" content="<%= title %> - QED" />
+        <meta
+            property="twitter:description"
+            content="Website of the QED association of the Universidad Autónoma de Madrid" />
+        <meta property="twitter:image" content="<%= baseURL %>/images/favicon.png" />
+        <title><%= title %> - QED</title>
+        <link href="/css/styles.css" type="text/css" rel="stylesheet" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" />
+        <style id="scrollbar-style"></style>
+        <script src="/js/theme.js"></script>
+        <script defer src="/js/scrollPercentage.js"></script>
+        <script defer src="/js/changeBr.js"></script>
+        <script defer src="/js/offline.js"></script>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+    </head>
+    <body class="flex min-h-screen flex-col bg-gray-100 dark:bg-gray-700 dark:text-white">
+        <div id="scroll-percentage"></div>
+        <%- include("navbar") %>
+        <div class="py-6 sm:px-8">
+    </body>
+</html>

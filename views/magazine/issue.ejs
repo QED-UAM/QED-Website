@@ -1,0 +1,74 @@
+<%- include("../partials/header", { title: __("magazine.issue.title", { name: magazine.title }) }) %>
+
+<h1 class="text-center sm:text-left flex items-center justify-center sm:justify-start space-x-2 text-5xl sm:mx-4 sm:text-6xl font-bold <%= magazine.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %> mb-6 sm:mb-12" <%- magazine.noTranslation ? `title="${__('magazine.issue.noTranslation')}"` : '' %>>
+    <% if (magazine.noTranslation) { %>
+        <%- include("../partials/components/icons/translate", { size: 12 }) %>
+    <% } %>
+    <p><%= magazine.title %></p>
+</h1>
+
+<div class="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-12 space-y-4 sm:space-y-0 mx-4">
+    <img src="<%= magazine.cover %>" alt="QED - <%= magazine.title %>" class="w-32 sm:w-72 rounded-2xl sm:sticky sm:top-12 border-2 border-gray-200 dark:border-gray-600 pointer-events-none" onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
+    <div class="flex flex-col space-y-4">
+        <div id="post-md" class="text-slate-700 dark:text-slate-100 mb-4 text-center sm:text-left prose dark:prose-invert mobile:prose-lg max-w-none break-words prose-custom">
+            <%- magazine.description %>
+        </div>
+
+        <% 
+            const postsByType = magazine.posts.reduce((acc, post) => {
+                if (!acc[post.type]) {
+                    acc[post.type] = [];
+                }
+                acc[post.type].push(post);
+                return acc;
+            }, {});
+
+            if (postsByType['post']) { 
+        %>
+            <div class="flex flex-col space-y-2">
+                <% postsByType['post'].forEach((post) => { %>
+                    <% if (!post.noTranslation) { %>
+                        <div class="p-2 px-4 bg-gray-200 dark:bg-gray-600 rounded-md shadow-sm w-full">
+                            <div class="flex flex-col text-center sm:flex-row sm:text-start justify-between items-center mb-1">
+                                <h2 class="text-xl font-semibold flex items-center space-x-0.5 text-blue-800 dark:text-blue-300 hover:underline">
+                                    <a href="/<%= __('magazine.index.url') %>/<%= __('magazine.post.url') %>/<%= post.url %>">
+                                        <%= post.title %>
+                                    </a>
+                                </h2>
+                                <%- include("../partials/components/tags", { tags: post.tags }) %>
+                            </div>
+                            <p class="text-center sm:text-start"><%= post.description %></p>
+                        </div>
+                    <% } %>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <% 
+            Object.keys(postsByType).forEach(type => {
+                if (type !== 'post') {
+        %>
+            <h2 class="text-2xl font-bold mt-6 italic uppercase text-gray-700 dark:text-gray-100" style="margin-bottom: -0.5rem;"><%= __(`postTypes.${type}`) %></h2>
+            <hr class="border-t-2 border-gray-700 dark:border-gray-100" style="margin-top: 0.5rem; margin-bottom: -0.25rem;">
+            <div class="flex flex-col space-y-2">
+                <% postsByType[type].forEach((post) => { %>
+                    <% if (!post.noTranslation) { %>
+                        <div class="p-2 px-4 bg-gray-200 dark:bg-gray-600 rounded-md shadow-sm w-full">
+                            <div class="flex flex-col text-center sm:flex-row sm:text-start justify-between items-center mb-1">
+                                <h2 class="text-xl font-semibold flex items-center space-x-0.5 text-blue-800 dark:text-blue-300 hover:underline">
+                                    <a href="/<%= __('magazine.index.url') %>/<%= __('magazine.post.url') %>/<%= post.url %>">
+                                        <%= post.title %>
+                                    </a>
+                                </h2>
+                                <%- include("../partials/components/tags", { tags: post.tags }) %>
+                            </div>
+                            <p class="text-center sm:text-start"><%= post.description %></p>
+                        </div>
+                    <% } %>
+                <% }) %>
+            </div>
+        <% }}); %>
+    </div>
+</div>
+
+<%- include("../partials/footer") %>
