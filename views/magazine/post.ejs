@@ -35,7 +35,7 @@
 </head>
 
 <div class="mx-4">
-    <h1 class="text-5xl sm:text-6xl flex items-center space-x-2 font-bold <%= post.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" <%- post.noTranslation ? `title="${__('magazine.post.noTranslation')}"` : '' %>>
+    <h1 class="text-5xl sm:text-6xl flex items-center space-x-2 font-bold <%= post.noTranslation ? 'text-red-700 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" <%- post.noTranslation ? `title="${__('magazine.post.noTranslation')}"` : '' %>>
         <% if (post.noTranslation) { %>
             <%- include("../partials/components/icons/translate", { size: 12 }) %>
         <% } %>

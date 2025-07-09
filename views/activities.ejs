@@ -22,10 +22,10 @@
           <!-- Text content on the right -->
           <div class="<% if (activity.photo && activity.photo !== 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png') { %>sm:ml-6<% } %> mt-4 sm:mt-0 mb-auto flex-1 text-center sm:text-justify">
             <div class="flex justify-between items-center mb-2">
-                <h2 class="text-3xl flex font-bold space-x-2 <%= activity.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
+                <h2 class="text-3xl flex font-bold space-x-2 <%= activity.noTranslation ? 'text-red-700 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
                     <%- activity.noTranslation ? `title="${__('activities.activity.noTranslation')}"` : '' %>>
                   <% if (activity.noTranslation) { %>
-                    <div class="flex-shrink-0 text-red-900 dark:text-red-200">
+                    <div class="flex-shrink-0 text-red-700 dark:text-red-200">
                       <%- include("partials/components/icons/translate", { size: 8 }) %>
                     </div>
                   <% } %>

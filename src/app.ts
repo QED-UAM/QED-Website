@@ -96,7 +96,7 @@ import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
 import adminRouter from "./routes/admin";
 import endpointRouter from "./routes/endpoints";
-import testRouter from "./routes/test";
+// import testRouter from "./routes/test";
 
 app.use("/", indexRouter);
 app.use(getRouteTranslations("magazine.index"), magazineRouter);
@@ -105,7 +105,7 @@ app.use(getRouteTranslations("profile"), userRouter);
 app.use("/auth", isNotAuthorized, authRouter);
 app.use("/admin", isAuthorized, adminRouter);
 app.use("/endpoints", endpointRouter);
-if (process.env.npm_lifecycle_event === "dev") app.use("/test", testRouter);
+// if (process.env.npm_lifecycle_event === "dev") app.use("/test", testRouter);
 
 // CSRF erorr
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

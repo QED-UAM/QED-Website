@@ -1,6 +1,6 @@
 <%- include("../partials/header", { title: __("magazine.issue.title", { name: magazine.title }) }) %>
 
-<h1 class="text-center sm:text-left flex items-center justify-center sm:justify-start space-x-2 text-5xl sm:mx-4 sm:text-6xl font-bold <%= magazine.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %> mb-6 sm:mb-12" <%- magazine.noTranslation ? `title="${__('magazine.issue.noTranslation')}"` : '' %>>
+<h1 class="text-center sm:text-left flex items-center justify-center sm:justify-start space-x-2 text-5xl sm:mx-4 sm:text-6xl font-bold <%= magazine.noTranslation ? 'text-red-700 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %> mb-6 sm:mb-12" <%- magazine.noTranslation ? `title="${__('magazine.issue.noTranslation')}"` : '' %>>
     <% if (magazine.noTranslation) { %>
         <%- include("../partials/components/icons/translate", { size: 12 }) %>
     <% } %>
