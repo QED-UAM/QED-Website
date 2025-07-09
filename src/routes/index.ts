@@ -1,16 +1,17 @@
 import { Router, Request, Response } from "express";
-import mailgun from "mailgun-js";
 import path from "path";
 import ejs from "ejs";
 import { __ } from "i18n";
 import getRouteTranslations from "../utils/getRouteTranslations";
-import { MAILGUN_KEY, MAILGUN_DOMAIN } from "../config";
+import { BREVO_KEY } from "../config";
 import { escapeHTML, parseMD } from "../utils/mdParser";
 import { News } from "../models/news";
+import * as brevo from "@getbrevo/brevo";
 
 const router: Router = Router();
 
-const mg = mailgun({ apiKey: MAILGUN_KEY, domain: MAILGUN_DOMAIN });
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, BREVO_KEY);
 
 router.get("/", async (req: Request, res: Response) => {
     const lang = req.getLocale();
@@ -79,22 +80,33 @@ router.post("/send-email", (req: Request, res: Response) => {
                 return res.status(500).send("Error rendering email template");
             }
 
-            const data = {
-                from: `noreply@${MAILGUN_DOMAIN}`,
-                to: "qed.uam@gmail.com",
-                subject: `Nuevo mensaje desde la web - ${Date.now()}`,
-                html: html
+            const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+            sendSmtpEmail.to = [{ email: "qed.uam@gmail.com", name: "QED UAM" }];
+            sendSmtpEmail.sender = { email: "qed.uam@gmail.com", name: "QED UAM" };
+            sendSmtpEmail.replyTo = { email, name };
+            sendSmtpEmail.templateId = 2;
+            sendSmtpEmail.params = {
+                CONTACT_NAME: name,
+                CONTACT_EMAIL: email,
+                CONTENT: message.replace(/\n/g, "<br>")
             };
 
-            mg.messages().send(data, (error, body) => {
-                if (error) {
+            apiInstance.sendTransacEmail(sendSmtpEmail).then(
+                function (data) {
+                    res.redirect(`/${__("email-successful.url")}`);
+                },
+                function (error) {
                     console.error(error);
                     return res.status(500).send("Error sending email");
                 }
-                res.redirect(`/${__("contact.url")}`);
-            });
+            );
         }
     );
+});
+
+router.get(getRouteTranslations("email-successful"), (req: Request, res: Response) => {
+    res.render("email-successful");
 });
 
 export default router;

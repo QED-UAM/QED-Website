@@ -50,7 +50,7 @@
                 <h4><%= __("profile.collaboratedArticles") %></h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <% user.collaboratedPosts.forEach(post => { %>
-                        <a href="/magazine/<%= post.url %>" class="flex flex-col justify-between p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow duration-200 no-underline <%= post.noTranslation ? 'text-red-900 dark:text-red-200' : '' %>" <%- post.noTranslation ? `title="${__('magazine.post.noTranslation')}"` : '' %>>
+                        <a href="/<%= __('magazine.index.url') %>/<%= post.url %>" class="flex flex-col justify-between p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow duration-200 no-underline <%= post.noTranslation ? 'text-red-900 dark:text-red-200' : '' %>" <%- post.noTranslation ? `title="${__('magazine.post.noTranslation')}"` : '' %>>
                             <div>
                                 <h5 class="font-bold text-lg mb-1 hover:underline flex items-center space-x-2">
                                     <% if (post.noTranslation) { %>

@@ -7,8 +7,19 @@ const router: Router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
     const lang = req.getLocale();
+    let page = Math.max(parseInt(req.query.page as string) || 1, 1);
+    const limit = 5;
 
     try {
+        const totalActivities = await Activity.countDocuments();
+        const totalPages = Math.ceil(totalActivities / limit);
+
+        if (page > totalPages && totalPages > 0) {
+            page = 1;
+        }
+
+        const skip = (page - 1) * limit;
+
         const activities = await Activity.aggregate([
             {
                 $addFields: {
@@ -20,7 +31,7 @@ router.get("/", async (req: Request, res: Response) => {
                 $addFields: {
                     noTranslation: {
                         $cond: {
-                            if: { $eq: [`$selectedTitle`, `$title.${lang}`] },
+                            if: { $eq: [`$title.${lang}`, `$selectedTitle`] },
                             then: false,
                             else: true
                         }
@@ -40,6 +51,12 @@ router.get("/", async (req: Request, res: Response) => {
             },
             {
                 $sort: { created_at: -1 }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
             }
         ]);
 
@@ -47,7 +64,11 @@ router.get("/", async (req: Request, res: Response) => {
             activity.description = parseMD(activity.description);
             activity.created_at = moment(activity.created_at).format("DD/MM/YYYY");
         });
-        res.render("activities", { activities: activities });
+        res.render("activities", {
+            activities: activities,
+            currentPage: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.error(error);
         res.status(500).render("errors/500");

@@ -10,27 +10,33 @@
     <% activities.forEach((activity) => { %>
       <div class="p-4 bg-gray-200 dark:bg-gray-600 rounded-xl shadow-sm hover:shadow-md transition-all">
         <div class="flex flex-col sm:flex-row items-center">
-          <!-- Fixed-size image on the left -->
-          <a href="/<%= __('activities.index.url') %>/<%= activity.url %>">
-            <img src="<%= activity.photo %>" 
-                 alt="QED - <%= activity.title %>" 
-                 class="w-32 h-32 object-cover rounded-md pointer-events-none"
-                 onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
-          </a>
+          <!-- Image on the left, only if photo is not the placeholder -->
+          <% if (activity.photo && activity.photo !== 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png') { %>
+            <a href="/<%= __('activities.index.url') %>/<%= activity.url %>">
+              <img src="<%= activity.photo %>" 
+                   alt="QED - <%= activity.title %>" 
+                   class="w-32 h-32 object-cover rounded-md pointer-events-none"
+                   onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png';">
+            </a>
+          <% } %>
           <!-- Text content on the right -->
-          <div class="sm:ml-6 mt-4 sm:mt-0 mb-auto flex-1 text-center sm:text-justify">
-            <h2 class="text-3xl flex font-bold space-x-2 <%= activity.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
-                <%- activity.noTranslation ? `title="${__('activities.activity.noTranslation')}"` : '' %>>
-              <% if (activity.noTranslation) { %>
-                <%- include("partials/components/icons/translate", { size: 8 }) %>
-              <% } %>
-              <a href="/<%= __('activities.index.url') %>/<%= activity.url %>" class="hover:underline min-w-max">
-                <%= activity.title %>
-              </a>
-              <p class="hidden sm:block text-sm w-full text-right text-gray-600 dark:text-gray-400 mb-auto">
-                <%= activity.created_at %>
-              </p>
-            </h2>
+          <div class="<% if (activity.photo && activity.photo !== 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png') { %>sm:ml-6<% } %> mt-4 sm:mt-0 mb-auto flex-1 text-center sm:text-justify">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-3xl flex font-bold space-x-2 <%= activity.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
+                    <%- activity.noTranslation ? `title="${__('activities.activity.noTranslation')}"` : '' %>>
+                  <% if (activity.noTranslation) { %>
+                    <div class="flex-shrink-0 text-red-900 dark:text-red-200">
+                      <%- include("partials/components/icons/translate", { size: 8 }) %>
+                    </div>
+                  <% } %>
+                  <a href="/<%= __('activities.index.url') %>/<%= activity.url %>" class="hover:underline">
+                    <%= activity.title %>
+                  </a>
+                </h2>
+                <p class="hidden sm:block text-sm text-gray-600 dark:text-gray-400 ml-4 mb-auto flex-shrink-0">
+                  <%= activity.created_at %>
+                </p>
+            </div>
             <div class="mt-2 text-md prose dark:prose-invert mobile:prose-md break-words prose-custom">
               <%- activity.description %>
             </div>
@@ -38,6 +44,50 @@
         </div>
       </div>
     <% }) %>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="flex justify-center mt-8 space-x-2">
+    <%
+    const numPageSlots = 5;
+    let pagesToDisplay = [];
+
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    // Adjust range if near start or end
+    if (currentPage <= 2) {
+      endPage = Math.min(totalPages, 5);
+    } else if (currentPage >= totalPages - 1) {
+      startPage = Math.max(1, totalPages - 4);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pagesToDisplay.push(i);
+    }
+  %>
+
+  <% if (currentPage > 1) { %>
+    <a href="?page=<%= currentPage - 1 %>" class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 text-white hover:bg-blue-500/75 transition-colors">
+      &larr;
+    </a>
+  <% } else { %>
+    <div class="w-10 h-10"></div>
+  <% } %>
+
+  <% pagesToDisplay.forEach(page => { %>
+    <a href="?page=<%= page %>" class="w-10 h-10 rounded-full flex items-center justify-center <%= currentPage === page ? 'bg-blue-600 dark:bg-blue-300 text-gray-100 dark:text-gray-700' : 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-200/75 dark:hover:bg-gray-600/75' %> transition-colors">
+      <%= page %>
+    </a>
+  <% }) %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>" class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 text-white hover:bg-blue-500/75 transition-colors">
+      &rarr;
+    </a>
+  <% } else { %>
+    <div class="w-10 h-10"></div>
+  <% } %>
   </div>
 
 <%- include("partials/footer") %>

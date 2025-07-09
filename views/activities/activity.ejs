@@ -7,7 +7,9 @@
   <h1 class="text-5xl sm:text-6xl flex items-center space-x-2 font-bold <%= activity.noTranslation ? 'text-red-900 dark:text-red-200 underline decoration-dotted' : 'text-blue-700 dark:text-blue-200' %>" 
       <%- activity.noTranslation ? `title="${__('activities.activity.noTranslation')}"` : '' %>>
     <% if (activity.noTranslation) { %>
-      <%- include("../partials/components/icons/translate", { size: 12 }) %>
+      <div class="flex-shrink-0">
+        <%- include("../partials/components/icons/translate", { size: 12 }) %>
+      </div>
     <% } %>
     <p><%= activity.title %></p>
   </h1>

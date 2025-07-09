@@ -13,8 +13,7 @@ const QED_EMAIL: string = process.env.QED_EMAIL || "qed.uam@gmail.com";
 const SUPPORTED_LANGUAGES: string[] = process.env.SUPPORTED_LANGUAGES?.replace(", ", ",").split(
     ","
 ) || ["es", "en"];
-const MAILGUN_KEY: string = process.env.MAILGUN_KEY || "";
-const MAILGUN_DOMAIN: string = process.env.MAILGUN_DOMAIN || "";
+const BREVO_KEY: string = process.env.BREVO_KEY || "";
 
 export {
     PORT,
@@ -26,6 +25,5 @@ export {
     COOKIE_SESSION_KEY2,
     QED_EMAIL,
     SUPPORTED_LANGUAGES,
-    MAILGUN_KEY,
-    MAILGUN_DOMAIN
+    BREVO_KEY
 };

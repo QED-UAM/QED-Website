@@ -1,0 +1,19 @@
+<%- include('partials/header', { title: __("email-successful.title") }) %>
+
+<div class="max-w-3xl mx-auto text-center py-16">
+    <h1 class="text-5xl sm:text-6xl font-bold text-blue-700 dark:text-blue-200 mb-4"><%= __('email-successful.title') %></h1>
+    <p class="text-lg text-gray-800 dark:text-gray-200 mt-4"><%= __('email-successful.message') %></p>
+    <div class="text-center mt-8">
+        <a href="/" class="inline-block w-fit px-6 py-3 text-lg rounded-md shadow-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-400 focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 transition-colors">
+            <%= __('email-successful.button') %>
+        </a>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        window.location.href = "/";
+    }, 3000);
+</script>
+
+<%- include('partials/footer') %>

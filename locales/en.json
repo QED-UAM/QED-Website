@@ -89,6 +89,12 @@
         "message": "Message",
         "submit": "Send"
     },
+    "email-successful": {
+        "title": "Email sent!",
+        "url": "email-successful",
+        "message": "Your email has been sent successfully. We will get back to you as soon as possible.",
+        "button": "Go to Home"
+    },
     "about": {
         "title": "About QED",
         "url": "about",

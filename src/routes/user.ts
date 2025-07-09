@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { User } from "../models/user";
 import { Post } from "../models/post";
+import { Magazine } from "../models/magazine";
 import { parseMD } from "../utils/mdParser";
 
 const router: Router = Router();
@@ -10,10 +11,14 @@ router.get("/:url", async (req: Request, res: Response) => {
 
     const user = await User.findOne({ url: req.params.url }).lean();
     if (user) {
-        const collaboratedPosts = await Post.find({ "authors.user_id": user._id })
-            .populate("magazine_id", "title")
+        const collaboratedPosts = (await Post.find({ "authors.user_id": user._id })
+            .populate({
+                path: "magazine_id",
+                select: "title visible",
+                match: { visible: true }
+            })
             .select("title url description authors magazine_id")
-            .lean();
+            .lean()).filter(post => post.magazine_id !== null);
 
         const titleCounts = new Map<string, number>();
         collaboratedPosts.forEach((post) => {

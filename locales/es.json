@@ -88,6 +88,12 @@
         "message": "Mensaje",
         "submit": "Enviar"
     },
+    "email-successful": {
+        "title": "¡Email enviado!",
+        "url": "email-enviado",
+        "message": "Tu email ha sido enviado correctamente. Te responderemos lo antes posible.",
+        "button": "Ir a Inicio"
+    },
     "about": {
         "title": "Sobre QED",
         "url": "nosotros",
