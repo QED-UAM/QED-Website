@@ -69,6 +69,7 @@
     "profile": {
         "title": "{{name}}",
         "url": "perfil",
+        "directiveBoardHistory": "Historial de Junta Directiva",
         "collaboratedArticles": "Artículos en los que ha colaborado",
         "role": {
             "president": "Presidente de QED",
