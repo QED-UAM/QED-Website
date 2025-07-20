@@ -6,6 +6,7 @@ import getRouteTranslations from "../utils/getRouteTranslations";
 import { BREVO_KEY } from "../config";
 import { escapeHTML, parseMD } from "../utils/mdParser";
 import { News } from "../models/news";
+import { User } from "../models/user";
 import * as brevo from "@getbrevo/brevo";
 
 const router: Router = Router();
@@ -64,8 +65,22 @@ router.get(getRouteTranslations("contact"), (req: Request, res: Response) => {
     res.render("contact");
 });
 
-router.get(getRouteTranslations("about"), (req: Request, res: Response) => {
-    res.render("about");
+router.get(getRouteTranslations("about"), async (req: Request, res: Response) => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    let currentSchoolYear;
+    if (currentMonth >= 8) {
+        // September is 8
+        currentSchoolYear = `${currentYear}-${(currentYear + 1).toString().slice(-2)}`;
+    } else {
+        currentSchoolYear = `${currentYear - 1}-${currentYear.toString().slice(-2)}`;
+    }
+
+    const boardMembers = await User.find({
+        "directiveBoard.year": currentSchoolYear
+    });
+
+    res.render("about", { boardMembers, currentSchoolYear });
 });
 
 router.post("/send-email", (req: Request, res: Response) => {
