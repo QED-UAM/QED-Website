@@ -47,27 +47,30 @@
         <% 
             Object.keys(postsByType).forEach(type => {
                 if (type !== 'post') {
+                    // Filter posts that have translations for the current language
+                    const translatedPosts = postsByType[type].filter(post => !post.noTranslation);
+                    
+                    // Only show section if there are translated posts
+                    if (translatedPosts.length > 0) {
         %>
             <h2 class="text-2xl font-bold mt-6 italic uppercase text-gray-700 dark:text-gray-100" style="margin-bottom: -0.5rem;"><%= __(`postTypes.${type}`) %></h2>
             <hr class="border-t-2 border-gray-700 dark:border-gray-100" style="margin-top: 0.5rem; margin-bottom: -0.25rem;">
             <div class="flex flex-col space-y-2">
-                <% postsByType[type].forEach((post) => { %>
-                    <% if (!post.noTranslation) { %>
-                        <div class="p-2 px-4 bg-gray-200 dark:bg-gray-600 rounded-md shadow-sm w-full">
-                            <div class="flex flex-col text-center sm:flex-row sm:text-start justify-between items-center mb-1">
-                                <h2 class="text-xl font-semibold flex items-center space-x-0.5 text-blue-800 dark:text-blue-300 hover:underline">
-                                    <a href="/<%= __('magazine.index.url') %>/<%= __('magazine.post.url') %>/<%= post.url %>">
-                                        <%= post.title %>
-                                    </a>
-                                </h2>
-                                <%- include("../partials/components/tags", { tags: post.tags }) %>
-                            </div>
-                            <p class="text-center sm:text-start"><%= post.description %></p>
+                <% translatedPosts.forEach((post) => { %>
+                    <div class="p-2 px-4 bg-gray-200 dark:bg-gray-600 rounded-md shadow-sm w-full">
+                        <div class="flex flex-col text-center sm:flex-row sm:text-start justify-between items-center mb-1">
+                            <h2 class="text-xl font-semibold flex items-center space-x-0.5 text-blue-800 dark:text-blue-300 hover:underline">
+                                <a href="/<%= __('magazine.index.url') %>/<%= __('magazine.post.url') %>/<%= post.url %>">
+                                    <%= post.title %>
+                                </a>
+                            </h2>
+                            <%- include("../partials/components/tags", { tags: post.tags }) %>
                         </div>
-                    <% } %>
+                        <p class="text-center sm:text-start"><%= post.description %></p>
+                    </div>
                 <% }) %>
             </div>
-        <% }}); %>
+        <% }}}); %>
     </div>
 </div>
 
