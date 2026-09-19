@@ -1,0 +1,30 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import MagazineEditor from "../../../components/admin/MagazineEditor.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext, editable } from "../../../lib/admin/page";
+import { Magazine } from "../../../lib/db/models";
+
+const { locale, t, href, param, origin } = usePage(Astro);
+const magazine = await Magazine.findOne({ url: param("url") }).lean();
+if (!magazine) return Astro.rewrite("/404");
+const { languages, strings } = adminContext(locale);
+---
+
+<Admin title={t("admin.magazines.magazine.title", { name: magazine.title?.es || magazine.url })} section="adminMagazine">
+    <MagazineEditor
+        client:load
+        magazine={{
+            url: magazine.url,
+            title: editable(magazine.title),
+            cover: magazine.cover ?? "",
+            visible: Boolean(magazine.visible),
+            description: editable(magazine.description)
+        }}
+        languages={languages}
+        strings={strings}
+        urlPrefix={`${origin}/${t("magazine.index.url")}/`}
+        editorBase={href("adminMagazines")}
+        publicHref={href("issue", { issue: magazine.url })}
+    />
+</Admin>

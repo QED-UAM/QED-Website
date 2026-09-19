@@ -1,0 +1,77 @@
+---
+import Base from "../../layouts/Base.astro";
+import MagazineCover from "../../components/MagazineCover.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import Untranslated from "../../components/Untranslated.astro";
+import { usePage } from "../../lib/page";
+import { listMagazines } from "../../lib/content";
+
+const { locale, t, href } = usePage(Astro);
+const magazines = await listMagazines(locale);
+if (magazines.length === 0) return Astro.rewrite("/404");
+
+const sections = [
+    { id: "about", title: t("magazine.index.aboutTitle"), html: t("magazine.index.aboutDesc") },
+    { id: "colaborar", title: t("magazine.index.collaborateTitle"), html: t("magazine.index.collaborateDesc") },
+    {
+        id: "commissions",
+        title: t("magazine.index.commissionsTitle"),
+        html: t("magazine.index.commissionsDesc", { contactUrl: t("contact.url") })
+    }
+];
+---
+
+<Base title={t("magazine.index.title")}>
+    <PageHeader title={t("magazine.index.title")} />
+
+    <section class="shelf relative mt-10" aria-labelledby="editions">
+        <h2 id="editions" class="mx-auto max-w-6xl px-4 font-serif text-3xl font-bold sm:px-8">{t("magazine.index.editions")}</h2>
+        <p class="sr-only">{t("magazine.index.shelfLabel")}</p>
+        <ul class="shelf-row flex snap-x snap-mandatory gap-10 overflow-x-auto px-6 pt-10 pb-16 sm:gap-14 sm:px-[max(2rem,calc((100vw-80rem)/2+2rem))]">
+            {
+                magazines.map((magazine, index) => (
+                    <li class="flex shrink-0 snap-center flex-col items-center">
+                        <MagazineCover
+                            cover={magazine.cover}
+                            title={`QED - ${magazine.title.value}`}
+                            href={href("issue", { issue: magazine.url })}
+                            width="min(60vw, 15rem)"
+
+                            eager={index < 3}
+                        />
+                        <a
+                            href={href("issue", { issue: magazine.url })}
+                            class="mt-8 max-w-[15rem] text-center font-serif text-xl font-bold hover:text-ink">
+                            <Untranslated missing={magazine.title.missing} message={t("magazine.index.noTranslation")}>
+                                {magazine.title.value}
+                            </Untranslated>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+
+    <div class="mx-auto mt-10 grid max-w-7xl gap-16 px-4 sm:px-8">
+        {
+            sections.map((section) => (
+                <section id={section.id} class="grid gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-12">
+                    <h2 class="font-serif text-3xl font-bold md:text-right">
+                        {section.id === "commissions" && <span id="comisiones" />}
+                        {section.title}
+                    </h2>
+                    <div
+                        class="prose prose-custom dark:prose-invert max-w-3xl break-words sm:prose-lg prose-h3:mt-8 prose-h3:text-2xl"
+                        set:html={section.html}
+                    />
+                </section>
+            ))
+        }
+    </div>
+</Base>
+
+<style>
+    .shelf-row {
+        scrollbar-width: thin;
+    }
+</style>

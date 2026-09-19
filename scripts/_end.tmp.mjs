@@ -1,0 +1,16 @@
+import { chromium } from "@playwright/test";
+const out = (n) => `C:/Users/hecto/AppData/Local/Temp/claude/C--Users-hecto-Desktop-QED/52b0c3ee-bdc5-4802-8533-9b2626b4613d/scratchpad/${n}.png`;
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+await page.goto("http://127.0.0.1:4500/revista/articulo/enigma", { waitUntil: "networkidle" });
+const end = page.locator(".qed-end");
+await end.scrollIntoViewIfNeeded();
+await page.waitForTimeout(1500);
+await end.hover();
+await page.waitForTimeout(400);
+const box = await end.boundingBox();
+await page.screenshot({ path: out("qed-end"), clip: { x: box.x - 420, y: box.y - 90, width: box.width + 460, height: box.height + 130 } });
+await page.goto("http://127.0.0.1:4500/revista", { waitUntil: "networkidle" });
+await page.waitForTimeout(1500);
+await page.screenshot({ path: out("shelf2"), clip: { x: 0, y: 150, width: 1280, height: 520 } });
+await browser.close();

@@ -1,0 +1,129 @@
+---
+import Base from "../../../layouts/Base.astro";
+import Untranslated from "../../../components/Untranslated.astro";
+import Icon from "../../../components/Icon.astro";
+import Tombstone from "../../../components/Tombstone.astro";
+import InteractiveContent from "../../../components/InteractiveContent.astro";
+import { usePage } from "../../../lib/page";
+import { getArticle } from "../../../lib/content";
+import { longDate } from "../../../lib/format";
+import { DEFAULT_AVATAR } from "../../../lib/config";
+
+const { locale, t, href, origin, param } = usePage(Astro);
+const article = await getArticle(param("url"), locale);
+if (!article) return Astro.rewrite("/404");
+
+const profileUrl = (url: string) => href("profile", { url });
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.description || undefined,
+    inLanguage: article.missing ? "es" : locale,
+    author: article.authors.map((author) => ({
+        "@type": "Person",
+        name: author.name,
+        url: origin + profileUrl(author.url)
+    })),
+    datePublished: article.createdAt.toISOString(),
+    dateModified: article.updatedAt.toISOString(),
+    mainEntityOfPage: { "@type": "WebPage", "@id": origin + href("article", { url: article.url }) },
+    isPartOf: { "@type": "PublicationIssue", name: `QED - ${article.magazine.title}` },
+    publisher: { "@type": "Organization", name: "QED", url: origin }
+};
+---
+
+<Base title={article.title} description={article.description || undefined} type="article" jsonLd={jsonLd}>
+    <article class="mx-auto max-w-[46rem] px-5 pt-6 sm:px-8 sm:pt-12">
+        <header>
+            {
+                article.type !== "post" && (
+                    <p class="font-serif text-xl italic text-muted sm:text-2xl">{t(`postTypes.${article.type}`)}</p>
+                )
+            }
+            <h1 class="mt-2 font-serif text-4xl leading-[1.1] font-bold text-balance text-ink sm:text-6xl">
+                <Untranslated missing={article.missing} message={t("magazine.post.noTranslation")}>
+                    {article.title}
+                </Untranslated>
+            </h1>
+
+            {
+                article.authors.length > 0 && (
+                    <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-4">
+                        {article.authors.map((author) => (
+                            <li>
+                                <a
+                                    href={profileUrl(author.url)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="group flex items-center gap-3">
+                                    <img
+                                        src={author.photo}
+                                        alt=""
+                                        width="44"
+                                        height="44"
+                                        class="size-11 rounded-full border border-grid object-cover"
+                                        loading="lazy"
+                                        onerror={`this.onerror=null;this.src='${DEFAULT_AVATAR}';`}
+                                    />
+                                    <span class="flex flex-col leading-tight">
+                                        <span class="font-semibold group-hover:underline">{author.name}</span>
+                                        <span class="text-sm text-muted">{t(`roles.${author.role}`)}</span>
+                                    </span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
+            <p class="mt-6 text-sm text-muted">
+                <time datetime={article.createdAt.toISOString()}>{longDate(article.createdAt, locale)}</time>
+            </p>
+        </header>
+
+        <hr class="mt-8 border-grid" />
+
+        <InteractiveContent
+            html={article.contentHtml}
+            scripts={article.scripts}
+            class="article-body prose prose-custom dark:prose-invert mt-10 max-w-none break-words"
+        />
+
+        <p class="mt-10 text-right">
+            <Tombstone label={t("magazine.post.qed")} caption={t("magazine.post.qed")} meaning={t("magazine.post.qedMeaning")} />
+        </p>
+
+        <footer class="mt-14 border-t border-grid pt-8">
+            {
+                article.authors.length > 0 && (
+                    <>
+                        <h2 class="font-serif text-xl font-bold">{t("magazine.post.authors")}</h2>
+                        <ul class="mt-3 space-y-1">
+                            {article.authors.map((author) => (
+                                <li>
+                                    <a
+                                        href={profileUrl(author.url)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="font-semibold underline decoration-grid underline-offset-4 hover:decoration-marker">
+                                        {author.name}
+                                    </a>{" "}
+                                    <span class="text-muted">({t(`roles.${author.role}`)})</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )
+            }
+            <a href={href("issue", { issue: article.magazine.url })} class="btn-quiet mt-8">
+                <Icon name="arrowLeft" class="size-4" />
+                {t("magazine.post.backToIssue", { name: article.magazine.title })}
+            </a>
+        </footer>
+    </article>
+
+    <script>
+        import { trackRead } from "../../../scripts/views";
+        trackRead();
+    </script>
+</Base>

@@ -1,0 +1,43 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import AdminList from "../../../components/admin/AdminList.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext } from "../../../lib/admin/page";
+import { Magazine, Post } from "../../../lib/db/models";
+
+const { locale, t, href } = usePage(Astro);
+const { strings } = adminContext(locale);
+const [posts, magazines] = await Promise.all([
+    Post.find().sort({ _id: -1 }).select("url title views magazine_id type").lean(),
+    Magazine.find().sort({ _id: -1 }).lean()
+]);
+
+// Grouped by magazine (newest first), then the posts without a magazine.
+const groups = [
+    ...magazines.map((magazine) => ({ id: magazine._id.toString(), title: magazine.title?.es || magazine.url, visible: magazine.visible })),
+    { id: "", title: t("admin.posts.noMagazine"), visible: false }
+].map((group) => ({
+    title: group.title,
+    items: posts
+        .filter((post) => (post.magazine_id?.toString() ?? "") === group.id)
+        .map((post) => ({
+            url: post.url,
+            title: post.title?.es ?? "",
+            subtitle: post.type && post.type !== "post" ? t(`postTypes.${post.type}`) : post.url,
+            meta: t("admin.common.views", { count: post.views ?? 0 }),
+            publicHref: group.visible ? href("article", { url: post.url }) : undefined
+        }))
+}));
+---
+
+<Admin title={t("admin.posts.title")} section="adminPosts">
+    <AdminList
+        client:load
+        kind="posts"
+        section="posts"
+        heading={t("admin.posts.postsSection")}
+        groups={groups}
+        editorBase={href("adminPosts")}
+        strings={strings}
+    />
+</Admin>

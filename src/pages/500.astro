@@ -1,0 +1,11 @@
+---
+import ErrorCalculator from "../components/ErrorCalculator.astro";
+
+interface Props {
+    error: unknown;
+}
+
+console.error("[500]", Astro.props.error);
+---
+
+<ErrorCalculator code={500} />

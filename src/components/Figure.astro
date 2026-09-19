@@ -1,0 +1,79 @@
+---
+// An engraved 3D figure (see src/scripts/figures): ink lines on a paper-colored surface,
+// drawn by the page's shared WebGL stage. `cycle` makes it a button that shows the next
+// figure of the list, updating the caption.
+interface Props {
+    shape: string;
+    caption?: string;
+    /** Other shapes to cycle through on click: { key: caption }. */
+    cycle?: Record<string, string>;
+    cycleLabel?: string;
+    class?: string;
+    figureClass?: string;
+    phase?: number;
+    speed?: number;
+}
+
+const { shape, caption, cycle, cycleLabel, class: className, figureClass = "aspect-square w-full", phase, speed } = Astro.props;
+const Tag = cycle ? "button" : "div";
+---
+
+<figure class:list={["figure flex flex-col items-center", className]}>
+    <Tag
+        type={cycle ? "button" : undefined}
+        class:list={["figure-view relative block", figureClass, cycle && "figure-cycle cursor-pointer rounded-full"]}
+        data-figure={shape}
+        data-phase={phase}
+        data-speed={speed}
+        data-cycle={cycle ? JSON.stringify(cycle) : undefined}
+        aria-label={cycle ? cycleLabel : undefined}
+        role={cycle ? undefined : "img"}
+        aria-hidden={cycle || caption ? undefined : "true"}>
+    </Tag>
+    {
+        caption && (
+            <figcaption class="figure-caption mt-1 text-center font-serif text-muted italic">
+                <span data-figure-caption>{caption}</span>
+                <slot name="hint" />
+            </figcaption>
+        )
+    }
+</figure>
+
+<style is:global>
+    .figure-stage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 30;
+    }
+    .figure-cycle:focus-visible {
+        outline: 2px solid var(--color-marker);
+        outline-offset: 6px;
+    }
+</style>
+
+<script>
+    // three.js loads lazily, after the page is interactive.
+    const start = () =>
+        import("../scripts/figures/stage").then(({ mountAll, setFigure }) => {
+            mountAll();
+            document.querySelectorAll<HTMLElement>("[data-cycle]").forEach((element) => {
+                if (element.dataset.cycleBound) return;
+                element.dataset.cycleBound = "";
+                const options = JSON.parse(element.dataset.cycle ?? "{}") as Record<string, string>;
+                const keys = Object.keys(options);
+                const caption = element.closest("figure")?.querySelector<HTMLElement>("[data-figure-caption]");
+                element.addEventListener("click", () => {
+                    const next = keys[(keys.indexOf(element.dataset.figure ?? "") + 1) % keys.length];
+                    void setFigure(element, next);
+                    if (caption) caption.textContent = options[next];
+                });
+            });
+        });
+    if ("requestIdleCallback" in window) requestIdleCallback(() => void start(), { timeout: 800 });
+    else setTimeout(() => void start(), 200);
+</script>

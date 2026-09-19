@@ -1,0 +1,36 @@
+---
+// QED's social networks (same accounts as the previous contact page).
+import Icon from "./Icon.astro";
+
+interface Props {
+    class?: string;
+    size?: string;
+    labels?: boolean;
+}
+
+const { class: className = "gap-4", size = "size-6", labels = false } = Astro.props;
+
+const QED_SOCIALS = [
+    { icon: "instagram", label: "Instagram", href: "https://instagram.com/qed_uam" },
+    { icon: "x", label: "X", href: "https://twitter.com/qed_uam" },
+    { icon: "linkedin", label: "LinkedIn", href: "https://linkedin.com/in/qed-matematicas" },
+    { icon: "discord", label: "Discord", href: "https://discord.gg/VRd3dWx6SX" }
+] as const;
+---
+
+<ul class:list={["flex flex-wrap items-center", className]}>
+    {
+        QED_SOCIALS.map((social) => (
+            <li>
+                <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 text-graphite/75 transition-colors hover:text-ink">
+                    <Icon name={social.icon} class={size} label={labels ? undefined : social.label} />
+                    {labels && <span class="font-medium">{social.label}</span>}
+                </a>
+            </li>
+        ))
+    }
+</ul>

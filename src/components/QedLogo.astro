@@ -1,0 +1,44 @@
+---
+// The hand-drawn QED logo, inlined so it takes the current text color (no dark-mode invert).
+// `animated` draws the strokes in once, as the old home page did on first visits.
+import raw from "../../public/images/qed.svg?raw";
+
+interface Props {
+    class?: string;
+    animated?: boolean;
+    title?: string;
+}
+
+const { class: className = "", animated = false, title = "QED UAM" } = Astro.props;
+const svg = raw
+    .replace(/<\?xml[^>]*>/, "")
+    .replace(/<svg[^>]*>/, (tag) =>
+        tag
+            .replace(/\s(width|height)="[^"]*"/g, "")
+            .replace('stroke="black"', 'stroke="currentColor"')
+            .replace(
+                "<svg",
+                `<svg class="qed-logo ${animated ? "qed-logo-draw" : ""} ${className}" role="img" aria-label="${title}"`
+            )
+    );
+---
+
+<Fragment set:html={svg} />
+
+<style is:global>
+    .qed-logo {
+        display: block;
+        height: auto;
+        overflow: visible;
+    }
+    .qed-logo-draw path {
+        stroke-dasharray: 6000;
+        stroke-dashoffset: 6000;
+        animation: qed-draw 1.6s ease-in-out forwards;
+    }
+    @keyframes qed-draw {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+</style>

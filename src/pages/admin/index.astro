@@ -1,0 +1,65 @@
+---
+import Admin from "../../layouts/Admin.astro";
+import { usePage } from "../../lib/page";
+import { Activity, Admin as AdminModel, Magazine, News, Post, User } from "../../lib/db/models";
+import type { RouteName } from "../../lib/i18n/routes";
+
+const { t, href } = usePage(Astro);
+const [posts, magazines, activities, profiles, admins, news, mostRead] = await Promise.all([
+    Post.countDocuments(),
+    Magazine.countDocuments(),
+    Activity.countDocuments(),
+    User.countDocuments(),
+    AdminModel.countDocuments(),
+    News.countDocuments(),
+    Post.find({ views: { $gt: 0 } }).sort({ views: -1 }).limit(5).select("url title views").lean()
+]);
+
+const cards: { route: RouteName; label: string; count: number | null }[] = [
+    { route: "adminPosts", label: t("admin.posts.title"), count: posts },
+    { route: "adminMagazines", label: t("admin.magazines.title"), count: magazines },
+    { route: "adminActivities", label: t("admin.activities.title"), count: activities },
+    { route: "adminProfiles", label: t("admin.profiles.title"), count: profiles },
+    { route: "adminNews", label: t("admin.news.title"), count: news },
+    { route: "adminAccounts", label: t("admin.accounts.title"), count: admins }
+];
+const admin = Astro.locals.admin!;
+---
+
+<Admin title={t("admin.index.title")} section="admin">
+    <h1 class="font-serif text-4xl font-bold text-ink">{t("admin.index.section")}</h1>
+    <p class="mt-2 text-muted">{t("admin.index.signedInAs", { name: admin.name || admin.email })}</p>
+
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {
+            cards.map((card) => (
+                <li>
+                    <a
+                        href={href(card.route)}
+                        class="flex items-baseline justify-between rounded-xl border border-grid bg-surface px-5 py-4 transition-colors hover:border-ink">
+                        <span class="font-semibold">{card.label}</span>
+                        <span class="font-serif text-3xl font-bold text-ink tabular-nums">{card.count}</span>
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+
+    {
+        mostRead.length > 0 && (
+            <section class="mt-12 max-w-2xl">
+                <h2 class="font-serif text-2xl font-bold">{t("admin.index.mostRead")}</h2>
+                <ol class="mt-4 divide-y divide-grid rounded-xl border border-grid bg-surface">
+                    {mostRead.map((post) => (
+                        <li class="flex items-center justify-between gap-4 px-4 py-3">
+                            <a href={href("adminPost", { url: post.url })} class="truncate font-medium hover:underline">
+                                {post.title?.es || post.url}
+                            </a>
+                            <span class="text-sm text-muted tabular-nums">{post.views}</span>
+                        </li>
+                    ))}
+                </ol>
+            </section>
+        )
+    }
+</Admin>

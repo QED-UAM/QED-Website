@@ -1,0 +1,26 @@
+---
+// Red-pen proofreading mark for text shown in Spanish because the current language has no
+// translation. Renders children untouched when nothing is missing.
+import Icon from "./Icon.astro";
+
+interface Props {
+    missing: boolean;
+    message: string;
+    iconClass?: string;
+}
+
+const { missing, message, iconClass = "size-[0.8em]" } = Astro.props;
+---
+
+{
+    missing ? (
+        <span class="untranslated inline-flex items-baseline gap-[0.3em]" title={message}>
+            <Icon name="translate" class:list={[iconClass, "shrink-0 self-center"]} label={message} />
+            <span>
+                <slot />
+            </span>
+        </span>
+    ) : (
+        <slot />
+    )
+}

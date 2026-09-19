@@ -1,0 +1,235 @@
+---
+// A magazine issue as a physical object: CSS 3D with a spine and a page edge, resting at an
+// angle and turning toward the pointer. Tilt is skipped for touch and reduced motion.
+import QedLogo from "./QedLogo.astro";
+import { PLACEHOLDER_IMAGE } from "../lib/config";
+
+interface Props {
+    cover: string;
+    title: string;
+    href?: string;
+    /** Width of the cover (CSS length). */
+    width?: string;
+    /** Resting rotation around the vertical axis, in degrees. */
+    angle?: number;
+    eager?: boolean;
+    class?: string;
+}
+
+const { cover, title, href, width = "14rem", angle = 9, eager = false, class: className } = Astro.props;
+const Tag = href ? "a" : "div";
+const hasImage = Boolean(cover) && cover !== PLACEHOLDER_IMAGE;
+const shortTitle = title.replace(/^QED - /, "");
+---
+
+<Tag
+    href={href}
+    class:list={["cover3d group", className]}
+    style={`--cover-w: ${width}; --ry-rest: ${angle}deg;`}
+    data-tilt>
+    <div class="cover3d-object">
+        <span class="cover3d-back" aria-hidden="true"></span>
+        <span class="cover3d-spine" aria-hidden="true"></span>
+        <span class="cover3d-pages" aria-hidden="true"></span>
+        <span class="cover3d-top" aria-hidden="true"></span>
+        <span class="cover3d-front cover3d-blank" role={hasImage ? undefined : "img"} aria-label={hasImage ? undefined : title}>
+            <QedLogo class="w-3/5" title="" />
+            <span class="cover3d-blank-title">{shortTitle}</span>
+        </span>
+        {
+            hasImage && (
+                <img
+                    class="cover3d-front cover3d-image"
+                    src={cover}
+                    alt={title}
+                    loading={eager ? "eager" : "lazy"}
+                    decoding="async"
+                    onerror="this.remove()"
+                />
+            )
+        }
+        <span class="cover3d-gloss" aria-hidden="true"></span>
+    </div>
+</Tag>
+
+<style is:global>
+    .cover3d {
+        position: relative;
+        --cover-t: calc(var(--cover-w) * 0.05);
+        --rx: 2deg;
+        --ry: var(--ry-rest);
+        display: block;
+        width: var(--cover-w);
+        perspective: 1400px;
+        perspective-origin: 50% 40%;
+    }
+
+    /* Soft contact shadow: the magazine stands on the paper. */
+    .cover3d::after {
+        content: "";
+        position: absolute;
+        left: 6%;
+        right: 6%;
+        bottom: -0.9rem;
+        height: 1.1rem;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgb(10 14 30 / 0.28), rgb(10 14 30 / 0));
+        pointer-events: none;
+        z-index: -1;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .dark .cover3d::after {
+        background: radial-gradient(closest-side, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0));
+    }
+    a.cover3d:hover::after {
+        transform: scaleX(0.92);
+    }
+
+    .cover3d-object {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1.414;
+        transform-style: preserve-3d;
+        transform: rotateX(var(--rx)) rotateY(var(--ry));
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .cover3d[data-tilting] .cover3d-object {
+        transition: transform 0.12s linear;
+    }
+
+    .cover3d-front,
+    .cover3d-back,
+    .cover3d-gloss {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 2px 5px 5px 2px;
+        backface-visibility: hidden;
+    }
+
+    .cover3d-front {
+        object-fit: cover;
+        background: var(--qed-grid);
+        transform: translateZ(calc(var(--cover-t) / 2));
+        box-shadow:
+            0 1px 1px rgb(0 0 0 / 0.15),
+            0 30px 40px -24px rgb(10 14 30 / 0.55);
+    }
+
+    .cover3d-image {
+        transform: translateZ(calc(var(--cover-t) / 2 + 0.25px));
+    }
+
+    /* Typographic cover for issues without an image (or when it fails to load). */
+    .cover3d-blank {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 12% 10%;
+        color: #f7f8fb;
+        background:
+            linear-gradient(to right, rgb(255 255 255 / 0.07) 1px, transparent 1px) 0 0 / 8% 5.66%,
+            linear-gradient(to bottom, rgb(255 255 255 / 0.07) 1px, transparent 1px) 0 0 / 8% 5.66%,
+            linear-gradient(160deg, #1d3b9c, #11235e);
+    }
+
+    .cover3d-blank-title {
+        font-family: var(--font-serif);
+        font-weight: 700;
+        font-size: calc(var(--cover-w) * 0.1);
+        line-height: 1.1;
+        border-top: 3px solid var(--color-marker);
+        padding-top: 0.5em;
+    }
+
+    .cover3d-gloss {
+        pointer-events: none;
+        transform: translateZ(calc(var(--cover-t) / 2 + 0.5px));
+        background: linear-gradient(
+            calc(115deg + var(--ry) * 1.5),
+            rgb(255 255 255 / 0) 30%,
+            rgb(255 255 255 / 0.22) 48%,
+            rgb(255 255 255 / 0) 62%
+        );
+        mix-blend-mode: soft-light;
+    }
+
+    .cover3d-back {
+        background: #e9ecf3;
+        transform: rotateY(180deg) translateZ(calc(var(--cover-t) / 2));
+    }
+
+    .cover3d-spine {
+        position: absolute;
+        top: 0;
+        left: calc(var(--cover-t) / -2);
+        width: var(--cover-t);
+        height: 100%;
+        background: linear-gradient(90deg, #0d1a47, #2a4fbf 40%, #1d3b9c 60%, #0d1a47);
+        transform: rotateY(-90deg);
+    }
+
+    .cover3d-pages {
+        position: absolute;
+        top: 1.5%;
+        right: calc(var(--cover-t) / -2);
+        width: var(--cover-t);
+        height: 97%;
+        background: repeating-linear-gradient(90deg, #f7f5ef 0 1px, #dcd9d0 1px 2px);
+        transform: rotateY(90deg);
+    }
+
+    .cover3d-top {
+        position: absolute;
+        top: calc(var(--cover-t) / -2);
+        left: 0;
+        width: 98%;
+        height: var(--cover-t);
+        background: repeating-linear-gradient(0deg, #f7f5ef 0 1px, #dcd9d0 1px 2px);
+        transform: rotateX(90deg);
+    }
+
+    a.cover3d:focus-visible {
+        outline: none;
+    }
+    a.cover3d:focus-visible .cover3d-front {
+        outline: 3px solid var(--color-marker);
+        outline-offset: 4px;
+    }
+    a.cover3d:hover,
+    a.cover3d:focus-visible {
+        --ry: calc(var(--ry-rest) * 1.8);
+        --rx: 3deg;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .cover3d-object {
+            transition: none;
+        }
+    }
+</style>
+
+<script>
+    // Pointer tilt for every [data-tilt] cover on the page.
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    document.querySelectorAll<HTMLElement>(".cover3d[data-tilt]").forEach((element) => {
+        if (element.dataset.tiltReady) return;
+        element.dataset.tiltReady = "true";
+        element.addEventListener("pointermove", (event) => {
+            if (reduce.matches || event.pointerType === "touch") return;
+            const rect = element.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+            element.dataset.tilting = "";
+            element.style.setProperty("--ry", `${x * 28}deg`);
+            element.style.setProperty("--rx", `${-y * 14 + 2}deg`);
+        });
+        element.addEventListener("pointerleave", () => {
+            delete element.dataset.tilting;
+            element.style.removeProperty("--ry");
+            element.style.removeProperty("--rx");
+        });
+    });
+</script>

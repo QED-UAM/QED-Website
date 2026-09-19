@@ -1,15 +1,18 @@
-const ielightbgrgb = "rgb(243, 244, 246)";
-const ielightbgclass = "gray-100";
-const ielightmainrgb = "rgb(209, 213, 219)";
-const ielightmainclass = "gray-300";
-const ielightcontrastrgb = "rgb(37, 99, 235)";
-const ielightcontrastclass = "blue-600";
-const iedarkbgrgb = "rgb(55, 65, 81)";
-const iedarkbgclass = "gray-700";
-const iedarkmainrgb = "rgb(107, 114, 128)";
-const iedarkmainclass = "gray-500";
-const iedarkcontrastrgb = "rgb(191, 219, 254)";
-const iedarkcontrastclass = "blue-200";
+// Interactive-component palette (v2 redesign). Article scripts read these globals, parse the
+// "rgb(r, g, b)" strings and build Tailwind classes such as `bg-${ielightbgclass}`: keep the
+// names and formats. The ie-* colors are defined in src/styles/global.css.
+const ielightbgrgb = "rgb(255, 255, 255)";
+const ielightbgclass = "ie-light-bg";
+const ielightmainrgb = "rgb(128, 146, 196)";
+const ielightmainclass = "ie-light-main";
+const ielightcontrastrgb = "rgb(29, 59, 156)";
+const ielightcontrastclass = "ie-light-contrast";
+const iedarkbgrgb = "rgb(26, 34, 54)";
+const iedarkbgclass = "ie-dark-bg";
+const iedarkmainrgb = "rgb(100, 120, 170)";
+const iedarkmainclass = "ie-dark-main";
+const iedarkcontrastrgb = "rgb(168, 189, 255)";
+const iedarkcontrastclass = "ie-dark-contrast";
 
 function toggleControls(instanceName) {
     const controlsContainer = document.getElementById(`controls-${instanceName}`);
@@ -49,7 +52,9 @@ function activateInteractiveElements(scripts) {
             clearData: "Clear Data"
         }
     };
-    const lang = document.getElementById("current-lang-icon").alt.toLowerCase();
+    const langIcon = document.getElementById("current-lang-icon");
+    const requestedLang = (langIcon ? langIcon.alt : document.documentElement.lang || "es").toLowerCase();
+    const lang = translations[requestedLang] ? requestedLang : "es";
     extractAndEvaluateScripts(scripts || []);
     document.querySelectorAll(".interactive-placeholder").forEach((placeholder) => {
         const scriptName = placeholder.dataset.script;
@@ -106,13 +111,13 @@ function activateInteractiveElements(scripts) {
 
             pauseButton = document.createElement("a");
             pauseButton.href = "javascript:;";
-            pauseButton.className = "text-blue-500 dark:text-blue-300 hover:underline";
+            pauseButton.className = "ie-control";
             pauseButton.textContent = translations[lang].pause;
             pauseResumeContainer.appendChild(pauseButton);
 
             resumeButton = document.createElement("a");
             resumeButton.href = "javascript:;";
-            resumeButton.className = "hidden text-blue-500 dark:text-blue-300 hover:underline";
+            resumeButton.className = "hidden ie-control";
             resumeButton.textContent = translations[lang].resume;
             pauseResumeContainer.appendChild(resumeButton);
 
@@ -134,7 +139,7 @@ function activateInteractiveElements(scripts) {
 
             const clearDataButton = document.createElement("a");
             clearDataButton.href = "javascript:;";
-            clearDataButton.className = "text-blue-500 dark:text-blue-300 hover:underline";
+            clearDataButton.className = "ie-control";
             clearDataButton.textContent = translations[lang].clearData;
             clearDataContainer.appendChild(clearDataButton);
 
@@ -152,7 +157,7 @@ function activateInteractiveElements(scripts) {
             fullscreenButton = document.createElement("a");
             fullscreenButton.href = "javascript:;";
             fullscreenButton.className =
-                "fullscreen-link absolute bottom-2 right-2 text-black dark:text-white hover:underline w-6 h-6 z-10";
+                "fullscreen-link absolute bottom-2 right-2 w-6 h-6 z-10";
             const enterFullscreenIcon = `
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                 <path d="M4 12 L4 4 12 4 M20 4 L28 4 28 12 M4 20 L4 28 12 28 M28 20 L28 28 20 28"/>
@@ -207,15 +212,20 @@ function activateInteractiveElements(scripts) {
                 }
             });
 
-            document.addEventListener("fullscreenchange", () => {
-                if (document.fullscreenElement) {
-                    fullscreenButton.innerHTML = exitFullscreenIcon;
-                    interactiveContainer.classList.remove("rounded-t-xl");
-                } else {
-                    fullscreenButton.innerHTML = enterFullscreenIcon;
-                    interactiveContainer.classList.add("rounded-t-xl");
-                }
-            });
+            // Registered once per component (it used to be added again on every play/reset).
+            if (!interactiveContainer.dataset.fullscreenListener) {
+                interactiveContainer.dataset.fullscreenListener = "true";
+                document.addEventListener("fullscreenchange", () => {
+                    if (!fullscreenButton) return;
+                    if (document.fullscreenElement) {
+                        fullscreenButton.innerHTML = exitFullscreenIcon;
+                        interactiveContainer.classList.remove("rounded-t-xl");
+                    } else {
+                        fullscreenButton.innerHTML = enterFullscreenIcon;
+                        interactiveContainer.classList.add("rounded-t-xl");
+                    }
+                });
+            }
         }
 
         function checkVisibility() {
@@ -255,7 +265,7 @@ function activateInteractiveElements(scripts) {
 
         const stopButton = document.createElement("a");
         stopButton.href = "javascript:;";
-        stopButton.className = "text-blue-500 dark:text-blue-300 hover:underline";
+        stopButton.className = "ie-control";
         stopButton.textContent = translations[lang].stop;
         stopContainer.appendChild(stopButton);
 
@@ -265,7 +275,7 @@ function activateInteractiveElements(scripts) {
 
         const resetLink = document.createElement("a");
         resetLink.href = "javascript:;";
-        resetLink.className = "text-blue-500 dark:text-blue-300 hover:underline";
+        resetLink.className = "ie-control";
         resetLink.textContent = translations[lang].reset;
         resetContainer.appendChild(resetLink);
 
@@ -315,7 +325,7 @@ function activateInteractiveElements(scripts) {
                 if (contentContainer) contentContainer.remove();
                 const newContentContainer = document.createElement("div");
                 newContentContainer.className =
-                    "interactive-content w-full h-full bg-gray-100 dark:bg-gray-700";
+                    "interactive-content w-full h-full bg-ie-light-bg dark:bg-ie-dark-bg";
                 interactiveContainer.appendChild(newContentContainer);
                 instance.iter = () => {
                     if (instance.running) {

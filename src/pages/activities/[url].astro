@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+import Untranslated from "../../components/Untranslated.astro";
+import Icon from "../../components/Icon.astro";
+import InteractiveContent from "../../components/InteractiveContent.astro";
+import { usePage } from "../../lib/page";
+import { getActivity } from "../../lib/content";
+
+const { locale, t, href, param } = usePage(Astro);
+const activity = await getActivity(param("url"), locale);
+if (!activity) return Astro.rewrite("/404");
+---
+
+<Base title={activity.title} description={activity.description || undefined} image={activity.photo ?? undefined}>
+    <article class="mx-auto max-w-[46rem] px-5 pt-6 sm:px-8 sm:pt-12">
+        <header>
+            <h1 class="font-serif text-4xl leading-[1.1] font-bold text-balance text-ink sm:text-6xl">
+                <Untranslated missing={activity.missing} message={t("activities.activity.noTranslation")}>
+                    {activity.title}
+                </Untranslated>
+            </h1>
+            <p class="mt-4 text-muted">
+                <time datetime={activity.isoDate} set:html={t("activities.activity.postedAt", { date: activity.date })} />
+            </p>
+        </header>
+
+        <hr class="mt-8 border-grid" />
+
+        <InteractiveContent
+            id="activity-md"
+            html={activity.contentHtml}
+            scripts={activity.scripts}
+            class="article-body prose prose-custom dark:prose-invert mt-10 max-w-none break-words"
+        />
+
+        <footer class="mt-14 border-t border-grid pt-8">
+            <a href={href("activities")} class="btn-quiet">
+                <Icon name="arrowLeft" class="size-4" />
+                {t("activities.activity.backToActivities")}
+            </a>
+        </footer>
+    </article>
+</Base>

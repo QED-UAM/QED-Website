@@ -1,2 +1,10 @@
 node_modules
 dist
+.astro
+tests/legacy
+tests/fixtures
+public/js/postInteractiveElements.js
+public/js/postUtils.js
+src/styles/generated
+package-lock.json
+locales

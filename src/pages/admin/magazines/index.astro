@@ -1,0 +1,30 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import AdminList from "../../../components/admin/AdminList.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext } from "../../../lib/admin/page";
+import { Magazine } from "../../../lib/db/models";
+
+const { locale, t, href } = usePage(Astro);
+const { strings } = adminContext(locale);
+const magazines = await Magazine.find().sort({ _id: -1 }).lean();
+const items = magazines.map((magazine) => ({
+    url: magazine.url,
+    title: magazine.title?.es ?? "",
+    badge: magazine.visible ? t("admin.common.visible") : t("admin.common.hidden"),
+    badgeTone: magazine.visible ? ("ok" as const) : ("muted" as const),
+    publicHref: magazine.visible ? href("issue", { issue: magazine.url }) : undefined
+}));
+---
+
+<Admin title={t("admin.magazines.title")} section="adminMagazines">
+    <AdminList
+        client:load
+        kind="magazines"
+        section="magazines"
+        heading={t("admin.magazines.magazinesSection")}
+        groups={[{ title: "", items }]}
+        editorBase={href("adminMagazines")}
+        strings={strings}
+    />
+</Admin>

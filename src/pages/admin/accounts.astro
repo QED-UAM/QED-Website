@@ -1,0 +1,22 @@
+---
+import Admin from "../../layouts/Admin.astro";
+import AccountsEditor from "../../components/admin/AccountsEditor.svelte";
+import { usePage } from "../../lib/page";
+import { adminContext } from "../../lib/admin/page";
+import { Admin as AdminModel } from "../../lib/db/models";
+import { config } from "../../lib/config";
+
+const { locale, t } = usePage(Astro);
+const { strings } = adminContext(locale);
+const admins = await AdminModel.find().sort({ _id: 1 }).lean();
+---
+
+<Admin title={t("admin.accounts.title")} section="adminAccounts">
+    <AccountsEditor
+        client:load
+        accounts={admins.map((admin) => ({ email: admin.email, name: admin.name ?? "", photo: admin.photo ?? "" }))}
+        qedEmail={config.qedEmail}
+        currentEmail={Astro.locals.admin!.email}
+        strings={strings}
+    />
+</Admin>

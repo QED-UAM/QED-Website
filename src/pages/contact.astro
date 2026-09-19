@@ -1,0 +1,88 @@
+---
+import Base from "../layouts/Base.astro";
+import SocialLinks from "../components/SocialLinks.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { usePage } from "../lib/page";
+import { rateLimited, sendContactMessage, validateContact, type ContactError } from "../lib/email/contact";
+import { config } from "../lib/config";
+
+const { t, href } = usePage(Astro);
+
+let error: ContactError | null = null;
+let values = { name: "", email: "", message: "" };
+
+if (Astro.request.method === "POST") {
+    const form = await Astro.request.formData();
+    values = {
+        name: String(form.get("name") ?? ""),
+        email: String(form.get("email") ?? ""),
+        message: String(form.get("message") ?? "")
+    };
+    // Honeypot: people never see this field; bots fill it in.
+    if (String(form.get("website") ?? "")) return Astro.redirect(href("emailSuccessful"), 303);
+
+    const client =
+        Astro.request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || Astro.clientAddress || "unknown";
+    const result = validateContact(values);
+    if (!result.ok) error = result.error;
+    else if (rateLimited(client)) error = "rateLimited";
+    else if (await sendContactMessage(result.value)) return Astro.redirect(href("emailSuccessful"), 303);
+    else error = "send";
+    Astro.response.status = error === "rateLimited" ? 429 : 400;
+}
+---
+
+<Base title={t("contact.title")}>
+    <PageHeader title={t("contact.title")} lead={t("contact.contactUs")} />
+    <div class="mx-auto grid max-w-6xl gap-14 px-4 pt-12 sm:px-8 sm:pt-16 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div>
+            <h2 class="font-serif text-3xl font-bold">{t("contact.ourSocialMedia")}</h2>
+            <SocialLinks class="mt-5 flex-col items-start gap-4" size="size-6" labels />
+        </div>
+
+        <form method="POST" class="flex flex-col gap-5 rounded-xl border border-grid bg-surface p-6 sm:p-8" novalidate>
+            {
+                error && (
+                    <p role="alert" class="rounded-lg border border-redpen/40 bg-redpen/10 px-4 py-3 text-sm font-medium text-redpen">
+                        {t(`contact.errors.${error}`, { email: config.qedEmail })}
+                    </p>
+                )
+            }
+            <label class="flex flex-col gap-1.5">
+                <span class="text-sm font-semibold">{t("contact.name")}</span>
+                <input class="field" type="text" name="name" autocomplete="name" required maxlength="200" value={values.name} />
+            </label>
+            <label class="flex flex-col gap-1.5">
+                <span class="text-sm font-semibold">{t("contact.email")}</span>
+                <input class="field" type="email" name="email" autocomplete="email" required maxlength="320" value={values.email} />
+            </label>
+            <label class="flex flex-col gap-1.5">
+                <span class="text-sm font-semibold">{t("contact.message")}</span>
+                <textarea class="field min-h-40" name="message" rows="6" required maxlength="10000">{values.message}</textarea>
+            </label>
+            <label class="hidden" aria-hidden="true">
+                Website <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+                <button type="submit" class="btn key" data-sending={t("contact.sending")}>{t("contact.submit")}</button>
+                <p class="text-sm text-muted">{t("contact.formHint")}</p>
+            </div>
+        </form>
+    </div>
+</Base>
+
+<script>
+    document.querySelector<HTMLFormElement>("form[method=POST]")?.addEventListener("submit", (event) => {
+        const form = event.currentTarget as HTMLFormElement;
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            form.reportValidity();
+            return;
+        }
+        const button = form.querySelector<HTMLButtonElement>("button[type=submit]");
+        if (button?.dataset.sending) {
+            button.disabled = true;
+            button.textContent = button.dataset.sending;
+        }
+    });
+</script>

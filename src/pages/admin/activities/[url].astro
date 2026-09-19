@@ -1,0 +1,31 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import ActivityEditor from "../../../components/admin/ActivityEditor.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext, editable, lf } from "../../../lib/admin/page";
+import { Activity } from "../../../lib/db/models";
+
+const { locale, t, href, param, origin } = usePage(Astro);
+const activity = await Activity.findOne({ url: param("url") }).lean();
+if (!activity) return Astro.rewrite("/404");
+const { languages, strings } = adminContext(locale);
+---
+
+<Admin title={t("admin.activities.activity.title", { name: activity.title?.es || activity.url })} section="adminActivity" runtime>
+    <ActivityEditor
+        client:load
+        activity={{
+            url: activity.url,
+            title: editable(activity.title),
+            description: editable(activity.description),
+            photo: activity.photo ?? "",
+            scripts: lf(activity.scripts),
+            content: editable(activity.content)
+        }}
+        languages={languages}
+        strings={strings}
+        urlPrefix={`${origin}/${t("activities.index.url")}/`}
+        editorBase={href("adminActivities")}
+        publicHref={href("activity", { url: activity.url })}
+    />
+</Admin>

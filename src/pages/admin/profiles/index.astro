@@ -1,0 +1,38 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import AdminList from "../../../components/admin/AdminList.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext } from "../../../lib/admin/page";
+import { User } from "../../../lib/db/models";
+import { schoolYear, boardRoleKey } from "../../../lib/format";
+
+const { locale, t, href } = usePage(Astro);
+const { strings } = adminContext(locale);
+const year = schoolYear();
+const users = await User.find().select("url name photo directiveBoard").lean();
+const items = users
+    .map((user) => {
+        const role = user.directiveBoard?.find((entry) => entry.year === year)?.role;
+        return {
+            url: user.url,
+            title: user.name ?? "",
+            image: user.photo ?? "",
+            badge: role ? t(boardRoleKey(role, false)) : undefined,
+            badgeTone: "ok" as const,
+            publicHref: href("profile", { url: user.url })
+        };
+    })
+    .sort((a, b) => a.title.localeCompare(b.title));
+---
+
+<Admin title={t("admin.profiles.title")} section="adminProfiles">
+    <AdminList
+        client:load
+        kind="profiles"
+        section="profiles"
+        heading={t("admin.profiles.userProfiles")}
+        groups={[{ title: "", items }]}
+        editorBase={href("adminProfiles")}
+        strings={strings}
+    />
+</Admin>

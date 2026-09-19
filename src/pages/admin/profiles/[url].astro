@@ -1,0 +1,39 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import ProfileEditor from "../../../components/admin/ProfileEditor.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext, editable } from "../../../lib/admin/page";
+import { boardYears } from "../../../lib/admin/service";
+import { User } from "../../../lib/db/models";
+
+const { locale, t, href, param, origin } = usePage(Astro);
+const user = await User.findOne({ url: param("url") }).lean();
+if (!user) return Astro.rewrite("/404");
+const { languages, strings } = adminContext(locale);
+const social = user.socialMedia ?? {};
+---
+
+<Admin title={t("admin.profiles.profile.title", { name: user.name || user.url })} section="adminProfile">
+    <ProfileEditor
+        client:load
+        profile={{
+            url: user.url,
+            name: user.name ?? "",
+            photo: user.photo ?? "",
+            socialMedia: {
+                email: social.email ?? "",
+                instagram: social.instagram ?? "",
+                x: social.x ?? "",
+                linkedin: social.linkedin ?? ""
+            },
+            about: editable(user.about),
+            directiveBoard: (user.directiveBoard ?? []).map((entry) => ({ year: entry.year, role: entry.role }))
+        }}
+        languages={languages}
+        years={boardYears()}
+        strings={strings}
+        urlPrefix={`${origin}/${t("profile.url")}/`}
+        editorBase={href("adminProfiles")}
+        publicHref={href("profile", { url: user.url })}
+    />
+</Admin>

@@ -1,0 +1,22 @@
+---
+import QedLogo from "./QedLogo.astro";
+import SocialLinks from "./SocialLinks.astro";
+import { usePage } from "../lib/page";
+
+const { t } = usePage(Astro);
+---
+
+<footer class="graph-paper mt-24 border-t border-grid">
+    <div
+        class="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:flex-row sm:items-end sm:justify-between sm:px-8">
+        <div class="flex flex-col gap-3">
+            <QedLogo class="w-20 text-graphite" />
+            <p class="max-w-xs font-serif text-lg italic text-muted">{t("index.logoSubtitle")}</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:items-end">
+            <SocialLinks class="gap-5" size="size-6" />
+            <p class="text-sm text-graphite/80" set:html={t("footer.webMadeBy", { profileUrl: t("profile.url") })} />
+            <p class="text-sm text-muted">{t("footer.copyright", { year: new Date().getFullYear() })}</p>
+        </div>
+    </div>
+</footer>
