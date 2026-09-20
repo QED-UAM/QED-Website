@@ -1,26 +1,89 @@
 ---
 // Red-pen proofreading mark for text shown in Spanish because the current language has no
-// translation. Renders children untouched when nothing is missing.
+// translation. The reason appears in a tooltip of the site's own (a `title` attribute is slow,
+// unstyled and never shows on touch), and the translate icon rides inside it: beside the text
+// it was an atomic inline box, which swallowed the underline of any link the text sits in.
+// Renders children untouched when nothing is missing.
 import Icon from "./Icon.astro";
 
 interface Props {
     missing: boolean;
     message: string;
-    iconClass?: string;
 }
 
-const { missing, message, iconClass = "size-[0.8em]" } = Astro.props;
+const { missing, message } = Astro.props;
+const tipId = `untranslated-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 {
     missing ? (
-        <span class="untranslated inline-flex items-baseline gap-[0.3em]" title={message}>
-            <Icon name="translate" class:list={[iconClass, "shrink-0 self-center"]} label={message} />
-            <span>
+        <span class="untranslated-host" aria-describedby={tipId}>
+            <span class="untranslated">
                 <slot />
+            </span>
+            <span class="untranslated-tip" role="tooltip" id={tipId}>
+                <Icon name="translate" class="size-[1.15em] shrink-0" />
+                <span>{message}</span>
             </span>
         </span>
     ) : (
         <slot />
     )
 }
+
+<style is:global>
+    .untranslated-host {
+        position: relative;
+    }
+    .untranslated-host .untranslated {
+        /* An inline box of its own: the underline a link paints on hover stops at its edge,
+           instead of running under the wavy mark as a second line. */
+        display: inline-block;
+        transition: text-decoration-color 150ms ease;
+    }
+    /* The mark answers to hover on its own, and to hover or focus of the link around it. It
+       only changes colour: the wave is drawn from its thickness, so a thicker line would be a
+       differently shaped squiggle. */
+    .untranslated-host:hover .untranslated,
+    a:hover .untranslated,
+    a:focus-visible .untranslated {
+        text-decoration-color: var(--color-marker);
+        color: color-mix(in srgb, var(--qed-redpen) 80%, var(--qed-text));
+    }
+    .untranslated-tip {
+        position: absolute;
+        bottom: calc(100% + 0.45rem);
+        left: 0;
+        z-index: 20;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: max-content;
+        max-width: min(20rem, 70vw);
+        padding: 0.45rem 0.7rem;
+        border-radius: 0.5rem;
+        background: var(--qed-text);
+        color: var(--qed-paper);
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1.35;
+        text-align: left;
+        text-decoration: none;
+        box-shadow: 0 10px 24px -12px rgb(0 0 0 / 0.5);
+        opacity: 0;
+        transform: translateY(4px);
+        pointer-events: none;
+        transition:
+            opacity 150ms ease,
+            transform 150ms ease;
+    }
+    .untranslated-host:hover .untranslated-tip,
+    .untranslated-host:focus-within .untranslated-tip,
+    a:hover .untranslated-tip,
+    a:focus-visible .untranslated-tip {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>

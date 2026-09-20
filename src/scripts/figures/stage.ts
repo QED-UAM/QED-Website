@@ -1,6 +1,7 @@
 // One WebGL renderer for every engraved figure on the page. A transparent canvas covers the
 // viewport; each frame, every visible `[data-figure]` element gets its scene drawn into its own
-// box (scissor), so a page can show many figures with a single WebGL context.
+// box (scissor), so a page can show many figures with a single WebGL context. Where WebGL is
+// missing or turned off, ./flat draws the same figures with the 2D canvas instead.
 import * as THREE from "three";
 import { loadShape } from "./shapes";
 
@@ -16,6 +17,7 @@ interface View {
     speed: number;
     visible: boolean;
     appear: number;
+    drawn: boolean;
     key: string;
 }
 
@@ -23,9 +25,15 @@ const views: View[] = [];
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let renderer: THREE.WebGLRenderer | undefined;
 let canvas: HTMLCanvasElement | undefined;
+/** Set once WebGL turns out to be unavailable: from there on the figures are drawn flat. */
+let flat = false;
+let flatModule: Promise<typeof import("./flat")> | undefined;
+const useFlat = () => (flatModule ??= import("./flat"));
 let clock = 0;
 let last = performance.now();
 let pointer = { x: 0, y: 0 };
+/** How far the figures turn with the pointer, in radians from one edge of the window to the other. */
+const LEAN = { x: 0.75, y: 1.2 };
 let dirty = true;
 
 function color(name: string, fallback: string) {
@@ -46,13 +54,37 @@ const fillMaterial = new THREE.MeshBasicMaterial({
 });
 const lineMaterial = new THREE.LineBasicMaterial({ color: ink(), fog: true });
 
+/** Asked before building the renderer: three.js logs a stack of errors if we let it find out. */
+function webglAvailable() {
+    try {
+        const probe = document.createElement("canvas");
+        const context = probe.getContext("webgl2") ?? probe.getContext("webgl");
+        // Hand the context straight back: browsers only allow a handful at a time.
+        context?.getExtension("WEBGL_lose_context")?.loseContext();
+        return !!context;
+    } catch {
+        return false;
+    }
+}
+
 function ensureRenderer() {
-    if (renderer) return renderer;
+    if (renderer || flat) return renderer;
+    if (!webglAvailable()) {
+        flat = true;
+        return undefined;
+    }
     canvas = document.createElement("canvas");
     canvas.className = "figure-stage";
     canvas.setAttribute("aria-hidden", "true");
     document.body.appendChild(canvas);
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+        canvas.remove();
+        canvas = undefined;
+        flat = true;
+        return undefined;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.setAnimationLoop(loop);
@@ -103,7 +135,7 @@ function loop(now: number) {
         if (rect.bottom < 0 || rect.top > height || rect.right < 0 || rect.left > width || rect.width === 0) continue;
         if (animate) view.appear = Math.min(1, view.appear + dt * 2);
         const sway = animate ? Math.sin(clock * view.speed + view.phase) * 0.45 : 0;
-        const lean = animate ? { x: pointer.y * 0.3, y: pointer.x * 0.45 } : { x: 0, y: 0 };
+        const lean = animate ? { x: pointer.y * LEAN.x, y: pointer.x * LEAN.y } : { x: 0, y: 0 };
         view.group.rotation.set(view.view[0] + lean.x, view.view[1] + sway + lean.y, view.view[2]);
         view.group.scale.setScalar(0.85 + 0.15 * (1 - Math.pow(1 - view.appear, 3)));
         view.camera.aspect = rect.width / rect.height;
@@ -112,6 +144,11 @@ function loop(now: number) {
         r.setViewport(rect.left, bottom, rect.width, rect.height);
         r.setScissor(rect.left, bottom, rect.width, rect.height);
         r.render(view.scene, view.camera);
+        // The figure is on screen now, so the sketch under it can fade away.
+        if (!view.drawn) {
+            view.drawn = true;
+            view.element.dataset.figureReady = "";
+        }
     }
 }
 
@@ -151,6 +188,7 @@ async function buildView(element: HTMLElement, key: string): Promise<View> {
         speed: Number(element.dataset.speed ?? 0.35),
         visible: false,
         appear: reduceMotion.matches ? 1 : 0,
+        drawn: false,
         key
     };
 }
@@ -159,18 +197,21 @@ const TAU_SAFE = Math.PI * 2;
 
 /** Starts drawing the figure named by `element.dataset.figure` inside `element`. */
 export async function mountFigure(element: HTMLElement) {
-    ensureRenderer();
-    const view = await buildView(element, element.dataset.figure ?? "cube");
+    const key = element.dataset.figure ?? "";
+    if (!ensureRenderer()) return (await useFlat()).mountFlat(element, key);
+    const view = await buildView(element, key);
     views.push(view);
     observer.observe(element);
     dirty = true;
-    return view;
 }
 
 /** Replaces the shape drawn in a mounted figure (e.g. the hero's click-to-change). */
 export async function setFigure(element: HTMLElement, key: string) {
     const view = views.find((item) => item.element === element);
-    if (!view) return;
+    if (!view) {
+        if (flat) await (await useFlat()).setFlatFigure(element, key);
+        return;
+    }
     const shape = await loadShape(key);
     view.fill.geometry = shape.fill ?? new THREE.BufferGeometry();
     view.lines.geometry = shape.lines;

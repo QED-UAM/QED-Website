@@ -33,14 +33,15 @@ if (Astro.request.method === "POST") {
 ---
 
 <Base title={t("contact.title")}>
-    <PageHeader title={t("contact.title")} lead={t("contact.contactUs")} />
-    <div class="mx-auto grid max-w-6xl gap-14 px-4 pt-12 sm:px-8 sm:pt-16 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-        <div>
-            <h2 class="font-serif text-3xl font-bold">{t("contact.ourSocialMedia")}</h2>
-            <SocialLinks class="mt-5 flex-col items-start gap-4" size="size-6" labels />
-        </div>
+    {/* The form shares the header's row, so it starts at the top of the page and fits one screen. */}
+    <div
+        class="mx-auto grid max-w-6xl gap-x-14 gap-y-10 px-4 pt-8 sm:px-8 sm:pt-14 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-start">
+        <PageHeader title={t("contact.title")} lead={t("contact.contactUs")} class="md:col-start-1 md:row-start-1" />
 
-        <form method="POST" class="flex flex-col gap-5 rounded-xl border border-grid bg-surface p-6 sm:p-8" novalidate>
+        <form
+            method="POST"
+            class="flex flex-col gap-5 rounded-xl border border-grid bg-surface p-6 sm:p-8 md:col-start-2 md:row-span-2 md:row-start-1"
+            novalidate>
             {
                 error && (
                     <p role="alert" class="rounded-lg border border-redpen/40 bg-redpen/10 px-4 py-3 text-sm font-medium text-redpen">
@@ -68,6 +69,11 @@ if (Astro.request.method === "POST") {
                 <p class="text-sm text-muted">{t("contact.formHint")}</p>
             </div>
         </form>
+
+        <section class="md:col-start-1 md:row-start-2">
+            <h2 class="font-serif text-3xl font-bold">{t("contact.ourSocialMedia")}</h2>
+            <SocialLinks class="mt-5 flex-col items-start gap-4" size="size-6" labels />
+        </section>
     </div>
 </Base>
 

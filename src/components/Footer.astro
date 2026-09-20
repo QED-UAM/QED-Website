@@ -15,8 +15,45 @@ const { t } = usePage(Astro);
         </div>
         <div class="flex flex-col gap-3 sm:items-end">
             <SocialLinks class="gap-5" size="size-6" />
-            <p class="text-sm text-graphite/80" set:html={t("footer.webMadeBy", { profileUrl: t("profile.url") })} />
+            <p class="footer-credit text-sm text-graphite/80" set:html={t("footer.webMadeBy", { profileUrl: t("profile.url") })} />
             <p class="text-sm text-muted">{t("footer.copyright", { year: new Date().getFullYear() })}</p>
         </div>
     </div>
 </footer>
+
+<style is:global>
+    /* The credit line carries a link inside translated markup. It keeps the colour of the text
+       around it and is marked instead with the same highlighter swipe the navbar gives the page
+       you are on, drawn in ink blue so it stays quiet. */
+    .footer-credit a {
+        color: inherit;
+        font-weight: 600;
+        text-decoration: none;
+        background-image: linear-gradient(
+            104deg,
+            transparent 0.2em,
+            color-mix(in srgb, var(--qed-ink) 30%, transparent) 0.3em,
+            color-mix(in srgb, var(--qed-ink) 24%, transparent) calc(100% - 0.3em),
+            transparent calc(100% - 0.2em)
+        );
+        background-repeat: no-repeat;
+        background-size: 100% 0.55em;
+        background-position: 0 88%;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        transition:
+            background-size 150ms ease,
+            background-image 150ms ease;
+    }
+    .footer-credit a:hover,
+    .footer-credit a:focus-visible {
+        background-image: linear-gradient(
+            104deg,
+            transparent 0.2em,
+            color-mix(in srgb, var(--qed-ink) 45%, transparent) 0.3em,
+            color-mix(in srgb, var(--qed-ink) 38%, transparent) calc(100% - 0.3em),
+            transparent calc(100% - 0.2em)
+        );
+        background-size: 100% 0.8em;
+    }
+</style>

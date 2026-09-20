@@ -3,33 +3,12 @@
 // random figure; clicking it shows the next one of the collection, and the caption names it.
 import QedLogo from "./QedLogo.astro";
 import Figure from "./Figure.astro";
+import { SHAPE_KEYS } from "../scripts/figures/shapes";
 import { usePage } from "../lib/page";
 
 const { t } = usePage(Astro);
-const COLLECTION = [
-    "trefoil",
-    "klein",
-    "mobius",
-    "torus",
-    "enneper",
-    "torusKnot",
-    "seashell",
-    "catenoid",
-    "roman",
-    "figureEight",
-    "helicoid",
-    "dini",
-    "hyperboloid",
-    "saddle",
-    "sphere",
-    "icosahedron",
-    "dodecahedron",
-    "octahedron",
-    "cube",
-    "tetrahedron"
-];
-const start = Math.floor(Math.random() * COLLECTION.length);
-const ordered = [...COLLECTION.slice(start), ...COLLECTION.slice(0, start)];
+const start = Math.floor(Math.random() * SHAPE_KEYS.length);
+const ordered = [...SHAPE_KEYS.slice(start), ...SHAPE_KEYS.slice(0, start)];
 const cycle = Object.fromEntries(ordered.map((key) => [key, t(`figures.${key}`)]));
 const first = ordered[0];
 ---
@@ -54,7 +33,7 @@ const first = ordered[0];
             cycleLabel={t("index.figures.next")}
             figureClass="aspect-square w-[min(72vw,26rem)]"
             speed={0.35}>
-            <span slot="hint" class="block font-sans text-xs not-italic opacity-80">{t("index.figures.hint")}</span>
+            <span slot="hint" class="figure-hint font-sans text-xs not-italic opacity-80">{t("index.figures.hint")}</span>
         </Figure>
     </div>
 </section>
@@ -62,12 +41,35 @@ const first = ordered[0];
 <script is:inline>
     // First visit from outside the site: draw the logo in and fade the subtitle, as before.
     (() => {
+        const logo = document.querySelector(".hero-logo");
         const internal = document.referrer && document.referrer.startsWith(location.origin);
         const nav = performance.getEntriesByType("navigation")[0];
         const reload = nav && nav.type === "reload";
         const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if (internal || reload || reduce) return;
-        document.querySelector(".hero-logo")?.classList.add("qed-logo-draw");
+        if (!logo || internal || reload || reduce) return;
+
+        // The stylesheet dashes every path with the same guessed length, and a path longer than
+        // that one would stop short of being drawn: give each its own.
+        const paths = Array.from(logo.querySelectorAll("path"));
+        for (const path of paths) {
+            try {
+                const length = Math.ceil(path.getTotalLength());
+                path.style.strokeDasharray = String(length);
+                path.style.strokeDashoffset = String(length);
+            } catch {
+                /* nothing to measure: the animation runs with the stylesheet's dashes */
+            }
+        }
+        logo.classList.add("qed-logo-draw");
+        // However the drawing went - cut short, interrupted, dashes left over - it ends whole.
+        setTimeout(() => {
+            logo.classList.remove("qed-logo-draw");
+            for (const path of paths) {
+                path.style.strokeDasharray = "";
+                path.style.strokeDashoffset = "";
+            }
+        }, 2400);
+
         const subtitle = document.getElementById("hero-subtitle");
         if (subtitle) {
             subtitle.style.opacity = "0";
