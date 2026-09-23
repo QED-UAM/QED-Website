@@ -1,0 +1,24 @@
+---
+// Small inline icon set (social networks, UI glyphs). Paths come from the previous site.
+import { icons, type IconName } from "./icons";
+
+interface Props {
+    name: IconName;
+    class?: string;
+    label?: string;
+}
+
+const { name, class: className = "size-5", label } = Astro.props;
+const icon = icons[name];
+---
+
+<svg
+    class={className}
+    viewBox={icon.viewBox}
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden={label ? undefined : "true"}
+    role={label ? "img" : undefined}
+    aria-label={label}
+    set:html={icon.body}
+/>

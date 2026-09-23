@@ -1,0 +1,254 @@
+/* Styles for markdown-rendered content: math, code, embeds, spoilers and the
+   interactive-component slate. */
+
+.custom-br {
+    height: 10px;
+}
+
+.footnote-ref a,
+.footnote-backref {
+    color: var(--qed-ink);
+}
+
+.footnote-backref {
+    font-family: initial;
+}
+
+/* KaTeX */
+.katex-display {
+    margin: 1.3333333em 0 !important;
+}
+
+.katex {
+    display: inline-block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    font-size: 1em !important;
+    margin-bottom: -0.5rem;
+    max-width: 100%;
+    vertical-align: baseline;
+}
+
+eq .katex {
+    scrollbar-width: none;
+}
+
+.katex .katex-html .newline {
+    height: 10px;
+}
+
+@media (min-width: 640px) {
+    .katex {
+        font-size: 1.12em !important;
+    }
+}
+
+/* Solution spoilers (::: solution es) */
+.spoiler-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    cursor: pointer;
+    border: 2px dashed var(--qed-grid);
+    border-radius: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--qed-text);
+    background-color: color-mix(in srgb, var(--qed-surface) 80%, transparent);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    transition: all 0.5s ease-in-out;
+}
+
+.spoiler-overlay.hide {
+    border-color: transparent;
+    background-color: transparent;
+    color: transparent;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+}
+
+/* Video embeds */
+.block-embed-service-youtube,
+.block-embed-service-vimeo,
+.block-embed-service-vine,
+.block-embed-service-prezi {
+    position: absolute;
+    inset: 0;
+}
+
+/* Interactive slate. The markup and the Tailwind classes toggled by
+   public/js/postInteractiveElements.js are a contract (docs/interactive-components.md);
+   these rules only style around it. */
+.interactive-slate {
+    filter: drop-shadow(0 12px 14px rgb(21 27 44 / 0.1)) drop-shadow(0 1px 1px rgb(21 27 44 / 0.06));
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.dark .interactive-slate {
+    filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.45));
+}
+
+/* Before playing: a sheet of squared paper with the play key. */
+.interactive-slate .interactive-overlay {
+    background-image:
+        linear-gradient(to right, var(--qed-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--qed-grid) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+    background-position: -1px -1px;
+}
+
+.interactive-slate .interactive-overlay .play-button {
+    width: 3.75rem;
+    height: 3.75rem;
+    padding: 1.15rem 1rem 1.15rem 1.3rem;
+    border-radius: 9999px;
+    background-color: var(--qed-surface);
+    color: var(--qed-ink);
+    box-shadow:
+        0 0 0 1.5px var(--qed-grid),
+        0 4px 0 0 var(--qed-key-shadow),
+        0 10px 20px -10px rgb(0 0 0 / 0.5);
+    transition:
+        transform 90ms ease,
+        box-shadow 90ms ease;
+}
+
+.interactive-slate .interactive-overlay .play-button:hover {
+    transform: translateY(-1px);
+}
+
+.interactive-slate .interactive-overlay .play-button:active {
+    transform: translateY(4px);
+    box-shadow:
+        0 0 0 1.5px var(--qed-grid),
+        0 0 0 0 var(--qed-key-shadow);
+}
+
+.interactive-slate .interactive-arrow-button {
+    box-shadow: 0 2px 0 0 var(--qed-key-shadow);
+}
+
+/* Control bar: pause/resume, clear data, stop, reset (created by the runtime). */
+.interactive-slate .ie-control {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--qed-ink);
+    text-decoration: none;
+    transition: background-color 120ms ease;
+}
+
+.interactive-slate .ie-control:hover {
+    background-color: color-mix(in srgb, var(--qed-grid) 70%, transparent);
+}
+
+.interactive-slate .ie-control.hidden {
+    display: none;
+}
+
+.interactive-slate .fullscreen-link {
+    color: var(--qed-muted);
+    padding: 0.15rem;
+    border-radius: 0.35rem;
+    background-color: color-mix(in srgb, var(--qed-surface) 70%, transparent);
+}
+
+.interactive-slate .fullscreen-link:hover {
+    color: var(--qed-ink);
+}
+
+/* highlight.js: GitHub Dark on a dark slab in both themes. */
+pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+}
+code.hljs {
+    padding: 3px 5px;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+    color: #ff7b72;
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+    color: #d2a8ff;
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+    color: #79c0ff;
+}
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-string {
+    color: #a5d6ff;
+}
+.hljs-built_in,
+.hljs-symbol {
+    color: #ffa657;
+}
+.hljs-code,
+.hljs-comment,
+.hljs-formula {
+    color: #8b949e;
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-pseudo,
+.hljs-selector-tag {
+    color: #7ee787;
+}
+.hljs-subst {
+    color: #c9d1d9;
+}
+.hljs-section {
+    color: #1f6feb;
+    font-weight: 700;
+}
+.hljs-bullet {
+    color: #f2cc60;
+}
+.hljs-emphasis {
+    color: #c9d1d9;
+    font-style: italic;
+}
+.hljs-strong {
+    color: #c9d1d9;
+    font-weight: 700;
+}
+.hljs-addition {
+    color: #aff5b4;
+    background-color: #033a16;
+}
+.hljs-deletion {
+    color: #ffdcd7;
+    background-color: #67060c;
+}

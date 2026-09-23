@@ -1,0 +1,100 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { usePage } from "../lib/page";
+import { getBoard } from "../lib/content";
+import { boardRoleKey } from "../lib/format";
+import { DEFAULT_AVATAR } from "../lib/config";
+
+const { t, href } = usePage(Astro);
+const board = await getBoard();
+const avatarFallback = `this.onerror=null;this.src='${DEFAULT_AVATAR}';`;
+---
+
+<Base title={t("about.title")}>
+    <PageHeader title={t("about.title")} />
+    <div class="mx-auto grid max-w-6xl gap-20 px-4 pt-12 sm:px-8 sm:pt-16">
+        <section id="quienes-somos" class="grid gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-12">
+            <h2 class="font-serif text-4xl font-bold md:text-right md:text-5xl" set:html={t("about.aboutTitle")} />
+            <div
+                class="prose prose-custom dark:prose-invert max-w-3xl break-words sm:prose-lg"
+                set:html={t("about.aboutDesc", { magazineUrl: t("magazine.index.url") })}
+            />
+        </section>
+
+        <section id="nombre" class="grid gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-12">
+            <h2 class="font-serif text-4xl font-bold md:text-right md:text-5xl" set:html={t("about.nameTitle")} />
+            <div class="prose prose-custom dark:prose-invert max-w-3xl break-words sm:prose-lg" set:html={t("about.nameDesc")} />
+        </section>
+
+        <section id="junta" class="grid gap-6 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-12">
+            <h2 class="font-serif text-4xl font-bold md:text-right md:text-5xl" set:html={t("about.boardTitle")} />
+            <div class="min-w-0">
+                <div class="prose prose-custom dark:prose-invert max-w-3xl break-words sm:prose-lg" set:html={t("about.boardDesc")} />
+
+                <h3 class="mt-12 font-serif text-3xl font-bold">{t("about.currentBoardTitle", { year: board.year })}</h3>
+
+                {
+                    board.main.length > 0 && (
+                        <ul class="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                            {board.main.map((member) => (
+                                <li>
+                                    <a href={href("profile", { url: member.url })} class="group flex items-center gap-4">
+                                        <img
+                                            src={member.photo}
+                                            alt=""
+                                            width="64"
+                                            height="64"
+                                            class="size-16 shrink-0 rounded-full border border-grid object-cover ring-2 ring-marker ring-offset-2 ring-offset-paper"
+                                            loading="lazy"
+                                            onerror={avatarFallback}
+                                        />
+                                        <span class="flex flex-col gap-1">
+                                            <span class="font-serif text-xl font-bold group-hover:underline">{member.name}</span>
+                                            {member.role && (
+                                                <span class="inline-flex w-fit items-center gap-1 text-sm font-semibold text-ink">
+                                                    <Icon name="badge" class="size-4" />
+                                                    {t(boardRoleKey(member.role))}
+                                                </span>
+                                            )}
+                                        </span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    )
+                }
+
+                {
+                    board.others.length > 0 && (
+                        <>
+                            <h4 class="mt-10 font-serif text-xl font-bold text-muted italic">{t("about.otherMembers")}</h4>
+                            <ul class="mt-4 flex flex-wrap gap-x-6 gap-y-4">
+                                {board.others.map((member) => (
+                                    <li>
+                                        <a href={href("profile", { url: member.url })} class="group flex items-center gap-3">
+                                            <img
+                                                src={member.photo}
+                                                alt=""
+                                                width="40"
+                                                height="40"
+                                                class="size-10 shrink-0 rounded-full border border-grid object-cover"
+                                                loading="lazy"
+                                                onerror={avatarFallback}
+                                            />
+                                            <span class="flex flex-col leading-tight">
+                                                <span class="font-semibold group-hover:underline">{member.name}</span>
+                                                {member.role && <span class="text-sm text-muted">{t(boardRoleKey(member.role, false))}</span>}
+                                            </span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    )
+                }
+            </div>
+        </section>
+    </div>
+</Base>

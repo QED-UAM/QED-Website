@@ -1,0 +1,39 @@
+---
+// Markdown-rendered content plus the legacy runtime for interactive components.
+// The runtime (public/js/postInteractiveElements.js) and the way scripts are handed to it
+// are a contract with the articles stored in the database: see docs/interactive-components.md.
+interface Props {
+    html: string;
+    /** JS classes stored in the post/activity `scripts` field. */
+    scripts?: string;
+    id?: string;
+    class?: string;
+}
+
+const { html, scripts = "", id = "post-md", class: className } = Astro.props;
+---
+
+<script is:inline src="/js/postInteractiveElements.js"></script>
+<script is:inline src="/js/postUtils.js"></script>
+
+<div id={id} class:list={["md-content", className]} set:html={html} />
+
+{
+    scripts && (
+        <>
+            <textarea id="scripts" class="hidden" aria-hidden="true" set:text={scripts} />
+            <script is:inline>
+                (() => {
+                    const element = document.getElementById("scripts");
+                    activateInteractiveElements([element.value]);
+                    element.remove();
+                })();
+            </script>
+        </>
+    )
+}
+
+<script>
+    import { enhanceContent } from "../scripts/content";
+    document.querySelectorAll<HTMLElement>(".md-content").forEach(enhanceContent);
+</script>

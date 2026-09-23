@@ -1,0 +1,20 @@
+---
+import Base from "../../layouts/Base.astro";
+import { usePage } from "../../lib/page";
+
+const { t } = usePage(Astro);
+const reason = Astro.url.searchParams.get("reason");
+const key = reason === "notAdmin" || reason === "state" ? reason : "google";
+Astro.response.status = key === "notAdmin" ? 403 : 400;
+---
+
+<Base title={t("auth.errorTitle")} noindex>
+    <div class="mx-auto flex max-w-xl flex-col items-center px-4 pt-16 text-center sm:pt-24">
+        <h1 class="font-serif text-4xl font-bold text-ink sm:text-5xl">{t("auth.errorTitle")}</h1>
+        <p class="mt-5 text-lg text-graphite/90">{t(`auth.errors.${key}`)}</p>
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <a href="/auth/google" class="btn key">{t("auth.retry")}</a>
+            <a href="/" class="btn-quiet">{t("errors.home")}</a>
+        </div>
+    </div>
+</Base>

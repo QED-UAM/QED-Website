@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import MagazineCover from "../../components/MagazineCover.astro";
+import Untranslated from "../../components/Untranslated.astro";
+import Icon from "../../components/Icon.astro";
+import { usePage } from "../../lib/page";
+import { getIssue } from "../../lib/content";
+
+const { locale, t, href, param } = usePage(Astro);
+const issue = await getIssue(param("issue"), locale);
+if (!issue) return Astro.rewrite("/404");
+---
+
+<Base title={issue.title.value} image={issue.cover}>
+    <div class="mx-auto grid max-w-6xl gap-12 px-4 pt-6 sm:px-8 sm:pt-10 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] md:gap-16">
+        <aside class="flex flex-col items-center gap-8 md:sticky md:top-10 md:self-start">
+            <MagazineCover cover={issue.cover} title={`QED - ${issue.title.value}`} width="min(55vw, 16rem)" eager />
+            <a href={href("magazine")} class="btn-quiet text-sm">
+                <Icon name="arrowLeft" class="size-4" />
+                {t("magazine.issue.allIssues")}
+            </a>
+        </aside>
+
+        <div class="min-w-0">
+            <h1 class="font-serif text-5xl font-bold text-ink sm:text-6xl">
+                <Untranslated missing={issue.title.missing} message={t("magazine.issue.noTranslation")}>
+                    {issue.title.value}
+                </Untranslated>
+            </h1>
+            <span class="mt-5 block h-1.5 w-16 rounded-full bg-marker/80" aria-hidden="true"></span>
+            <div
+                class="prose prose-custom dark:prose-invert mt-6 max-w-none break-words sm:prose-lg"
+                set:html={issue.descriptionHtml}
+            />
+
+            <h2 class="mt-14 border-b border-grid pb-3 font-serif text-3xl font-bold">{t("magazine.issue.contents")}</h2>
+            {issue.sections.length === 0 && <p class="mt-6 text-muted">{t("magazine.issue.empty")}</p>}
+            {
+                issue.sections.map((section) => (
+                    <section class="mt-10">
+                        {section.type !== "post" && (
+                            <h3 class="font-serif text-2xl italic text-muted">{t(`postTypes.${section.type}`)}</h3>
+                        )}
+                        <ol class="mt-2 divide-y divide-grid">
+                            {section.posts.map((post) => (
+                                <li class="group py-5">
+                                    <a
+                                        href={href("article", { url: post.url })}
+                                        class="font-serif text-2xl leading-snug font-bold decoration-marker decoration-2 underline-offset-4 group-hover:underline">
+                                        {post.title}
+                                    </a>
+                                    {post.description && <p class="mt-2 max-w-2xl leading-relaxed text-graphite/85">{post.description}</p>}
+                                </li>
+                            ))}
+                        </ol>
+                    </section>
+                ))
+            }
+        </div>
+    </div>
+</Base>

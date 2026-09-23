@@ -5,10 +5,6 @@
         "illustrator": "Illustrator",
         "animator": "Web simulations"
     },
-    "tags": {
-        "tag1": "TAG1",
-        "tag2": "TAG2"
-    },
     "postTypes": {
         "post": "(No category)",
         "prose": "Operating in Prose",
@@ -49,7 +45,7 @@
         }
     },
     "footer": {
-        "webMadeBy": "Web created by <a href='/{{profileUrl}}/hector-tablero'><u>Héctor Tablero Díaz</u></a> and designed by <a href='/{{profileUrl}}/ana-xiu'><u>Ana Xiu Fernández</u></a>",
+        "webMadeBy": "Website by <a href='/{{profileUrl}}/hector-tablero'>Héctor Tablero Díaz</a>",
         "copyright": "Copyright © {{year}} - QED"
     },
     "index": {
@@ -64,7 +60,15 @@
         "gymkhanaTitle": "Gymkhana",
         "gymkhanaDesc": "The QED gymkhana is an activity that we usually organize two or three times each year for high school students who come to visit the UAM. In it, students go through several stations with tests they have to solve in teams, such as sudokus, ciphers, a mathematical twister, taboo, etc. After a couple of hours, the team with the best performance is the winner.",
         "escapeTitle": "Escape Rooms",
-        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room."
+        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room.",
+        "readMagazine": "Read the magazine",
+        "latestIssue": "Latest issue",
+        "beyondTitle": "Beyond the magazine",
+        "seeActivities": "See activities",
+        "figures": {
+            "next": "Show another figure",
+            "hint": "Click the figure to see another"
+        }
     },
     "profile": {
         "title": "{{name}}",
@@ -77,7 +81,9 @@
             "secretary": "Secretary of QED",
             "treasurer": "Treasurer of QED",
             "member": "Directive Board Member"
-        }
+        },
+        "socialMedia": "{{name}} on social media",
+        "currentBoard": "{{year}} board"
     },
     "contact": {
         "title": "Contact",
@@ -87,7 +93,15 @@
         "name": "Name",
         "email": "Email",
         "message": "Message",
-        "submit": "Send"
+        "submit": "Send",
+        "formHint": "We'll reply to the email address you give us.",
+        "sending": "Sending…",
+        "errors": {
+            "required": "Fill in your name, your email and the message.",
+            "email": "That email address doesn't look valid. Check it and try again.",
+            "rateLimited": "You've sent several messages in a row. Wait a few minutes before sending another.",
+            "send": "The message couldn't be sent. Try again in a few minutes or email us at {{email}}."
+        }
     },
     "email-successful": {
         "title": "Email sent!",
@@ -103,7 +117,9 @@
         "nameTitle": "Meaning of our name",
         "nameDesc": "<strong><em>Quod erat demonstrandum</em></strong>, abbreviated as <strong>QED</strong>, is a Latin phrase that means \"what was to be demonstrated.\" It originates from the Greek phrase ὅπερ ἔδει δεῖξαι (hóper édei deĩxai), which was used by various ancient mathematicians, including Euclid and Archimedes, at the end of mathematical proofs to indicate that they had reached the required result for the proof.<br><br>Nowadays, the use of the QED acronym is less common, and in most situations, it is replaced by symbols, such as the filled square ( ■ ).",
         "boardTitle": "Board",
-        "boardDesc": "Our association is organized through <strong>assemblies</strong>, where any member of the association can voice their opinion and participate. Everyone has a say and a vote, and important decisions are made collectively. However, we need a leadership team to formally establish ourselves as a student association at UAM. This team consists of a <strong>president, vice president, secretary, treasurer, and multiple board members</strong>."
+        "boardDesc": "Our association is organized through <strong>assemblies</strong>, where any member of the association can voice their opinion and participate. Everyone has a say and a vote, and important decisions are made collectively. However, we need a leadership team to formally establish ourselves as a student association at UAM. This team consists of a <strong>president, vice president, secretary, treasurer, and multiple board members</strong>.",
+        "currentBoardTitle": "{{year}} board",
+        "otherMembers": "Board members"
     },
     "magazine": {
         "index": {
@@ -115,24 +131,37 @@
             "collaborateTitle": "Want to collaborate?",
             "collaborateDesc": "After each issue, it's time to gather articles for future editions again. If you want more detailed information on article submission deadlines, write to us at our email! You don't need to be a Mathematics student, or even a student at all, to send us your proposal and see it published. We look forward to hearing from you!<br><br>You can participate in this project by <strong>editing, illustrating, or designing</strong>. You can check what each team is responsible for <a href='#commissions'>here</a>.<br><br>We would be delighted to have you for future publications!",
             "commissionsTitle": "Committees",
-            "commissionsDesc": "The magazine is entirely produced by <strong>students</strong>, both from Mathematics and other fields. To manage the large amount of work involved in the entire process, we divide into <strong>committees</strong>.<br><br>If after reading the summary of a committee you feel like participating in the association, <strong>write to us</strong> through the form on the <a href='/{{contactUrl}}'>Contact</a> page or through any of our social media channels.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Content Committee</h2>The <strong>Content Committee</strong> is responsible for creating the magazine's material, contributing original material or compiling what we receive by email. They also organize and discuss which articles will be published in each edition, striving to publish high-quality articles while maintaining a balance between popular science and scientific content.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Editing Committee</h2>The <strong>Editing Committee</strong> is the next link in the production chain. This committee receives all the content selected in the previous phase. Their job is to review the articles, interviews, and problems to maintain a consistent style, avoid errors, and address any potential issues in the text. Additionally, this committee is responsible for contacting the various volunteer professors from the Mathematics department to ensure mathematical rigor in all articles.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Layout Committee</h2>The <strong>Layout Committee</strong> organizes the corrected articles within the magazine. They choose the order in which the articles will appear, design a cover for the most important ones, and generally ensure that each article is visually appealing. They work closely with the <strong>Illustration Committee</strong>, who provide the cover and most of the images included in the articles.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Illustration Committee</h2>Finally, we have the <strong>Illustration Committee</strong>, which is responsible for finding or creating appropriate images for the articles. They also design the posters we post on social media to announce various events.",
-            "noTranslation": "The content is not available in English"
+            "commissionsDesc": "The magazine is entirely produced by <strong>students</strong>, both from Mathematics and other fields. To manage the large amount of work involved in the entire process, we divide into <strong>committees</strong>.<br><br>If after reading the summary of a committee you feel like participating in the association, <strong>write to us</strong> through the form on the <a href='/{{contactUrl}}'>Contact</a> page or through any of our social media channels.<h3>Content Committee</h3>The <strong>Content Committee</strong> is responsible for creating the magazine's material, contributing original material or compiling what we receive by email. They also organize and discuss which articles will be published in each edition, striving to publish high-quality articles while maintaining a balance between popular science and scientific content.<h3>Editing Committee</h3>The <strong>Editing Committee</strong> is the next link in the production chain. This committee receives all the content selected in the previous phase. Their job is to review the articles, interviews, and problems to maintain a consistent style, avoid errors, and address any potential issues in the text. Additionally, this committee is responsible for contacting the various volunteer professors from the Mathematics department to ensure mathematical rigor in all articles.<h3>Layout Committee</h3>The <strong>Layout Committee</strong> organizes the corrected articles within the magazine. They choose the order in which the articles will appear, design a cover for the most important ones, and generally ensure that each article is visually appealing. They work closely with the <strong>Illustration Committee</strong>, who provide the cover and most of the images included in the articles.<h3>Illustration Committee</h3>Finally, we have the <strong>Illustration Committee</strong>, which is responsible for finding or creating appropriate images for the articles. They also design the posters we post on social media to announce various events.",
+            "noTranslation": "The content is not available in English",
+            "shelfLabel": "Published issues, newest first"
         },
         "issue": {
             "title": "{{name}}",
-            "noTranslation": "The content is not available in English"
+            "noTranslation": "The content is not available in English",
+            "allIssues": "All issues",
+            "contents": "Contents",
+            "empty": "This issue has no articles in English yet."
         },
         "post": {
             "title": "{{name}}",
             "url": "article",
-            "noTranslation": "This post is not available in English"
+            "noTranslation": "This post is not available in English",
+            "backToIssue": "Back to {{name}}",
+            "authors": "Authors",
+            "qed": "Quod erat demonstrandum",
+            "qedMeaning": "“Which was to be demonstrated”: the traditional ending of a mathematical proof."
         }
     },
     "activities": {
         "index": {
             "title": "Activities",
             "url": "activities",
-            "section": "Activities"
+            "section": "Activities",
+            "empty": "No activities have been published yet.",
+            "previous": "Previous page",
+            "next": "Next page",
+            "page": "Page {{page}}",
+            "pagination": "Pagination"
         },
         "activity": {
             "title": "{{name}}",
@@ -150,12 +179,19 @@
         "500": {
             "title": "Error 500",
             "desc": "It seems like we had an error. Try to refresh or return to the home page."
-        }
+        },
+        "home": "Go to the home page",
+        "calculator": "Calculator"
     },
     "admin": {
         "index": {
             "title": "Admin Panel",
-            "section": "Admin Panel"
+            "section": "Admin Panel",
+            "description": "Manage the website's content.",
+            "logout": "Log out",
+            "viewSite": "View site",
+            "signedInAs": "Signed in as {{name}}",
+            "mostRead": "Most read articles"
         },
         "accounts": {
             "title": "Account Management",
@@ -241,11 +277,6 @@
                 "descriptionSection": "Description",
                 "scriptsSection": "Scripts",
                 "contentSection": "Content",
-                "tagsSection": "Tags",
-                "tags": {
-                    "select": "Select tags",
-                    "search": "Search tags..."
-                },
                 "authorsSection": "Authors",
                 "authors": {
                     "select": "Select authors",
@@ -312,7 +343,9 @@
             "unsavedChanges": "You have unsaved changes",
             "titleSection": "Title",
             "descriptionSection": "Description",
-            "back": "Back"
+            "back": "Back",
+            "deleted": "News removed: the Spanish title and description were empty.",
+            "preview": "How it will look on the home page"
         },
         "directiveBoard": {
             "year": "Year",
@@ -324,6 +357,91 @@
                 "treasurer": "Treasurer",
                 "member": "Member"
             }
+        },
+        "common": {
+            "search": "Search…",
+            "noResults": "No results.",
+            "saving": "Saving…",
+            "saved": "Changes saved",
+            "saveShortcut": "Ctrl+S to save",
+            "preview": "Preview",
+            "views": "{{count}} reads",
+            "hidden": "Hidden",
+            "visible": "Visible",
+            "untitled": "(Untitled)",
+            "deleteConfirm": "Delete “{{name}}”? This can't be undone.",
+            "errorGeneric": "The changes couldn't be saved.",
+            "openPublic": "Open on the site",
+            "published": "Published",
+            "draft": "Unpublished",
+            "createFailed": "It couldn't be created. Try again.",
+            "deleteFailed": "It couldn't be deleted. Try again.",
+            "noItems": "Nothing here yet.",
+            "reads": "reads",
+            "moveUp": "Move up",
+            "moveDown": "Move down",
+            "add": "Add",
+            "editing": "Editing"
+        },
+        "errors": {
+            "url": "The URL must be at least 4 characters long and contain only letters, numbers, underscores and hyphens.",
+            "urlTaken": "Another item already uses that URL. Choose a different one.",
+            "email": "“{{email}}” isn't a valid email address.",
+            "invalidYear": "The year “{{year}}” isn't valid.",
+            "duplicateYear": "The year {{year}} appears more than once in the directive board.",
+            "invalidRole": "The role “{{role}}” doesn't exist.",
+            "invalidType": "The publication type “{{type}}” doesn't exist.",
+            "invalidAuthor": "There's no profile with id {{id}}.",
+            "invalidAuthors": "The author list isn't valid.",
+            "invalidMagazine": "The selected magazine isn't valid.",
+            "notFound": "This item no longer exists. Someone may have deleted it."
         }
+    },
+    "meta": {
+        "description": "Website of QED, the mathematics student association of the Universidad Autónoma de Madrid"
+    },
+    "nav": {
+        "main": "Main navigation",
+        "language": "Change language",
+        "darkTheme": "Use dark theme",
+        "lightTheme": "Use light theme",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu",
+        "skipToContent": "Skip to content"
+    },
+    "auth": {
+        "errorTitle": "Couldn’t log you in",
+        "retry": "Try again",
+        "errors": {
+            "notAdmin": "That Google account doesn’t have access to the admin panel. Ask an admin to add it under Account Management.",
+            "state": "The login expired or was started in another tab. Try again.",
+            "google": "Google didn’t complete the login. Try again in a few minutes."
+        }
+    },
+    "figures": {
+        "trefoil": "Trefoil knot",
+        "figureEight": "Figure-eight knot",
+        "torusKnot": "(2, 5) torus knot",
+        "lissajous": "Lissajous knot",
+        "borromean": "Borromean rings",
+        "hopf": "Hopf link",
+        "klein": "Klein bottle",
+        "mobius": "Möbius strip",
+        "roman": "Steiner's Roman surface",
+        "boy": "Boy's surface",
+        "torus": "Torus",
+        "hyperboloid": "Hyperboloid of one sheet",
+        "saddle": "Hyperbolic paraboloid",
+        "monkey": "Monkey saddle",
+        "whitney": "Whitney umbrella",
+        "helicoid": "Helicoid",
+        "catenoid": "Catenoid",
+        "enneper": "Enneper surface",
+        "henneberg": "Henneberg's surface",
+        "dini": "Dini's surface",
+        "seashell": "Seashell",
+        "lorenz": "Lorenz attractor",
+        "menger": "Menger sponge",
+        "sierpinski": "Sierpiński tetrahedron"
     }
 }

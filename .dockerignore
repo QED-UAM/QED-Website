@@ -1,6 +1,17 @@
-**/node_modules/
-**/dist
+# Secrets never go into the image: configuration is passed at runtime (env_file / -e).
+.env
+.env.*
+!.env.example
 deploy.bat
+
+node_modules
+dist
+.astro
+.git
+.github
+.serena
+tests
+test-results
+playwright-report
 GEMINI.md
-.gitignore
-.dockerignore
+*.log

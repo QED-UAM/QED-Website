@@ -1,0 +1,103 @@
+---
+import Base from "../../layouts/Base.astro";
+import Untranslated from "../../components/Untranslated.astro";
+import Icon from "../../components/Icon.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { usePage } from "../../lib/page";
+import { listActivities } from "../../lib/content";
+
+const { locale, t, href } = usePage(Astro);
+const requested = Number.parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
+const { activities, page, totalPages } = await listActivities(locale, requested);
+
+// Up to five page numbers around the current one (same window as before).
+let start = Math.max(1, page - 2);
+let end = Math.min(totalPages, page + 2);
+if (page <= 2) end = Math.min(totalPages, 5);
+else if (page >= totalPages - 1) start = Math.max(1, totalPages - 4);
+const pages = Array.from({ length: Math.max(end - start + 1, 0) }, (_, i) => start + i);
+const pageHref = (n: number) => `?page=${n}`;
+---
+
+<Base title={t("activities.index.title")}>
+    <PageHeader title={t("activities.index.section")} />
+    <div class="mx-auto max-w-4xl px-4 pt-4 sm:px-8">
+
+        {activities.length === 0 && <p class="mt-10 text-lg text-muted">{t("activities.index.empty")}</p>}
+
+        <ol class="mt-10 divide-y divide-grid border-y border-grid">
+            {
+                activities.map((activity) => (
+                    <li class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[7rem_minmax(0,1fr)]">
+                        <time datetime={activity.isoDate} class="pt-1.5 text-sm font-medium text-muted tabular-nums">
+                            {activity.date}
+                        </time>
+                        <div class="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                            <div class="min-w-0">
+                                <h2 class="font-serif text-3xl leading-tight font-bold">
+                                    <a
+                                        href={href("activity", { url: activity.url })}
+                                        class="decoration-marker decoration-2 underline-offset-4 hover:underline">
+                                        <Untranslated
+                                            missing={activity.title.missing}
+                                            message={t("activities.activity.noTranslation")}>
+                                            {activity.title.value}
+                                        </Untranslated>
+                                    </a>
+                                </h2>
+                                <div
+                                    class="prose prose-custom dark:prose-invert mt-3 max-w-none break-words"
+                                    set:html={activity.descriptionHtml}
+                                />
+                            </div>
+                            {activity.photo && (
+                                <a href={href("activity", { url: activity.url })} class="shrink-0" tabindex="-1">
+                                    <img
+                                        src={activity.photo}
+                                        alt=""
+                                        class="aspect-[4/3] w-full rounded-lg border border-grid object-cover md:w-44"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </a>
+                            )}
+                        </div>
+                    </li>
+                ))
+            }
+        </ol>
+
+        {
+            totalPages > 1 && (
+                <nav class="mt-12 flex items-center justify-center gap-2" aria-label={t("activities.index.pagination")}>
+                    {page > 1 ? (
+                        <a href={pageHref(page - 1)} class="key grid size-11 place-items-center bg-surface" aria-label={t("activities.index.previous")}>
+                            <Icon name="arrowLeft" class="size-4" />
+                        </a>
+                    ) : (
+                        <span class="size-11" />
+                    )}
+                    {pages.map((n) => (
+                        <a
+                            href={pageHref(n)}
+                            aria-label={t("activities.index.page", { page: n })}
+                            aria-current={n === page ? "page" : undefined}
+                            class:list={[
+                                "key grid size-11 place-items-center font-semibold tabular-nums",
+                                n === page ? "bg-ink text-paper" : "bg-surface"
+                            ]}>
+                            {n}
+                        </a>
+                    ))}
+                    {page < totalPages ? (
+                        <a href={pageHref(page + 1)} class="key grid size-11 place-items-center bg-surface" aria-label={t("activities.index.next")}>
+                            <Icon name="arrowRight" class="size-4" />
+                        </a>
+                    ) : (
+                        <span class="size-11" />
+                    )}
+                </nav>
+            )
+        }
+    </div>
+</Base>

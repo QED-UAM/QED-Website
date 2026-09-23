@@ -5,10 +5,6 @@
         "illustrator": "Ilustrador",
         "animator": "Simulaciones web"
     },
-    "tags": {
-        "tag1": "TAG1",
-        "tag2": "TAG2"
-    },
     "postTypes": {
         "post": "(Sin categoría)",
         "prose": "Operando en Prosa",
@@ -49,7 +45,7 @@
         }
     },
     "footer": {
-        "webMadeBy": "Web creada por <a href='/{{profileUrl}}/hector-tablero'><u>Héctor Tablero Díaz</u></a> y diseñada por <a href='/{{profileUrl}}/ana-xiu'><u>Ana Xiu Fernández</u></a>",
+        "webMadeBy": "Web creada por <a href='/{{profileUrl}}/hector-tablero'>Héctor Tablero Díaz</a>",
         "copyright": "Copyright © {{year}} - QED"
     },
     "index": {
@@ -64,7 +60,15 @@
         "gymkhanaTitle": "Gymkhana",
         "gymkhanaDesc": "La gymkhana QED es una actividad que solemos organizar dos o tres veces cada curso para alumnos de institutos que vienen a visitar la UAM. En ella, los estudiantes pasan por varios puestos con pruebas que tienen que resolver en equipo, como son sudokus, cifrados, un twister matemático, tabú, etc. Después de un par de horas, el equipo que mejor desempeño haya tenido es el ganador.",
         "escapeTitle": "Escape Rooms",
-        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room."
+        "escapeDesc": "La escape room QED es una actividad que se organiza dos o tres veces cada curso, tanto para estudiantes de instituto que vienen a visitar la UAM, como para alumnos de la propia universidad. Los equipos, de entre 6 y 10 personas, se enfrentan durante una hora a acertijos y problemas de lógica que tienen que resolver para poder salir del escape room.",
+        "readMagazine": "Leer la revista",
+        "latestIssue": "Último número",
+        "beyondTitle": "Más allá de la revista",
+        "seeActivities": "Ver actividades",
+        "figures": {
+            "next": "Mostrar otra figura",
+            "hint": "Haz clic en la figura para ver otra"
+        }
     },
     "profile": {
         "title": "{{name}}",
@@ -77,7 +81,9 @@
             "secretary": "Secretario de QED",
             "treasurer": "Tesorero de QED",
             "member": "Miembro de la Junta Directiva"
-        }
+        },
+        "socialMedia": "Redes de {{name}}",
+        "currentBoard": "Junta directiva {{year}}"
     },
     "contact": {
         "title": "Contacto",
@@ -87,7 +93,15 @@
         "name": "Nombre",
         "email": "Correo electrónico",
         "message": "Mensaje",
-        "submit": "Enviar"
+        "submit": "Enviar",
+        "formHint": "Te responderemos al correo que indiques.",
+        "sending": "Enviando…",
+        "errors": {
+            "required": "Rellena tu nombre, tu correo y el mensaje.",
+            "email": "Ese correo no parece válido. Revísalo e inténtalo de nuevo.",
+            "rateLimited": "Has enviado varios mensajes seguidos. Espera unos minutos antes de enviar otro.",
+            "send": "No se ha podido enviar el mensaje. Inténtalo de nuevo en unos minutos o escríbenos a {{email}}."
+        }
     },
     "email-successful": {
         "title": "¡Email enviado!",
@@ -103,7 +117,9 @@
         "nameTitle": "Significado de nuestro nombre",
         "nameDesc": "<strong><em>Quod erat demonstrandum</em></strong>, abreviado como <strong>QED</strong>, es una locución latina que significa \"lo que se quería demostrar\". Tiene su origen en la frase griega ὅπερ ἔδει δεῖξαι (hóper édei deĩxai), que usaban diversos matemáticos antiguos, incluidos Euclides y Arquímedes, al final de las demostraciones o pruebas matemáticas para señalar que habían alcanzado el resultado requerido para la prueba.<br><br>Hoy en día, el uso de las siglas QED es cada vez menos frecuente, y en la mayoría de las situaciones se ve sustituido por símbolos, como el cuadrado relleno ( ■ ).",
         "boardTitle": "Junta",
-        "boardDesc": "Nuestra asociación se organiza mediante <strong>asambleas</strong>, en las que cualquier miembro de la asociación puede opinar e intervenir. Todo el mundo tiene voz y voto, y las decisiones importantes se deciden entre todos. Aún así, necesitamos un equipo directivo para poder constituirnos como asociación de estudiantes de la UAM. Este equipo se compone de <strong>presidente, vicepresidente, secretario, tesorero y múltiples vocales</strong>."
+        "boardDesc": "Nuestra asociación se organiza mediante <strong>asambleas</strong>, en las que cualquier miembro de la asociación puede opinar e intervenir. Todo el mundo tiene voz y voto, y las decisiones importantes se deciden entre todos. Aún así, necesitamos un equipo directivo para poder constituirnos como asociación de estudiantes de la UAM. Este equipo se compone de <strong>presidente, vicepresidente, secretario, tesorero y múltiples vocales</strong>.",
+        "currentBoardTitle": "Junta {{year}}",
+        "otherMembers": "Vocales"
     },
     "magazine": {
         "index": {
@@ -115,24 +131,37 @@
             "collaborateTitle": "¿Quieres colaborar?",
             "collaborateDesc": "Tras cada entrega, comienza de nuevo la hora de recabar artículos para los posteriores números. Si quieres informarte en más detalle de los plazos de admisión de artículos, ¡escríbenos a nuestro correo! No es necesario ser estudiante de Matemáticas, ni siquiera estudiante, para mandarnos tu propuesta y verla publicada. ¡Esperamos recibir noticias tuyas!<br><br>Puedes participar en este proyecto <strong>corrigiendo, ilustrando o maquetando</strong>. Puedes comprobar de qué se encarga cada equipo de trabajo <a href='#commissions'>aquí</a>.<br><br>¡Estaremos encantados de contar contigo para futuras publicaciones!",
             "commissionsTitle": "Comisiones",
-            "commissionsDesc": "La revista está elaborada en su totalidad por <strong>estudiantes</strong>, tanto de Matemáticas como de otros grados. Para organizar la gran cantidad de trabajo que conlleva todo el proceso nos dividimos en <strong>comisiones</strong>.<br><br>Si después de leer el resumen de alguna comisión tienes ganas de participar en la asociación, <strong>escríbenos</strong> a través del formulario en la página de <a href='/{{contactUrl}}'>Contacto</a>, o mediante cualquiera de nuestras redes sociales.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de contenido</h2>La <strong>comisión de contenido</strong> se encarga de elaborar el material de la revista, aportando material propio o recopilando todo lo que recibimos por correo. También organizan y debaten qué artículos se publicarán en cada edición, intentando publicar artículos de calidad, manteniendo a la vez un equilibrio entre lo divulgativo y lo científico.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de corrección</h2>La <strong>comisión de corrección</strong> es el siguiente eslabón en la cadena de trabajo. Esta comisión recibe todo el contenido seleccionado en la fase anterior. Su trabajo es revisar los artículos, entrevistas y problemas, con el fin de mantener un estilo similar, evitar erratas y controlar cualquier posible problema en el texto. Además, esta comisión se encarga de contactar con los diferentes profesores voluntarios del departamento de Matemáticas, para así mantener el rigor matemático en todos los artículos.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de maquetación</h2>La <strong>comisión de maquetación</strong> organiza los artículos ya corregidos en la revista. Eligen el orden en el que aparecerán, elaboran una portada para los más importantes y, en general, se aseguran de que cada uno de los artículos sea atractivo visualmente. Trabajan mano a mano con la <strong>comisión de ilustración</strong>, ya que son los que proporcionan la portada y las mayoría de las imágenes que se incluyen en los artículos.<h2 style='margin-top:2.5rem;margin-bottom:0.75rem;' class='text-center sm:text-left text-4xl sm:text-5xl font-semibold text-blue-800 dark:text-blue-300'>Comisión de ilustración</h2>Por último tenemos la <strong>comisión de ilustración</strong>, que se encarga de buscar imágenes apropiadas para los artículos, o elaborarlas en caso de ser necesario. También se encargan de elaborar los carteles que colgamos en redes sociales para anunciar distintos eventos.",
-            "noTranslation": "El contenido no está disponible en español"
+            "commissionsDesc": "La revista está elaborada en su totalidad por <strong>estudiantes</strong>, tanto de Matemáticas como de otros grados. Para organizar la gran cantidad de trabajo que conlleva todo el proceso nos dividimos en <strong>comisiones</strong>.<br><br>Si después de leer el resumen de alguna comisión tienes ganas de participar en la asociación, <strong>escríbenos</strong> a través del formulario en la página de <a href='/{{contactUrl}}'>Contacto</a>, o mediante cualquiera de nuestras redes sociales.<h3>Comisión de contenido</h3>La <strong>comisión de contenido</strong> se encarga de elaborar el material de la revista, aportando material propio o recopilando todo lo que recibimos por correo. También organizan y debaten qué artículos se publicarán en cada edición, intentando publicar artículos de calidad, manteniendo a la vez un equilibrio entre lo divulgativo y lo científico.<h3>Comisión de corrección</h3>La <strong>comisión de corrección</strong> es el siguiente eslabón en la cadena de trabajo. Esta comisión recibe todo el contenido seleccionado en la fase anterior. Su trabajo es revisar los artículos, entrevistas y problemas, con el fin de mantener un estilo similar, evitar erratas y controlar cualquier posible problema en el texto. Además, esta comisión se encarga de contactar con los diferentes profesores voluntarios del departamento de Matemáticas, para así mantener el rigor matemático en todos los artículos.<h3>Comisión de maquetación</h3>La <strong>comisión de maquetación</strong> organiza los artículos ya corregidos en la revista. Eligen el orden en el que aparecerán, elaboran una portada para los más importantes y, en general, se aseguran de que cada uno de los artículos sea atractivo visualmente. Trabajan mano a mano con la <strong>comisión de ilustración</strong>, ya que son los que proporcionan la portada y las mayoría de las imágenes que se incluyen en los artículos.<h3>Comisión de ilustración</h3>Por último tenemos la <strong>comisión de ilustración</strong>, que se encarga de buscar imágenes apropiadas para los artículos, o elaborarlas en caso de ser necesario. También se encargan de elaborar los carteles que colgamos en redes sociales para anunciar distintos eventos.",
+            "noTranslation": "El contenido no está disponible en español",
+            "shelfLabel": "Números publicados, del más reciente al más antiguo"
         },
         "issue": {
             "title": "{{name}}",
-            "noTranslation": "El contenido no está disponible en español"
+            "noTranslation": "El contenido no está disponible en español",
+            "allIssues": "Todas las ediciones",
+            "contents": "Índice",
+            "empty": "Este número todavía no tiene artículos en español."
         },
         "post": {
             "title": "{{name}}",
             "url": "articulo",
-            "noTranslation": "Este artículo no está disponible en español"
+            "noTranslation": "Este artículo no está disponible en español",
+            "backToIssue": "Volver a {{name}}",
+            "authors": "Autores",
+            "qed": "Quod erat demonstrandum",
+            "qedMeaning": "«Lo que se quería demostrar»: así se cierran tradicionalmente las demostraciones matemáticas."
         }
     },
     "activities": {
         "index": {
             "title": "Actividades",
             "url": "actividades",
-            "section": "Actividades"
+            "section": "Actividades",
+            "empty": "Todavía no hay actividades publicadas.",
+            "previous": "Página anterior",
+            "next": "Página siguiente",
+            "page": "Página {{page}}",
+            "pagination": "Paginación"
         },
         "activity": {
             "title": "{{name}}",
@@ -150,12 +179,19 @@
         "500": {
             "title": "Error 500",
             "desc": "Parece que hemos tenido un fallo. Intenta refrescar o volver a inicio."
-        }
+        },
+        "home": "Volver a inicio",
+        "calculator": "Calculadora"
     },
     "admin": {
         "index": {
             "title": "Panel de Administración",
-            "section": "Panel de Administración"
+            "section": "Panel de Administración",
+            "description": "Gestiona el contenido de la web.",
+            "logout": "Cerrar sesión",
+            "viewSite": "Ver la web",
+            "signedInAs": "Sesión iniciada como {{name}}",
+            "mostRead": "Artículos más leídos"
         },
         "accounts": {
             "title": "Gestión de Cuentas",
@@ -241,11 +277,6 @@
                 "descriptionSection": "Descripción",
                 "scriptsSection": "Scripts",
                 "contentSection": "Contenido",
-                "tagsSection": "Etiquetas",
-                "tags": {
-                    "select": "Seleccionar etiquetas",
-                    "search": "Buscar etiquetas..."
-                },
                 "authorsSection": "Autores",
                 "authors": {
                     "select": "Seleccionar autores",
@@ -312,7 +343,9 @@
             "unsavedChanges": "Tienes cambios sin guardar",
             "titleSection": "Título",
             "descriptionSection": "Descripción",
-            "back": "Atrás"
+            "back": "Atrás",
+            "deleted": "Noticia eliminada: el título y la descripción en español estaban vacíos.",
+            "preview": "Así se verá en la página de inicio"
         },
         "directiveBoard": {
             "year": "Año",
@@ -324,6 +357,91 @@
                 "treasurer": "Tesorero",
                 "member": "Vocal"
             }
+        },
+        "common": {
+            "search": "Buscar…",
+            "noResults": "No hay resultados.",
+            "saving": "Guardando…",
+            "saved": "Cambios guardados",
+            "saveShortcut": "Ctrl+S para guardar",
+            "preview": "Vista previa",
+            "views": "{{count}} lecturas",
+            "hidden": "Oculta",
+            "visible": "Visible",
+            "untitled": "(Sin título)",
+            "deleteConfirm": "¿Eliminar «{{name}}»? Esta acción no se puede deshacer.",
+            "errorGeneric": "No se han podido guardar los cambios.",
+            "openPublic": "Abrir en la web",
+            "published": "Publicado",
+            "draft": "Sin publicar",
+            "createFailed": "No se ha podido crear. Inténtalo de nuevo.",
+            "deleteFailed": "No se ha podido eliminar. Inténtalo de nuevo.",
+            "noItems": "Todavía no hay nada aquí.",
+            "reads": "lecturas",
+            "moveUp": "Subir",
+            "moveDown": "Bajar",
+            "add": "Añadir",
+            "editing": "Editando"
+        },
+        "errors": {
+            "url": "La URL debe tener al menos 4 caracteres y contener solo letras, números, guiones bajos y guiones.",
+            "urlTaken": "Esa URL ya la usa otro elemento. Elige otra.",
+            "email": "«{{email}}» no es una dirección de correo válida.",
+            "invalidYear": "El año «{{year}}» no es válido.",
+            "duplicateYear": "El año {{year}} aparece más de una vez en la junta directiva.",
+            "invalidRole": "El rol «{{role}}» no existe.",
+            "invalidType": "El tipo de publicación «{{type}}» no existe.",
+            "invalidAuthor": "No existe ningún perfil con id {{id}}.",
+            "invalidAuthors": "La lista de autores no es válida.",
+            "invalidMagazine": "La revista seleccionada no es válida.",
+            "notFound": "Este elemento ya no existe. Puede que otra persona lo haya eliminado."
         }
+    },
+    "meta": {
+        "description": "Web de QED, la asociación estudiantil de matemáticas de la Universidad Autónoma de Madrid"
+    },
+    "nav": {
+        "main": "Navegación principal",
+        "language": "Cambiar idioma",
+        "darkTheme": "Usar tema oscuro",
+        "lightTheme": "Usar tema claro",
+        "openMenu": "Abrir menú",
+        "closeMenu": "Cerrar menú",
+        "skipToContent": "Saltar al contenido"
+    },
+    "auth": {
+        "errorTitle": "No se ha podido iniciar sesión",
+        "retry": "Intentarlo de nuevo",
+        "errors": {
+            "notAdmin": "Esa cuenta de Google no tiene acceso al panel de administración. Pide a un administrador que la añada en Gestión de Cuentas.",
+            "state": "El inicio de sesión ha caducado o se empezó en otra pestaña. Vuelve a intentarlo.",
+            "google": "Google no ha completado el inicio de sesión. Vuelve a intentarlo en unos minutos."
+        }
+    },
+    "figures": {
+        "trefoil": "Nudo de trébol",
+        "figureEight": "Nudo en forma de ocho",
+        "torusKnot": "Nudo tórico (2, 5)",
+        "lissajous": "Nudo de Lissajous",
+        "borromean": "Anillos borromeos",
+        "hopf": "Enlace de Hopf",
+        "klein": "Botella de Klein",
+        "mobius": "Banda de Möbius",
+        "roman": "Superficie romana de Steiner",
+        "boy": "Superficie de Boy",
+        "torus": "Toro",
+        "hyperboloid": "Hiperboloide de una hoja",
+        "saddle": "Paraboloide hiperbólico",
+        "monkey": "Silla del mono",
+        "whitney": "Paraguas de Whitney",
+        "helicoid": "Helicoide",
+        "catenoid": "Catenoide",
+        "enneper": "Superficie de Enneper",
+        "henneberg": "Superficie de Henneberg",
+        "dini": "Superficie de Dini",
+        "seashell": "Concha",
+        "lorenz": "Atractor de Lorenz",
+        "menger": "Esponja de Menger",
+        "sierpinski": "Tetraedro de Sierpiński"
     }
 }

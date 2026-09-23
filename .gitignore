@@ -1,0 +1,20 @@
+# dependencies & build output
+node_modules/
+dist/
+.astro/
+
+# environment & local deploy helpers (never commit secrets)
+.env
+.env.*
+!.env.example
+deploy.bat
+
+# test artifacts and content snapshots (contain unpublished drafts and profile data)
+tests/fixtures/
+test-results/
+playwright-report/
+
+# editor / tooling
+.serena/
+GEMINI.md
+.DS_Store

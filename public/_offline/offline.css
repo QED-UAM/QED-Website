@@ -1,0 +1,87 @@
+/* Offline pages (served by the service worker). Self-contained: no site CSS or fonts. */
+:root {
+    --paper: #f7f8fb;
+    --grid: #dde4f2;
+    --ink: #1d3b9c;
+    --text: #1c1f26;
+    --muted: #5b6275;
+    --marker: #f2a14d;
+    color-scheme: light;
+}
+.dark {
+    --paper: #121829;
+    --grid: #243050;
+    --ink: #a8bdff;
+    --text: #e8ebf3;
+    --muted: #a3abc0;
+    color-scheme: dark;
+}
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: grid;
+    place-items: center;
+    padding: 2rem 1.25rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background-color: var(--paper);
+    background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+}
+main {
+    max-width: 34rem;
+    text-align: center;
+}
+.logo {
+    width: 7rem;
+    height: auto;
+}
+.dark .logo {
+    filter: invert(1);
+}
+h1 {
+    margin: 1.75rem 0 0.5rem;
+    font-family: "CMU Serif", Georgia, "Times New Roman", serif;
+    font-size: clamp(2.25rem, 7vw, 3.5rem);
+    line-height: 1.1;
+    color: var(--ink);
+}
+p {
+    margin: 0.75rem 0 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+.status::before {
+    content: "";
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 9999px;
+    background: var(--marker);
+    animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+    50% {
+        opacity: 0.25;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .status::before {
+        animation: none;
+    }
+}

@@ -1,0 +1,44 @@
+/* Computer Modern Unicode (Knuth, SIL OFL; see /fonts/CMU-OFL.txt). Self-hosted. */
+@font-face {
+    font-family: "CMU Serif";
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("/fonts/cmu-serif-500-roman.woff2") format("woff2");
+}
+@font-face {
+    font-family: "CMU Serif";
+    font-style: italic;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("/fonts/cmu-serif-500-italic.woff2") format("woff2");
+}
+@font-face {
+    font-family: "CMU Serif";
+    font-style: normal;
+    font-weight: 600 800;
+    font-display: swap;
+    src: url("/fonts/cmu-serif-700-roman.woff2") format("woff2");
+}
+@font-face {
+    font-family: "CMU Serif";
+    font-style: italic;
+    font-weight: 600 800;
+    font-display: swap;
+    src: url("/fonts/cmu-serif-700-italic.woff2") format("woff2");
+}
+/* Heavier Computer Modern variant for long-form body text on low-DPI screens. */
+@font-face {
+    font-family: "CMU Concrete";
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("/fonts/cmu-concrete-500-roman.woff2") format("woff2");
+}
+@font-face {
+    font-family: "CMU Concrete";
+    font-style: italic;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("/fonts/cmu-concrete-500-italic.woff2") format("woff2");
+}

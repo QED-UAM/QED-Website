@@ -1,0 +1,117 @@
+---
+// An engraved 3D figure (see src/scripts/figures): ink lines on a paper-colored surface, drawn
+// by the page's shared WebGL stage - or, where WebGL is missing, by the 2D canvas renderer. A
+// static sketch of the figure ships in the markup, so there is a figure from the first paint and
+// still one if no script ever runs. `cycle` makes it a button that shows the next figure of the
+// list, updating the caption.
+import { figureSketch } from "../scripts/figures/sketch";
+
+interface Props {
+    shape: string;
+    caption?: string;
+    /** Other shapes to cycle through on click: { key: caption }. */
+    cycle?: Record<string, string>;
+    cycleLabel?: string;
+    class?: string;
+    figureClass?: string;
+    phase?: number;
+    speed?: number;
+}
+
+const { shape, caption, cycle, cycleLabel, class: className, figureClass = "aspect-square w-full", phase, speed } = Astro.props;
+const Tag = cycle ? "button" : "div";
+const sketch = await figureSketch(shape);
+---
+
+<figure class:list={["figure flex flex-col items-center", className]}>
+    <Tag
+        type={cycle ? "button" : undefined}
+        class:list={["figure-view relative block", figureClass, cycle && "figure-cycle cursor-pointer rounded-full"]}
+        data-figure={shape}
+        data-phase={phase}
+        data-speed={speed}
+        data-cycle={cycle ? JSON.stringify(cycle) : undefined}
+        aria-label={cycle ? cycleLabel : undefined}
+        role={cycle ? undefined : "img"}
+        aria-hidden={cycle || caption ? undefined : "true"}>
+        <Fragment set:html={sketch} />
+    </Tag>
+    {
+        caption && (
+            <figcaption class="figure-caption mt-1 text-center font-serif text-muted italic">
+                <span data-figure-caption>{caption}</span>
+                <slot name="hint" />
+            </figcaption>
+        )
+    }
+</figure>
+
+<style is:global>
+    .figure-stage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 30;
+    }
+    .figure-cycle:focus-visible {
+        outline: 2px solid var(--color-marker);
+        outline-offset: 6px;
+    }
+    .figure-sketch,
+    .figure-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    /* The sketch hands over as soon as a renderer has drawn the figure. */
+    .figure-sketch {
+        color: var(--qed-ink);
+        opacity: 0.6;
+        transition: opacity 400ms ease;
+    }
+    [data-figure-ready] > .figure-sketch {
+        opacity: 0;
+    }
+    .figure-canvas {
+        opacity: 0;
+        transition: opacity 500ms ease;
+    }
+    /* Only offered once the click handler is listening. */
+    .figure-hint {
+        display: none;
+    }
+    [data-interactive] .figure-hint {
+        display: block;
+    }
+</style>
+
+<script>
+    // Clicking is bound right away; three.js itself loads lazily, after the page is interactive.
+    const stage = () => import("../scripts/figures/stage");
+
+    document.querySelectorAll<HTMLElement>("[data-cycle]").forEach((element) => {
+        if (element.dataset.cycleBound) return;
+        element.dataset.cycleBound = "";
+        const options = JSON.parse(element.dataset.cycle ?? "{}") as Record<string, string>;
+        const keys = Object.keys(options);
+        const figure = element.closest("figure");
+        const caption = figure?.querySelector<HTMLElement>("[data-figure-caption]");
+        figure?.setAttribute("data-interactive", "");
+        element.addEventListener("click", async () => {
+            const next = keys[(keys.indexOf(element.dataset.figure ?? "") + 1) % keys.length];
+            if (caption) caption.textContent = options[next];
+            // Set before the renderer answers: a click landing before it loads still counts.
+            element.dataset.figure = next;
+            await (await stage()).setFigure(element, next);
+        });
+    });
+
+    const start = () => stage().then(({ mountAll }) => mountAll());
+    if ("requestIdleCallback" in window) requestIdleCallback(() => void start(), { timeout: 800 });
+    else setTimeout(() => void start(), 200);
+</script>

@@ -1,0 +1,21 @@
+---
+import Admin from "../../layouts/Admin.astro";
+import NewsEditor from "../../components/admin/NewsEditor.svelte";
+import { usePage } from "../../lib/page";
+import { adminContext, editable } from "../../lib/admin/page";
+import { News } from "../../lib/db/models";
+
+const { locale, t, origin } = usePage(Astro);
+const news = await News.findOne().lean();
+const { languages, strings } = adminContext(locale);
+---
+
+<Admin title={t("admin.news.title")} section="adminNews">
+    <NewsEditor
+        client:load
+        news={{ url: news?.url ?? "", title: editable(news?.title), description: editable(news?.description) }}
+        languages={languages}
+        strings={strings}
+        origin={origin}
+    />
+</Admin>

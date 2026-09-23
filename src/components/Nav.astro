@@ -1,0 +1,183 @@
+---
+import QedLogo from "./QedLogo.astro";
+import Icon from "./Icon.astro";
+import { usePage } from "../lib/page";
+import { languageName, supportedLocales } from "../lib/i18n";
+import { href as localizedHref, type RouteName } from "../lib/i18n/routes";
+
+const { locale, t, href } = usePage(Astro);
+const route = Astro.locals.route;
+const languages = supportedLocales();
+
+const sections: { route: RouteName; label: string; active: RouteName[] }[] = [
+    { route: "magazine", label: t("magazine.index.title"), active: ["magazine", "issue", "article"] },
+    { route: "activities", label: t("activities.index.title"), active: ["activities", "activity"] },
+    { route: "about", label: t("about.title"), active: ["about"] },
+    { route: "contact", label: t("contact.title"), active: ["contact", "emailSuccessful"] }
+];
+const isActive = (names: RouteName[]) => !!route && names.includes(route.route);
+
+// Switching language keeps the reader on the same page, in its localized URL.
+const languageHref = (language: string) => {
+    const path = route
+        ? localizedHref(language, route.route, route.params)
+        : Astro.locals.originalPath;
+    return `${path}?lang=${language}`;
+};
+---
+
+<header class="relative z-40">
+    <nav
+        id="navbar"
+        class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-8 sm:py-5"
+        aria-label={t("nav.main")}>
+        <div class="flex items-center gap-6 md:gap-10">
+            <a href="/" class="text-graphite hover:text-ink" aria-label={t("index.title")}>
+                <QedLogo class="w-16 sm:w-[5.5rem]" />
+            </a>
+            <ul class="hidden items-center gap-1 sm:flex md:gap-3">
+                {
+                    sections.map((section) => (
+                        <li>
+                            <a
+                                href={href(section.route)}
+                                aria-current={isActive(section.active) ? "page" : undefined}
+                                class:list={[
+                                    "rounded-md px-2 py-1 text-[0.95rem] font-medium text-graphite/80 transition-colors hover:text-graphite",
+                                    isActive(section.active) && "text-graphite"
+                                ]}>
+                                <span class:list={[isActive(section.active) && "marker"]}>{section.label}</span>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        <div class="flex items-center gap-1">
+            {
+                languages.length > 1 ? (
+                    <details class="lang-menu relative">
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-1 rounded-md px-2 py-1.5 text-graphite/80 hover:text-graphite"
+                            aria-label={t("nav.language")}>
+                            <img
+                                id="current-lang-icon"
+                                class="pointer-events-none size-5"
+                                src={`/images/flags/${locale}.svg`}
+                                alt={locale.toUpperCase()}
+                                width="20"
+                                height="20"
+                            />
+                            <span class="text-sm font-semibold uppercase">{locale}</span>
+                            <Icon name="chevron" class="size-4" />
+                        </summary>
+                        <ul class="absolute right-0 mt-2 w-max overflow-hidden rounded-lg border border-grid bg-surface py-1 shadow-lg">
+                            {languages.map((language) => (
+                                <li>
+                                    <a
+                                        href={languageHref(language)}
+                                        hreflang={language}
+                                        lang={language}
+                                        aria-current={language === locale ? "true" : undefined}
+                                        class="flex items-center gap-2.5 px-4 py-2 text-sm text-graphite hover:bg-grid/60">
+                                        <img
+                                            class="pointer-events-none size-4"
+                                            src={`/images/flags/${language}.svg`}
+                                            alt=""
+                                            width="16"
+                                            height="16"
+                                        />
+                                        {languageName(locale, language)}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </details>
+                ) : (
+                    <img id="current-lang-icon" class="hidden" src={`/images/flags/${locale}.svg`} alt={locale.toUpperCase()} />
+                )
+            }
+
+            <button
+                type="button"
+                class="rounded-md p-2 text-graphite/80 hover:text-graphite dark:hidden"
+                data-theme-value="dark"
+                aria-label={t("nav.darkTheme")}>
+                <Icon name="moon" class="size-5" />
+            </button>
+            <button
+                type="button"
+                class="hidden rounded-md p-2 text-graphite/80 hover:text-graphite dark:block"
+                data-theme-value="light"
+                aria-label={t("nav.lightTheme")}>
+                <Icon name="sun" class="size-5" />
+            </button>
+
+            <button
+                id="mobile-menu-button"
+                type="button"
+                class="rounded-md p-2 text-graphite/80 hover:text-graphite sm:hidden"
+                aria-label={t("nav.openMenu")}
+                aria-controls="mobile-menu">
+                <Icon name="menu" class="size-6" />
+            </button>
+        </div>
+    </nav>
+</header>
+
+<dialog
+    id="mobile-menu"
+    class="mobile-menu m-0 h-dvh max-h-none w-[80vw] max-w-sm bg-paper p-0 text-graphite backdrop:bg-black/50"
+    aria-label={t("nav.main")}>
+    <div class="graph-paper flex h-full flex-col gap-8 p-6">
+        <div class="flex items-center justify-between">
+            <QedLogo class="w-16" />
+            <button id="close-mobile-menu" type="button" class="rounded-md p-2" aria-label={t("nav.closeMenu")}>
+                <Icon name="close" class="size-6" />
+            </button>
+        </div>
+        <ul class="flex flex-col gap-5 font-serif text-3xl font-bold">
+            {
+                sections.map((section) => (
+                    <li>
+                        <a href={href(section.route)} aria-current={isActive(section.active) ? "page" : undefined}>
+                            <span class:list={[isActive(section.active) && "marker"]}>{section.label}</span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</dialog>
+
+<style>
+    .lang-menu summary::-webkit-details-marker {
+        display: none;
+    }
+    .mobile-menu[open] {
+        animation: slide-in 0.2s ease-out;
+    }
+    @keyframes slide-in {
+        from {
+            transform: translateX(-100%);
+        }
+    }
+</style>
+
+<script>
+    const menu = document.getElementById("mobile-menu") as HTMLDialogElement | null;
+    document.getElementById("mobile-menu-button")?.addEventListener("click", () => menu?.showModal());
+    document.getElementById("close-mobile-menu")?.addEventListener("click", () => menu?.close());
+    menu?.addEventListener("click", (event) => {
+        if (event.target === menu) menu.close();
+    });
+
+    const langMenu = document.querySelector<HTMLDetailsElement>(".lang-menu");
+    document.addEventListener("click", (event) => {
+        if (langMenu?.open && !langMenu.contains(event.target as Node)) langMenu.open = false;
+    });
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && langMenu?.open) langMenu.open = false;
+    });
+</script>

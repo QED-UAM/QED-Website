@@ -1,0 +1,30 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import AdminList from "../../../components/admin/AdminList.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext } from "../../../lib/admin/page";
+import { Activity } from "../../../lib/db/models";
+import { shortDate } from "../../../lib/format";
+
+const { locale, t, href } = usePage(Astro);
+const { strings } = adminContext(locale);
+const activities = await Activity.find().sort({ created_at: -1 }).select("url title created_at").lean();
+const items = activities.map((activity) => ({
+    url: activity.url,
+    title: activity.title?.es ?? "",
+    meta: shortDate(activity.created_at),
+    publicHref: href("activity", { url: activity.url })
+}));
+---
+
+<Admin title={t("admin.activities.title")} section="adminActivities">
+    <AdminList
+        client:load
+        kind="activities"
+        section="activities"
+        heading={t("admin.activities.activitiesSection")}
+        groups={[{ title: "", items }]}
+        editorBase={href("adminActivities")}
+        strings={strings}
+    />
+</Admin>

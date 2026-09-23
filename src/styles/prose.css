@@ -1,0 +1,132 @@
+/*
+ * Long-form text (articles, activity pages, bios, magazine descriptions).
+ * `prose-custom` maps the typography plugin's variables to the design tokens; the tokens
+ * already switch in dark mode, so the "invert" variables point to the same values.
+ */
+.prose-custom {
+    --tw-prose-body: var(--qed-text);
+    --tw-prose-headings: var(--qed-text);
+    --tw-prose-lead: var(--qed-muted);
+    --tw-prose-links: var(--qed-ink);
+    --tw-prose-bold: var(--qed-text);
+    --tw-prose-counters: var(--qed-muted);
+    --tw-prose-bullets: var(--qed-muted);
+    --tw-prose-hr: var(--qed-grid);
+    --tw-prose-quotes: var(--qed-text);
+    --tw-prose-quote-borders: var(--color-marker);
+    --tw-prose-captions: var(--qed-muted);
+    --tw-prose-code: var(--qed-ink-deep);
+    --tw-prose-pre-code: #e6e9f0;
+    --tw-prose-pre-bg: #151b2c;
+    --tw-prose-th-borders: var(--qed-grid);
+    --tw-prose-td-borders: var(--qed-grid);
+
+    --tw-prose-invert-body: var(--qed-text);
+    --tw-prose-invert-headings: var(--qed-text);
+    --tw-prose-invert-lead: var(--qed-muted);
+    --tw-prose-invert-links: var(--qed-ink);
+    --tw-prose-invert-bold: var(--qed-text);
+    --tw-prose-invert-counters: var(--qed-muted);
+    --tw-prose-invert-bullets: var(--qed-muted);
+    --tw-prose-invert-hr: var(--qed-grid);
+    --tw-prose-invert-quotes: var(--qed-text);
+    --tw-prose-invert-quote-borders: var(--color-marker);
+    --tw-prose-invert-captions: var(--qed-muted);
+    --tw-prose-invert-code: var(--qed-ink-deep);
+    --tw-prose-invert-pre-code: #e6e9f0;
+    --tw-prose-invert-pre-bg: #0d1220;
+    --tw-prose-invert-th-borders: var(--qed-grid);
+    --tw-prose-invert-td-borders: var(--qed-grid);
+}
+
+.prose-custom :where(h1, h2, h3, h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+.prose-custom :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+}
+
+.prose-custom :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)):hover {
+    text-decoration-thickness: 2px;
+}
+
+.prose-custom :where(code):not(:where(pre code)):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    font-weight: 400;
+    border-radius: 0.25rem;
+    padding: 0.1em 0.3em;
+    background-color: color-mix(in srgb, var(--qed-grid) 60%, transparent);
+}
+
+.prose-custom :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *))::before,
+.prose-custom :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *))::after {
+    content: "";
+}
+
+.prose :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.75rem;
+}
+
+.prose :where(img):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.75rem;
+    pointer-events: none;
+}
+
+.prose :where(iframe):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.75rem;
+}
+
+.prose :where(blockquote p):not(:where([class~="not-prose"], [class~="not-prose"] *))::before,
+.prose :where(blockquote p):not(:where([class~="not-prose"], [class~="not-prose"] *))::after {
+    content: "";
+}
+
+.prose-custom :where(blockquote):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    font-style: italic;
+    border-left-width: 3px;
+}
+
+/* Article body set in Computer Modern so it matches KaTeX's math. */
+.article-body {
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    line-height: 1.62;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+}
+
+@media (min-width: 640px) {
+    .article-body {
+        font-size: 1.25rem;
+        text-align: justify;
+        hyphens: auto;
+        -webkit-hyphens: auto;
+    }
+}
+
+.article-body :where(h2, h3, h4) {
+    text-align: left;
+}
+
+/* Low-DPI fallback: Computer Modern Roman gets thin; Concrete keeps its colour on the page. */
+@media (max-resolution: 1.5dppx) {
+    .article-body {
+        font-family: "CMU Concrete", var(--font-serif);
+    }
+    .article-body :where(h1, h2, h3, h4) {
+        font-family: var(--font-serif);
+    }
+}

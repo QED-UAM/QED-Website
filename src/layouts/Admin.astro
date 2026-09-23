@@ -1,0 +1,82 @@
+---
+import Base from "./Base.astro";
+import { usePage } from "../lib/page";
+import type { RouteName } from "../lib/i18n/routes";
+import { DEFAULT_AVATAR } from "../lib/config";
+
+interface Props {
+    title: string;
+    section: RouteName;
+    /** Load the interactive-component runtime (editors with a content preview). */
+    runtime?: boolean;
+}
+
+const { title, section, runtime = false } = Astro.props;
+const { t, href } = usePage(Astro);
+const admin = Astro.locals.admin!;
+
+const sections: { route: RouteName; label: string; active: RouteName[] }[] = [
+    { route: "admin", label: t("admin.index.title"), active: ["admin"] },
+    { route: "adminPosts", label: t("admin.posts.title"), active: ["adminPosts", "adminPost"] },
+    { route: "adminMagazines", label: t("admin.magazines.title"), active: ["adminMagazines", "adminMagazine"] },
+    { route: "adminActivities", label: t("admin.activities.title"), active: ["adminActivities", "adminActivity"] },
+    { route: "adminProfiles", label: t("admin.profiles.title"), active: ["adminProfiles", "adminProfile"] },
+    { route: "adminNews", label: t("admin.news.title"), active: ["adminNews"] },
+    { route: "adminAccounts", label: t("admin.accounts.title"), active: ["adminAccounts"] }
+];
+---
+
+<Base title={title} noindex bare>
+    {
+        runtime && (
+            <Fragment slot="head">
+                <script is:inline src="/js/postInteractiveElements.js" />
+                <script is:inline src="/js/postUtils.js" />
+            </Fragment>
+        )
+    }
+    <div class="mx-auto flex max-w-[92rem] flex-col gap-8 px-4 pb-24 sm:px-8 lg:flex-row">
+        <aside class="lg:sticky lg:top-6 lg:w-60 lg:shrink-0 lg:self-start">
+            <nav aria-label={t("admin.index.section")} class="rounded-xl border border-grid bg-surface p-3">
+                <ul class="flex gap-1 overflow-x-auto lg:flex-col">
+                    {
+                        sections.map((item) => (
+                            <li>
+                                <a
+                                    href={href(item.route)}
+                                    aria-current={item.active.includes(section) ? "page" : undefined}
+                                    class:list={[
+                                        "block rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors",
+                                        item.active.includes(section)
+                                            ? "bg-ink text-paper"
+                                            : "text-graphite/80 hover:bg-grid/60 hover:text-graphite"
+                                    ]}>
+                                    {item.label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </nav>
+            <div class="mt-4 hidden items-center gap-3 px-2 lg:flex">
+                <img
+                    src={admin.photo || DEFAULT_AVATAR}
+                    alt=""
+                    class="size-9 rounded-full border border-grid object-cover"
+                    referrerpolicy="no-referrer"
+                />
+                <div class="min-w-0 text-sm">
+                    <p class="truncate font-semibold">{admin.name || admin.email}</p>
+                    <form method="POST" action="/auth/logout">
+                        <button type="submit" class="text-muted underline underline-offset-2 hover:text-graphite">
+                            {t("admin.index.logout")}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+        <div class="min-w-0 flex-1">
+            <slot />
+        </div>
+    </div>
+</Base>

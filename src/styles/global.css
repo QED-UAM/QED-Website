@@ -1,0 +1,319 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/400-italic.css";
+@import "katex/dist/katex.min.css";
+@import "./fonts.css";
+@import "./prose.css";
+@import "./content.css";
+
+@plugin "@tailwindcss/typography";
+
+/* Classes used by article HTML/scripts stored in MongoDB and by the interactive runtime. */
+@source "./generated/content-classes.txt";
+@source "../../public/js";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens: "cuaderno de demostraciones".
+ * Paper and squared grid, ink-blue pen, highlighter orange (the QED brand color) and
+ * red pen for corrections. Grays and blues keep Tailwind v3's exact values because
+ * interactive components stored in the database compute colors from them.
+ */
+@theme {
+    --breakpoint-mobile: 976px;
+    --breakpoint-2xl: 1800px;
+
+    --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "CMU Serif", "Latin Modern Roman", "Computer Modern", Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    --color-gray-950: #030712;
+
+    --color-blue-50: #eff6ff;
+    --color-blue-100: #dbeafe;
+    --color-blue-200: #bfdbfe;
+    --color-blue-300: #93c5fd;
+    --color-blue-400: #60a5fa;
+    --color-blue-500: #3b82f6;
+    --color-blue-600: #2563eb;
+    --color-blue-700: #1d4ed8;
+    --color-blue-800: #1e40af;
+    --color-blue-900: #1e3a8a;
+    --color-blue-950: #172554;
+
+    /* Interactive components (public/js/postInteractiveElements.js ie* constants). */
+    --color-ie-light-bg: #ffffff;
+    --color-ie-light-main: #8092c4;
+    --color-ie-light-contrast: #1d3b9c;
+    --color-ie-dark-bg: #1a2236;
+    --color-ie-dark-main: #6478aa;
+    --color-ie-dark-contrast: #a8bdff;
+
+    --color-marker: #f2a14d;
+    --color-marker-deep: #c7711f;
+
+    --animate-settle: settle 1.1s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+
+@theme inline {
+    --color-paper: var(--qed-paper);
+    --color-surface: var(--qed-surface);
+    --color-grid: var(--qed-grid);
+    --color-ink: var(--qed-ink);
+    --color-ink-deep: var(--qed-ink-deep);
+    --color-graphite: var(--qed-text);
+    --color-muted: var(--qed-muted);
+    --color-redpen: var(--qed-redpen);
+}
+
+:root {
+    --qed-paper: #f7f8fb;
+    --qed-surface: #ffffff;
+    --qed-grid: #dde4f2;
+    --qed-ink: #1d3b9c;
+    --qed-ink-deep: #152c77;
+    --qed-text: #1c1f26;
+    --qed-muted: #5b6275;
+    --qed-redpen: #c63a2e;
+    --qed-key-shadow: #b8c3dc;
+
+    --scrollbar-percentage-color: rgba(40, 40, 40, 0.75);
+    --scrollbar-track-color: rgba(125, 125, 125, 0.25);
+    --scrollbar-thumb-color: rgba(75, 75, 75, 0.45);
+    --scrollbar-thumb-hover-color: rgba(40, 40, 40, 0.6);
+    color-scheme: light;
+}
+
+.dark {
+    --qed-paper: #121829;
+    --qed-surface: #1a2236;
+    --qed-grid: #243050;
+    --qed-ink: #a8bdff;
+    --qed-ink-deep: #c9d6ff;
+    --qed-text: #e8ebf3;
+    --qed-muted: #a3abc0;
+    --qed-redpen: #ff8f80;
+    --qed-key-shadow: #0a0e1a;
+
+    --scrollbar-percentage-color: rgba(200, 200, 200, 0.75);
+    --scrollbar-track-color: rgba(75, 75, 75, 0.35);
+    --scrollbar-thumb-color: rgba(150, 150, 150, 0.45);
+    --scrollbar-thumb-hover-color: rgba(200, 200, 200, 0.6);
+    color-scheme: dark;
+}
+
+@keyframes settle {
+    0% {
+        transform: translateY(-2.5rem) rotateX(-120deg) rotateY(160deg);
+        opacity: 0;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotateX(-8deg) rotateY(-18deg);
+        opacity: 1;
+    }
+}
+
+@layer base {
+    /* Tailwind v3 default border color, which article HTML stored in the database relies on. */
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    html {
+        font-family: var(--font-sans);
+        -webkit-text-size-adjust: 100%;
+        scroll-padding-top: 5rem;
+    }
+
+    body {
+        background-color: var(--qed-paper);
+        color: var(--qed-text);
+    }
+
+    ::selection {
+        background-color: color-mix(in srgb, var(--color-marker) 45%, transparent);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-marker);
+        outline-offset: 2px;
+    }
+
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
+@utility graph-paper {
+    background-color: var(--qed-paper);
+    background-image:
+        linear-gradient(to right, var(--qed-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--qed-grid) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+    background-position: -1px -1px;
+}
+
+/* Highlighter swipe behind text: active nav links, key phrases. */
+@utility marker {
+    background-image: linear-gradient(
+        104deg,
+        transparent 0.2em,
+        color-mix(in srgb, var(--color-marker) 55%, transparent) 0.3em,
+        color-mix(in srgb, var(--color-marker) 45%, transparent) calc(100% - 0.3em),
+        transparent calc(100% - 0.2em)
+    );
+    background-size: 100% 0.55em;
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Physical key: primary buttons, pagination, calculator keys, the interactive play key. */
+@utility key {
+    position: relative;
+    border-radius: 0.6rem;
+    box-shadow:
+        0 3px 0 0 var(--qed-key-shadow),
+        0 6px 14px -8px rgb(0 0 0 / 0.35);
+    transition:
+        transform 90ms ease,
+        box-shadow 90ms ease,
+        background-color 150ms ease;
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow:
+            0 4px 0 0 var(--qed-key-shadow),
+            0 8px 18px -8px rgb(0 0 0 / 0.35);
+    }
+    &:active {
+        transform: translateY(3px);
+        box-shadow:
+            0 0 0 0 var(--qed-key-shadow),
+            0 2px 6px -4px rgb(0 0 0 / 0.35);
+    }
+}
+
+@utility btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.35rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.25;
+    border-radius: 0.6rem;
+    background-color: var(--qed-ink);
+    color: var(--qed-paper);
+    &:hover {
+        background-color: var(--qed-ink-deep);
+    }
+}
+
+@utility btn-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--qed-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    &:hover {
+        text-decoration-thickness: 2px;
+    }
+}
+
+/* Red-pen proofreading mark for content missing in the current language. */
+@utility untranslated {
+    color: var(--qed-redpen);
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: color-mix(in srgb, var(--qed-redpen) 70%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+}
+
+@utility field {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    border: 1.5px solid var(--qed-grid);
+    background-color: var(--qed-surface);
+    color: var(--qed-text);
+    font-family: var(--font-sans);
+    transition: border-color 150ms ease;
+    &:focus {
+        border-color: var(--qed-ink);
+        outline: none;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-marker) 35%, transparent);
+    }
+}
+
+/* Scrollbar and scroll percentage indicator. */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+}
+
+#scroll-percentage {
+    position: fixed;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    color: var(--scrollbar-percentage-color);
+    transition: opacity 0.25s;
+}
+#scroll-percentage.visible {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

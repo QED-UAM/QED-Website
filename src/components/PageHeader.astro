@@ -1,0 +1,19 @@
+---
+// Shared page opening: the same title treatment on every main page (Computer Modern title in
+// ink with a short highlighter stroke, optional lead).
+interface Props {
+    title: string;
+    lead?: string;
+    /** Replaces the page-width container, for headers that sit inside another layout. */
+    class?: string;
+}
+
+const { title, lead, class: className = "mx-auto max-w-6xl px-4 pt-8 sm:px-8 sm:pt-14" } = Astro.props;
+---
+
+<header class:list={["page-header", className]}>
+    <h1 class="font-serif text-5xl leading-none font-bold text-ink sm:text-6xl">{title}</h1>
+    <span class="mt-5 block h-1.5 w-16 rounded-full bg-marker/80" aria-hidden="true"></span>
+    {lead && <p class="mt-5 max-w-2xl text-lg leading-relaxed text-graphite/85">{lead}</p>}
+    <slot />
+</header>

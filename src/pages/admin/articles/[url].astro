@@ -1,0 +1,46 @@
+---
+import Admin from "../../../layouts/Admin.astro";
+import PostEditor from "../../../components/admin/PostEditor.svelte";
+import { usePage } from "../../../lib/page";
+import { adminContext, editable, lf } from "../../../lib/admin/page";
+import { Magazine, Post, User } from "../../../lib/db/models";
+import { DEFAULT_AVATAR } from "../../../lib/config";
+
+const { locale, t, href, param, origin } = usePage(Astro);
+const post = await Post.findOne({ url: param("url") }).lean();
+if (!post) return Astro.rewrite("/404");
+
+const { languages, strings } = adminContext(locale);
+const [users, magazines] = await Promise.all([
+    User.find().select("name photo").lean(),
+    Magazine.find().sort({ _id: -1 }).select("title url visible").lean()
+]);
+const magazine = magazines.find((item) => item._id.toString() === post.magazine_id?.toString());
+const urlPrefix = `${origin}/${t("magazine.index.url")}/${t("magazine.post.url")}/`;
+---
+
+<Admin title={t("admin.posts.post.title", { name: post.title?.es || post.url })} section="adminPost" runtime>
+    <PostEditor
+        client:load
+        post={{
+            url: post.url,
+            title: editable(post.title),
+            description: editable(post.description),
+            scripts: lf(post.scripts),
+            content: editable(post.content),
+            authors: (post.authors ?? []).map((author) => ({ user_id: author.user_id.toString(), role: author.role })),
+            magazine_id: post.magazine_id?.toString() ?? null,
+            type: post.type || "post"
+        }}
+        views={post.views ?? 0}
+        users={users
+            .map((user) => ({ id: user._id.toString(), name: user.name ?? "", photo: user.photo || DEFAULT_AVATAR }))
+            .sort((a, b) => a.name.localeCompare(b.name))}
+        magazines={magazines.map((item) => ({ id: item._id.toString(), title: item.title?.es ?? item.url }))}
+        languages={languages}
+        strings={strings}
+        urlPrefix={urlPrefix}
+        editorBase={href("adminPosts")}
+        publicHref={magazine?.visible ? href("article", { url: post.url }) : null}
+    />
+</Admin>

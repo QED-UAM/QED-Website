@@ -1,0 +1,297 @@
+---
+// The error pages' working calculator with a seven-segment display, built as a small
+// physical device (raised body, recessed display, keys that press down).
+import Base from "../layouts/Base.astro";
+import { usePage } from "../lib/page";
+
+interface Props {
+    code: number;
+}
+
+const { code } = Astro.props;
+const { t } = usePage(Astro);
+const titleKey = `errors.${code}.title`;
+const descKey = `errors.${code}.desc`;
+const title = t(titleKey) === titleKey ? `Error ${code}` : t(titleKey);
+const description = t(descKey) === descKey ? "" : t(descKey);
+const keys = ["7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "0", ".", "C", "+"];
+---
+
+<Base title={title} noindex>
+    <div class="mx-auto flex max-w-3xl flex-col items-center px-4 pt-8 sm:pt-14">
+        <div class="calculator-stage">
+            <div class="calculator" role="group" aria-label={t("errors.calculator")}>
+                <div id="display" class="calculator-display" aria-live="polite" data-code={code}></div>
+                <div class="grid grid-cols-4 gap-2.5 sm:gap-3">
+                    {keys.map((key) => <button type="button" class="calc-key">{key}</button>)}
+                    <button type="button" class="calc-key calc-key-equals col-span-4">=</button>
+                </div>
+            </div>
+        </div>
+        <h1 class="mt-12 font-serif text-4xl font-bold text-ink sm:text-5xl">{title}</h1>
+        {description && <p class="mt-4 max-w-xl text-center text-lg text-graphite/90">{description}</p>}
+        <a href="/" class="btn key mt-8">{t("errors.home")}</a>
+    </div>
+</Base>
+
+<style is:global>
+    .calculator-stage {
+        perspective: 1200px;
+    }
+    .calculator {
+        width: min(88vw, 23rem);
+        padding: 1.1rem;
+        border-radius: 1.4rem;
+        background: linear-gradient(170deg, var(--qed-surface), color-mix(in srgb, var(--qed-grid) 70%, var(--qed-surface)));
+        border: 1px solid var(--qed-grid);
+        box-shadow:
+            0 1px 0 rgb(255 255 255 / 0.6) inset,
+            0 10px 0 -2px color-mix(in srgb, var(--qed-key-shadow) 80%, transparent),
+            0 30px 50px -24px rgb(10 14 30 / 0.55);
+        transform: rotateX(10deg);
+        transform-origin: 50% 100%;
+    }
+    .dark .calculator {
+        box-shadow:
+            0 1px 0 rgb(255 255 255 / 0.06) inset,
+            0 10px 0 -2px #070a13,
+            0 30px 50px -24px rgb(0 0 0 / 0.8);
+    }
+    .calculator-display {
+        display: flex;
+        justify-content: flex-end;
+        height: 4.5rem;
+        margin-bottom: 1rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.7rem;
+        background: #c9d3bf;
+        color: #1c231a;
+        box-shadow:
+            inset 0 3px 6px rgb(0 0 0 / 0.35),
+            inset 0 -1px 0 rgb(255 255 255 / 0.4);
+        overflow: hidden;
+    }
+    .dark .calculator-display {
+        background: #1d2a23;
+        color: #a6f0b8;
+    }
+    .calc-key {
+        padding: 0.6rem 0;
+        border-radius: 0.65rem;
+        font-family: var(--font-sans);
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--qed-text);
+        background: var(--qed-surface);
+        border: 1px solid var(--qed-grid);
+        box-shadow: 0 4px 0 0 var(--qed-key-shadow);
+        transition:
+            transform 70ms ease,
+            box-shadow 70ms ease;
+    }
+    .calc-key:active,
+    .calc-key[data-pressed] {
+        transform: translateY(4px);
+        box-shadow: 0 0 0 0 var(--qed-key-shadow);
+    }
+    .calc-key-equals {
+        background: var(--qed-ink);
+        color: var(--qed-paper);
+        border-color: transparent;
+    }
+
+    /* Seven-segment digits */
+    .S8D {
+        display: inline-block;
+        position: relative;
+        width: 1.95rem;
+        height: 100%;
+        flex: none;
+    }
+    .S8D-segment {
+        position: absolute;
+        width: 16.6666666666%;
+        height: 31%;
+        color: rgb(0 0 0 / 0.07);
+        background-color: currentColor;
+    }
+    .dark .S8D-segment {
+        color: rgb(166 240 184 / 0.08);
+    }
+    .S8D-segment::before,
+    .S8D-segment::after {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        height: 33.333333%;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        border-style: solid;
+        border-width: 2.9px;
+        border-color: transparent;
+    }
+    .S8D-segment::before {
+        top: -33.333333%;
+        border-bottom-color: currentColor;
+    }
+    .S8D-segment::after {
+        bottom: -33.333333%;
+        border-top-color: currentColor;
+    }
+    .S8D-segment.-seg-p::before,
+    .S8D-segment.-seg-p::after {
+        overflow: unset;
+    }
+    .S8D[data-code*="a"] .-seg-a,
+    .S8D[data-code*="b"] .-seg-b,
+    .S8D[data-code*="c"] .-seg-c,
+    .S8D[data-code*="d"] .-seg-d,
+    .S8D[data-code*="e"] .-seg-e,
+    .S8D[data-code*="f"] .-seg-f,
+    .S8D[data-code*="g"] .-seg-g,
+    .S8D[data-code*="p"] .-seg-p {
+        color: currentColor;
+        z-index: 10;
+    }
+    .calculator-display .S8D[data-code*="a"] .-seg-a,
+    .calculator-display .S8D[data-code*="b"] .-seg-b,
+    .calculator-display .S8D[data-code*="c"] .-seg-c,
+    .calculator-display .S8D[data-code*="d"] .-seg-d,
+    .calculator-display .S8D[data-code*="e"] .-seg-e,
+    .calculator-display .S8D[data-code*="f"] .-seg-f,
+    .calculator-display .S8D[data-code*="g"] .-seg-g,
+    .calculator-display .S8D[data-code*="p"] .-seg-p {
+        color: inherit;
+    }
+    .-seg-a { top: -5%; left: 41.666666666%; transform: rotate(90deg); }
+    .-seg-b { top: 15%; right: 8.333333333%; }
+    .-seg-c { bottom: 15%; right: 8.33333333%; }
+    .-seg-d { bottom: -5%; left: 41.666666666%; transform: rotate(90deg); }
+    .-seg-e { bottom: 15%; left: 8.33333333%; }
+    .-seg-f { top: 15%; left: 8.33333333%; }
+    .-seg-g { top: 35%; left: 41.666666666%; transform: rotate(90deg); }
+    .-seg-p { bottom: 5%; right: -5%; height: 9.31%; background-color: transparent; border: none; transform: none; }
+</style>
+
+<script>
+    // Seven-segment calculator. Numbers and operators only; no eval.
+    const display = document.getElementById("display")!;
+    const MAX_DIGITS = 10;
+    const CODES: Record<string, string> = {
+        "0": "abcdef", "1": "bc", "2": "abdeg", "3": "abcdg", "4": "bcfg", "5": "acdfg",
+        "6": "acdefg", "7": "abc", "8": "abcdefg", "9": "abcdfg", "-": "g", E: "adefg",
+        r: "eg", o: "cdeg", I: "ef", n: "ceg", f: "aefg"
+    };
+
+    let current = "";
+    let previous = "";
+    let operator: string | null = null;
+
+    function digit(code: string) {
+        const element = document.createElement("div");
+        element.className = "S8D";
+        for (const name of "abcdefgp") {
+            const segment = document.createElement("div");
+            segment.className = `S8D-segment -seg-${name}`;
+            element.appendChild(segment);
+        }
+        element.dataset.code = code;
+        return element;
+    }
+
+    function render(text?: string) {
+        display.innerHTML = "";
+        let value = text ?? (current || "0");
+        if (!text && (value.length > MAX_DIGITS || value.includes("e"))) {
+            let exp = Number.parseFloat(value).toExponential().replace("e", "E").replace("+", "");
+            const [mantissa, power] = exp.split("E");
+            const decimals = power === "0" ? MAX_DIGITS - 1 : MAX_DIGITS - power.length - 2;
+            const rounded = (Math.round(Number.parseFloat(mantissa) * 10 ** decimals) / 10 ** decimals).toString();
+            exp = power === "0" ? rounded : `${rounded}E${power}`;
+            value = exp;
+        }
+        value = " ".repeat(Math.max(MAX_DIGITS - value.length + Number(value.includes(".")), 0)) + value;
+        let last: HTMLElement | null = null;
+        for (const char of value) {
+            if (char === "." && last) last.dataset.code += "p";
+            else {
+                last = digit(CODES[char] ?? "");
+                display.appendChild(last);
+            }
+        }
+        display.setAttribute("aria-label", value.trim());
+    }
+
+    function operate(a: string, op: string, b: string): string {
+        const x = Number.parseFloat(a);
+        const y = Number.parseFloat(b);
+        const result = op === "+" ? x + y : op === "-" ? x - y : op === "*" ? x * y : x / y;
+        if (Number.isNaN(result)) return "Error";
+        if (!Number.isFinite(result)) return "Inf.";
+        return Number.parseFloat(result.toString()).toString();
+    }
+
+    function press(value: string) {
+        if (value === "C") {
+            current = previous = "";
+            operator = null;
+            render();
+        } else if (value === "=") {
+            if (!operator && previous.startsWith("-")) operator = "+";
+            if (operator && previous !== "") {
+                current = operate(previous, operator, current || "0");
+                operator = null;
+                previous = "";
+                render();
+            }
+        } else if ("+-*/".includes(value)) {
+            if (operator !== null && operator !== "-" && value === "-" && current.length < MAX_DIGITS) {
+                if (!current.includes("-")) {
+                    current = "-" + current;
+                    render();
+                }
+            } else if (operator !== null && operator !== "-" && current.includes("-")) {
+                current = current.substring(1);
+                render();
+                return;
+            }
+            if (current !== "" && current !== "-") {
+                if (operator) {
+                    current = operate(previous, operator, current);
+                    render();
+                }
+                previous = current;
+                current = "";
+                operator = value;
+            }
+        } else {
+            if (current === "Error" || current === "Inf.") {
+                current = previous = "";
+                operator = null;
+            }
+            if (value === "." ? !current.includes(".") : current.length < MAX_DIGITS) {
+                current = (current + value).replace(/^0+(?!\.)/, "") || "0";
+                render();
+            }
+        }
+    }
+
+    document.querySelectorAll<HTMLButtonElement>(".calc-key").forEach((button) =>
+        button.addEventListener("click", () => press(button.textContent!.trim()))
+    );
+    document.addEventListener("keydown", (event) => {
+        const key = event.key === "Enter" ? "=" : event.key === "Escape" ? "C" : event.key;
+        const button = [...document.querySelectorAll<HTMLButtonElement>(".calc-key")].find(
+            (element) => element.textContent!.trim() === key
+        );
+        if (!button || event.target instanceof HTMLInputElement) return;
+        event.preventDefault();
+        button.dataset.pressed = "";
+        setTimeout(() => delete button.dataset.pressed, 90);
+        press(key);
+    });
+
+    render(`Error ${display.dataset.code}`);
+</script>

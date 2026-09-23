@@ -1,0 +1,18 @@
+---
+import Base from "../layouts/Base.astro";
+import { usePage } from "../lib/page";
+
+const { t } = usePage(Astro);
+---
+
+<Base title={t("email-successful.title")} noindex>
+    <div class="mx-auto flex max-w-2xl flex-col items-center px-4 pt-16 text-center sm:pt-24">
+        <h1 class="font-serif text-5xl font-bold text-ink sm:text-6xl">{t("email-successful.title")}</h1>
+        <p class="mt-5 text-lg text-graphite/90">{t("email-successful.message")}</p>
+        <a href="/" class="btn key mt-10">{t("email-successful.button")}</a>
+    </div>
+</Base>
+
+<script>
+    setTimeout(() => (window.location.href = "/"), 3000);
+</script>
