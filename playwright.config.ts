@@ -9,7 +9,8 @@ export default defineConfig({
     testDir: "tests/e2e",
     workers: 1,
     retries: 0,
-    reporter: [["list"]],
+    forbidOnly: !!process.env.CI,
+    reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
     globalSetup: "./tests/e2e/global-setup.ts",
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,

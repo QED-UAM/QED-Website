@@ -9,11 +9,11 @@
 #    fresh process (new DNS lookup and connection pools).
 #  - The offline pages poll /endpoints/health, which is only 200 when MongoDB is reachable.
 #
-# Rollback: pin `image:` to a previous tag, e.g. qeduam/qed-website:<commit sha> or :legacy.
+# Rollback: pin `image:` to a previous tag, e.g. ghcr.io/qed-uam/qed-website:<commit sha>.
 
 services:
     web:
-        image: qeduam/qed-website:prod
+        image: ghcr.io/qed-uam/qed-website:prod
         restart: unless-stopped
         env_file: .env
         environment:
